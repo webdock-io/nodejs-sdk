@@ -1,6 +1,6 @@
 {
   "name": "webdock",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
   "scripts": {
     "build": "tsc",

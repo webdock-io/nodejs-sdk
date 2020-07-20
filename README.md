@@ -1,7 +1,8 @@
 # webdock-sdk
-NodeJS SDK Library / Wrapper for the Webdock API
+
 [![NPM](https://badgen.net/npm/v/webdock)](https://www.npmjs.com/package/webdock)
 
+> NodeJS SDK Library / Wrapper for the Webdock API
 
 ## Installation
 
