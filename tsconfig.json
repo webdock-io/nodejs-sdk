@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "outDir": "dist",
+    },
+    "include": [
+        "generated"
+    ]
+}
