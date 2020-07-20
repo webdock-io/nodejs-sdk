@@ -1,11 +1,12 @@
 {
-  "name": "webdock-sdk",
-  "version": "0.0.1",
+  "name": "webdock",
+  "version": "0.0.11",
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
-  "main": "dist",
   "scripts": {
     "build": "tsc",
-    "develop": "ts-node-dev --transpile-only --no-notify"
+    "develop": "ts-node-dev --transpile-only --no-notify",
+    "prepublishOnly": "cp -r ./dist/* . && rm -rf ./dist",
+    "postpublish": "git clean -fd"
   },
   "dependencies": {
     "node-fetch": "^2.6.0"
@@ -16,7 +17,10 @@
     "ts-node-dev": "^1.0.0-pre.52",
     "typescript": "^3.9.7"
   },
-  "keywords": ["webdock-io", "webdock"],
+  "keywords": [
+    "webdock-io",
+    "webdock"
+  ],
   "author": "Alex0007 <Alex0007lolpvp@gmail.com>",
   "license": "ISC"
 }
