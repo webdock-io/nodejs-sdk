@@ -1,9 +1,10 @@
 {
   "name": "webdock",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
   "scripts": {
     "build": "tsc",
+    "generate-client": "openapi-typescript-codegen --input ./webdock-v10.yaml --output generated",
     "develop": "ts-node-dev --transpile-only --no-notify",
     "prepublishOnly": "cp -r ./dist/* . && rm -rf ./dist",
     "postpublish": "git clean -fd"
