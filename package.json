@@ -4,7 +4,7 @@
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
   "scripts": {
     "build": "tsc",
-    "generate-client": "openapi-typescript-codegen --input ./webdock-v10.yaml --output generated",
+    "generate-client": "openapi --input ./webdock-v10.yaml --output generated --client node-fetch",
     "develop": "ts-node-dev --transpile-only --no-notify",
     "prepublishOnly": "npm run generate-client && npm run build && cp -r ./dist/* . && rm -rf ./dist",
     "postpublish": "git clean -fd"
