@@ -3,6 +3,7 @@
   "version": "0.0.17",
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
   "scripts": {
+    "release": "release-it",
     "build": "tsc",
     "generate-client": "node generate.js",
     "develop": "ts-node-dev --transpile-only --no-notify",
@@ -17,6 +18,7 @@
     "js-yaml": "^3.14.0",
     "lodash": "^4.17.19",
     "openapi-typescript-codegen": "^0.4.8",
+    "release-it": "^13.6.6",
     "ts-node-dev": "^1.0.0-pre.52",
     "typescript": "^3.9.7"
   },
