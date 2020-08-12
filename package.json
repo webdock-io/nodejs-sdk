@@ -4,6 +4,7 @@
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
   "scripts": {
     "release": "release-it",
+    "before:release": "npm run generate-client",
     "build": "tsc",
     "generate-client": "node generate.js",
     "develop": "ts-node-dev --transpile-only --no-notify",

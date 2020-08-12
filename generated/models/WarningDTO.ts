@@ -20,5 +20,5 @@ export interface WarningDTO {
     /**
      * Warning message
      */
-    data?: Dictionary<>;
+    data?: Dictionary<any>;
 }
