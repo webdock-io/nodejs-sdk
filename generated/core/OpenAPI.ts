@@ -19,6 +19,6 @@ export const OpenAPI: Config = {
     WITH_CREDENTIALS: false,
     TOKEN: '',
     WITH_HEADERS: {
-        'X-Client': 'webdock-nodejs-sdk/0.1.0'
+        'X-Client': 'webdock-nodejs-sdk/0.1.4'
     }
 };
