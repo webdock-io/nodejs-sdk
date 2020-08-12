@@ -10,9 +10,6 @@
     "prepublishOnly": "npm run generate-client && npm run build && cp -r ./dist/* . && rm -rf ./dist",
     "postpublish": "git clean -fd"
   },
-  "hooks": {
-    "before:release": "npm run generate-client"
-  },
   "dependencies": {
     "node-fetch": "^2.6.0"
   },
