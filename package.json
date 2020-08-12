@@ -4,8 +4,7 @@
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
   "scripts": {
     "build": "tsc",
-    "preprocess-schema": "node preprocess.js",
-    "generate-client": "openapi --input ./webdock.json --output generated --client node-fetch",
+    "generate-client": "node generate.js",
     "develop": "ts-node-dev --transpile-only --no-notify",
     "prepublishOnly": "npm run generate-client && npm run build && cp -r ./dist/* . && rm -rf ./dist",
     "postpublish": "git clean -fd"
