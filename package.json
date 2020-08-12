@@ -4,12 +4,14 @@
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
   "scripts": {
     "release": "release-it",
-    "before:release": "npm run generate-client",
     "build": "tsc",
     "generate-client": "node generate.js",
     "develop": "ts-node-dev --transpile-only --no-notify",
     "prepublishOnly": "npm run generate-client && npm run build && cp -r ./dist/* . && rm -rf ./dist",
     "postpublish": "git clean -fd"
+  },
+  "hooks": {
+    "before:release": "npm run generate-client"
   },
   "dependencies": {
     "node-fetch": "^2.6.0"
