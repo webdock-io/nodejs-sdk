@@ -1,4 +1,4 @@
-# webdock-sdk
+# webdock
 
 [![NPM](https://badgen.net/npm/v/webdock)](https://www.npmjs.com/package/webdock)
 
@@ -18,6 +18,9 @@ const WebdockApi = require('webdock/services');
 OpenAPI.TOKEN = 'Your_token_goes_here'
 
 const main = async () => {
+    const ping = await WebdockApi.PingService.getPing()
+    console.log(ping); // { webdock: 'rocks' }
+
     const servers = await WebdockApi.ServerService.getServers();
     console.log(servers);
 }
