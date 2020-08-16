@@ -17,10 +17,13 @@
   "devDependencies": {
     "@types/node": "^14.0.23",
     "dotenv": "^8.2.0",
+    "husky": "^4.2.5",
     "jest": "^26.4.0",
     "js-yaml": "^3.14.0",
+    "lint-staged": "^10.2.11",
     "lodash": "^4.17.19",
     "openapi-typescript-codegen": "^0.4.8",
+    "prettier": "^2.0.5",
     "release-it": "^13.6.6",
     "ts-node-dev": "^1.0.0-pre.52",
     "typescript": "^3.9.7"
@@ -29,6 +32,17 @@
     "webdock-io",
     "webdock"
   ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "author": "Alex0007 <Alex0007lolpvp@gmail.com>",
   "license": "ISC"
 }
