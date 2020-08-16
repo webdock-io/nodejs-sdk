@@ -21,7 +21,7 @@ const main = async () => {
     const ping = await WebdockApi.PingService.getPing()
     console.log(ping); // { webdock: 'rocks' }
 
-    const servers = await WebdockApi.ServerService.getServers();
+    const servers = await WebdockApi.ServersService.getServers();
     console.log(servers);
 }
 
