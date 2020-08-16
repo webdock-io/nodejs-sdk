@@ -13,12 +13,12 @@ interface Config {
 }
 
 export const OpenAPI: Config = {
-    BASE: 'https://api.webdock.io/v1',
-    VERSION: '1.0.0',
-    CLIENT: 'node-fetch',
+    BASE: "https://api.webdock.io/v1",
+    VERSION: "1.0.0",
+    CLIENT: "node-fetch",
     WITH_CREDENTIALS: false,
-    TOKEN: '',
+    TOKEN: "",
     WITH_HEADERS: {
-        'X-Client': 'webdock-nodejs-sdk/0.1.4'
-    }
+        "X-Client": "webdock-nodejs-sdk/0.1.5",
+    },
 };
