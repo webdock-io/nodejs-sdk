@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { ServerImageDTO } from '../models/ServerImageDTO';
 import { ServerLocationDTO } from '../models/ServerLocationDTO';

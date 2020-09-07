@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 
 /**
@@ -11,21 +10,21 @@ export interface CreateShellUserModelDTO {
     /**
      * Shell username
      */
-    username?: string;
+    username: string;
     /**
      * Password for the shell user
      */
-    password?: string;
+    password: string;
     /**
      * Group for the shell user
      */
-    group?: string;
+    group: string;
     /**
      * Shell for the shell user
      */
-    shell?: string;
+    shell: string;
     /**
      * List of PublicKeys IDs to the assigned to the shell user
      */
-    publicKeys?: Array<number>;
+    publicKeys: Array<number>;
 }

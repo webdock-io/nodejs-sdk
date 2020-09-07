@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { ScriptDTO } from '../models/ScriptDTO';
 import { catchGenericError } from '../core/ApiError';

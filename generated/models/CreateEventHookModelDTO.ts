@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 
 /**
@@ -11,7 +10,7 @@ export interface CreateEventHookModelDTO {
     /**
      * Callback URL
      */
-    callbackUrl?: string;
+    callbackUrl: string;
     /**
      * (Optional) Callback ID
      */

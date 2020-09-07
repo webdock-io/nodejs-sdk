@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 
 /**
@@ -11,9 +10,9 @@ export interface CreatePublicKeyModelDTO {
     /**
      * PublicKey name
      */
-    name?: string;
+    name: string;
     /**
      * PublicKey
      */
-    publicKey?: string;
+    publicKey: string;
 }

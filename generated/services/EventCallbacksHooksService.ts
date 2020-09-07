@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { CreateEventHookModelDTO } from '../models/CreateEventHookModelDTO';
 import { HookDTO } from '../models/HookDTO';

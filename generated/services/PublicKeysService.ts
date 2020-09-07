@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { CreatePublicKeyModelDTO } from '../models/CreatePublicKeyModelDTO';
 import { PublicKeyDTO } from '../models/PublicKeyDTO';

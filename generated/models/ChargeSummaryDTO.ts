@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { ChargeSummaryItemDTO } from './ChargeSummaryItemDTO';
 import { ChargeSummaryTotalDTO } from './ChargeSummaryTotalDTO';
@@ -18,8 +17,5 @@ export interface ChargeSummaryDTO {
      * True if the amount will be refunded
      */
     isRefund?: boolean;
-    /**
-     * Summary total
-     */
     totalSummary?: ChargeSummaryTotalDTO;
 }

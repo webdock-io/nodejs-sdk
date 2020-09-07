@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { InstantServerMetricsDTO } from '../models/InstantServerMetricsDTO';
 import { ServerMetricsDTO } from '../models/ServerMetricsDTO';

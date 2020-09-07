@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 export { PublicKeysService } from './PublicKeysService';
 export { AccountScriptsFilesService } from './AccountScriptsFilesService';

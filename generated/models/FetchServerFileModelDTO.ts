@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 
 /**
@@ -11,5 +10,5 @@ export interface FetchServerFileModelDTO {
     /**
      * Path of the file to fetch
      */
-    filePath?: string;
+    filePath: string;
 }

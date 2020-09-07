@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { CPUDTO } from './CPUDTO';
 import { PriceDTO } from './PriceDTO';

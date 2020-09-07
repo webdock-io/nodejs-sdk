@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 
 /**
@@ -11,13 +10,13 @@ export interface CreateUserScriptModelDTO {
     /**
      * Name of the script
      */
-    name?: string;
+    name: string;
     /**
      * Filename of the script
      */
-    filename?: string;
+    filename: string;
     /**
      * The script
      */
-    content?: string;
+    content: string;
 }

@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { CreateServerScriptModelDTO } from '../models/CreateServerScriptModelDTO';
 import { FetchServerFileModelDTO } from '../models/FetchServerFileModelDTO';

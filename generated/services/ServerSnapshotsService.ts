@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { SnapshotDTO } from '../models/SnapshotDTO';
 import { ApiError, catchGenericError } from '../core/ApiError';

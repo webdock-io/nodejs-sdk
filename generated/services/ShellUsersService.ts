@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { CreateShellUserModelDTO } from '../models/CreateShellUserModelDTO';
 import { PatchShellUserModelDTO } from '../models/PatchShellUserModelDTO';

@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 
 /**
@@ -11,5 +10,5 @@ export interface PatchShellUserModelDTO {
     /**
      * List of PublicKeys IDs to be assigned to the shell user
      */
-    publicKeys?: Array<number>;
+    publicKeys: Array<number>;
 }

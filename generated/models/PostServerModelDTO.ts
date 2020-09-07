@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 
 /**
@@ -11,23 +10,23 @@ export interface PostServerModelDTO {
     /**
      * Name of the server
      */
-    name?: string;
+    name: string;
     /**
      * Slug of the server
      */
-    slug?: string;
+    slug: string;
     /**
      * ID of the location
      */
-    locationId?: string;
+    locationId: string;
     /**
      * Slug of the server profile
      */
-    profileSlug?: string;
+    profileSlug: string;
     /**
      * Slug of the server image
      */
-    imageSlug?: string;
+    imageSlug: string;
     /**
      * SnapshotID from which to create the server
      */

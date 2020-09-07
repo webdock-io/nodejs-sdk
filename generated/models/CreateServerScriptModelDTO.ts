@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 
 /**
@@ -11,7 +10,7 @@ export interface CreateServerScriptModelDTO {
     /**
      * ID of the user script to be deployed
      */
-    scriptId?: number;
+    scriptId: number;
     /**
      * Absolute path and filename of deployment. Must start with a forward slash (/). If path doesn't exist it will be created.Existing files will be overwritten. Example: /root/myscript.sh
      */

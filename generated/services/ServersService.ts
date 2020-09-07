@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { PatchServerModelDTO } from '../models/PatchServerModelDTO';
 import { PostServerModelDTO } from '../models/PostServerModelDTO';

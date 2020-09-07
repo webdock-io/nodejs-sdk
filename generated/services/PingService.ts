@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { Ping } from '../models/Ping';
 import { catchGenericError } from '../core/ApiError';

@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/* prettier-ignore */
 
 import { ApiError, catchGenericError } from '../core/ApiError';
 import { request as __request } from '../core/request';
