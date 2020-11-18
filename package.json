@@ -22,7 +22,7 @@
     "js-yaml": "^3.14.0",
     "lint-staged": "^10.2.11",
     "lodash": "^4.17.19",
-    "openapi-typescript-codegen": "^0.4.8",
+    "openapi-typescript-codegen": "^0.6.0",
     "prettier": "^2.0.5",
     "release-it": "^13.6.6",
     "ts-node-dev": "^1.0.0-pre.52",
