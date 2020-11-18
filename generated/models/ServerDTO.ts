@@ -16,6 +16,10 @@ export interface ServerDTO {
      */
     name?: string;
     /**
+     * Creation date/time
+     */
+    date?: string;
+    /**
      * Location ID of the server
      */
     location?: string | null;
@@ -42,9 +46,9 @@ export interface ServerDTO {
     /**
      * Webserver type
      */
-    webServer?: string;
+    webServer?: ServerDTO.webServer;
     /**
-     * Aliases
+     * Aliases - Domain names for the server as known by Webdock. First entry should be treated as the &quot;Main Domain&quot; for the server.
      */
     aliases?: Array<string>;
     /**
@@ -52,23 +56,23 @@ export interface ServerDTO {
      */
     snapshotRunTime?: number;
     /**
-     * Description
+     * Server Description (what's installed here?) as entered by admin in Server Metadata
      */
     description?: string;
     /**
      * Wordpress lockdown status
      */
-    wordPressLockDown?: boolean;
+    WordPressLockDown?: boolean;
     /**
-     * Notes
+     * SSH Password Authentication Enabled for this Server
+     */
+    SSHPasswordAuthEnabled?: boolean;
+    /**
+     * Notes as entered by admin in Server Metadata
      */
     notes?: string;
     /**
-     * Creation date/time
-     */
-    date?: string;
-    /**
-     * Next Action date/time
+     * Next Action date/time as entered by admin in Server Metadata
      */
     nextActionDate?: string;
 }
@@ -87,6 +91,15 @@ export namespace ServerDTO {
         STARTING = 'starting',
         STOPPING = 'stopping',
         REINSTALLING = 'reinstalling',
+    }
+
+    /**
+     * Webserver type
+     */
+    export enum webServer {
+        APACHE = 'Apache',
+        NGINX = 'Nginx',
+        NONE = 'None',
     }
 
 

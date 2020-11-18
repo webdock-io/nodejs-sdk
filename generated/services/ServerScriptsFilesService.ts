@@ -166,7 +166,7 @@ export class ServerScriptsFilesService {
      * Fetches a file from the server
      *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)\
      * \
-     * Fetches a file from the server.
+     * Fetches a file from the server. Please note that the file contents will be returned in the event result &quot;message&quot; field as Base64 encoded data. If the Base64 encoded data is longer than 120.000 characters the callback from this method will return an error.
      * @param serverSlug Slug of the server
      * @param requestBody Fetch server file model
      * @result string Fetch initiated

@@ -17,5 +17,5 @@ export interface ChargeSummaryDTO {
      * True if the amount will be refunded
      */
     isRefund?: boolean;
-    totalSummary?: ChargeSummaryTotalDTO;
+    total?: ChargeSummaryTotalDTO;
 }

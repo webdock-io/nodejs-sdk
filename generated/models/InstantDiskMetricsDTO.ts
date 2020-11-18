@@ -5,7 +5,7 @@
 import { MetricsSamplingDTO } from './MetricsSamplingDTO';
 
 /**
- * Instant disk metrics model
+ * Instant disk metrics model. Disk utilization right now in MiB.
  */
 export interface InstantDiskMetricsDTO {
     /**

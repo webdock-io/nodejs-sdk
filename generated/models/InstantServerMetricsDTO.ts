@@ -5,6 +5,7 @@
 import { InstantCpuMetricsDTO } from './InstantCpuMetricsDTO';
 import { InstantDiskMetricsDTO } from './InstantDiskMetricsDTO';
 import { InstantMemoryMetricsDTO } from './InstantMemoryMetricsDTO';
+import { InstantNetworkMetricsDTO } from './InstantNetworkMetricsDTO';
 import { InstantProcessesMetricsDTO } from './InstantProcessesMetricsDTO';
 
 /**
@@ -12,6 +13,7 @@ import { InstantProcessesMetricsDTO } from './InstantProcessesMetricsDTO';
  */
 export interface InstantServerMetricsDTO {
     disk?: InstantDiskMetricsDTO;
+    network?: InstantNetworkMetricsDTO;
     cpu?: InstantCpuMetricsDTO;
     processes?: InstantProcessesMetricsDTO;
     memory?: InstantMemoryMetricsDTO;

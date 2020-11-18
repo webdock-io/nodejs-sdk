@@ -6,6 +6,7 @@ export { ApiError } from './core/ApiError';
 export { isSuccess } from './core/isSuccess';
 export { OpenAPI } from './core/OpenAPI';
 
+export type { AccountInformationDTO } from './models/AccountInformationDTO';
 export type { ChargeSummaryDTO } from './models/ChargeSummaryDTO';
 export type { ChargeSummaryItemDTO } from './models/ChargeSummaryItemDTO';
 export type { ChargeSummaryTotalDTO } from './models/ChargeSummaryTotalDTO';
@@ -53,6 +54,7 @@ export type { ShellUserDTO } from './models/ShellUserDTO';
 export { SnapshotDTO } from './models/SnapshotDTO';
 export type { WarningDTO } from './models/WarningDTO';
 
+export { AccountInformationService } from './services/AccountInformationService';
 export { AccountScriptsFilesService } from './services/AccountScriptsFilesService';
 export { EventCallbacksHooksService } from './services/EventCallbacksHooksService';
 export { PingService } from './services/PingService';

@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export { AccountInformationService } from './AccountInformationService';
 export { PublicKeysService } from './PublicKeysService';
 export { AccountScriptsFilesService } from './AccountScriptsFilesService';
 export { PollForEventsService } from './PollForEventsService';

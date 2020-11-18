@@ -31,5 +31,5 @@ export interface ShellUserDTO {
     /**
      * Shell user creation datetime
      */
-    date?: string;
+    created?: string;
 }

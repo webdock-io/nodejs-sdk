@@ -5,15 +5,15 @@
 import { MetricsSamplingDTO } from './MetricsSamplingDTO';
 
 /**
- * Network metrics model
+ * Network metrics model. Ingress and egress in 24 hour intervals last 7 days, in MiB.
  */
 export interface NetworkMetricsDTO {
     /**
-     * Total network usage (in Gb)
+     * Total network usage (in GiB) this month
      */
     total?: number;
     /**
-     * Maximum allowed network usage (in Gb)
+     * Maximum allowed network usage (in GiB)
      */
     allowed?: number;
     /**

@@ -101,7 +101,9 @@ export class ServerActionsService {
 
     /**
      * Suspend a server
-     *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
+     *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)\
+     * \
+     * Please note that you typically have a cap of 3 suspended servers at any one time. If you need more suspended server slots you can get these against a small monthly fee. Be in touch with Webdock support for more information.
      * @param serverSlug Slug of the server
      * @result string Server suspend initiated.
      * @throws ApiError
@@ -130,7 +132,9 @@ export class ServerActionsService {
 
     /**
      * Reinstall a server
-     *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
+     *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)\
+     * \
+     * **Please note:** Reinstall means you will be deleting your server and replacing it with a fresh image of your choice. You will keep your server name and metadata, server shortname (slug), monitoring rules and IP addresses. Otherwise it will behave as a freshly provisioned server. Any existing snapshots for this server will be deleted. If you install a LAMP/LEMP stack Webdock will generate new credentials for your server (Database, FTP and admin Shell/SSH user).
      * @param serverSlug Slug of the server
      * @param requestBody Reinstall server model
      * @result string Server reinstall initiated.

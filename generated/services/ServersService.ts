@@ -12,6 +12,7 @@ export class ServersService {
 
     /**
      * Get a list of servers
+     * webServer can be one of
      * @param status Filter by current status of the server
      * @result ServerDTO List of servers
      * @throws ApiError
@@ -35,7 +36,9 @@ export class ServersService {
 
     /**
      * Provision a server
-     *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
+     *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)\
+     * \
+     * You need to query the Server Configurations endpoints first in order to gather appropriate data for this method.
      * @param requestBody Post server model
      * @result string Server provisioning initiated
      * @throws ApiError
@@ -90,10 +93,12 @@ export class ServersService {
     }
 
     /**
-     * Delete a server
+     * Delete a server (restricted)
      *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)\
      * \
-     * This will nuke the server from orbit including all data and server snapshots. Use with care.
+     * This will nuke the server from orbit including all data and server snapshots. Use with care.\
+     * \
+     * _**Server Deletion requires special privileges which cannot be obtained in the Webdock dashboard without first contacting Webdock Support!**_
      * @param serverSlug Slug of the server
      * @result string Server deletion initiated
      * @throws ApiError

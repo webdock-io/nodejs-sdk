@@ -22,5 +22,5 @@ export interface PublicKeyDTO {
     /**
      * PublicKey creation datetime
      */
-    date?: string;
+    created?: string;
 }

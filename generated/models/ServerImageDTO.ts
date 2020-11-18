@@ -20,7 +20,7 @@ export interface ServerImageDTO {
      */
     webServer?: ServerImageDTO.webServer | null;
     /**
-     * PHP Version
+     * PHP Version. For example &quot;7.4&quot;
      */
     phpVersion?: string | null;
 }

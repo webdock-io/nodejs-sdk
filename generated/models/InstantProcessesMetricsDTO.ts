@@ -5,7 +5,7 @@
 import { MetricsSamplingDTO } from './MetricsSamplingDTO';
 
 /**
- * Instant Processes metrics model
+ * Instant Processes metrics model. Count of processes right now.
  */
 export interface InstantProcessesMetricsDTO {
     latestProcessesSampling?: MetricsSamplingDTO;

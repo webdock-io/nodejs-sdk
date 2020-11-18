@@ -18,11 +18,11 @@ export interface ServerProfileDTO {
      */
     name?: string;
     /**
-     * RAM memory (in Mb)
+     * RAM memory (in MiB)
      */
     ram?: number;
     /**
-     * Disk size (in Mb)
+     * Disk size (in MiB)
      */
     disk?: number;
     cpu?: CPUDTO;

@@ -32,11 +32,19 @@ export interface EventLogDTO {
      */
     eventType?: string;
     /**
+     * Just a plain text description of the action. Same text as you see in the Event Log in the Webdock Dashboard.
+     */
+    action?: string;
+    /**
+     * Action Data. A more static/parseable string representation of the action.
+     */
+    actionData?: string;
+    /**
      * Status
      */
     status?: EventLogDTO.status;
     /**
-     * Message
+     * Any &quot;Message&quot; or return data from the action once finished executing.
      */
     message?: string;
 }
