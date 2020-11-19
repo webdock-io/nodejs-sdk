@@ -17,10 +17,9 @@ Full API documentation is available at: [api.webdock.io](https://api.webdock.io)
 ## Usage example
 
 ```js
-const { OpenAPI } = require("webdock");
-const WebdockApi = require("webdock/services");
+const WebdockApi = require("webdock");
 
-OpenAPI.TOKEN = "Your_token_goes_here";
+WebdockApi.OpenAPI.TOKEN = "Your_token_goes_here";
 
 const main = async () => {
     const ping = await WebdockApi.PingService.getPing();
