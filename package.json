@@ -12,6 +12,7 @@
     "postpublish": "git clean -fd"
   },
   "dependencies": {
+    "form-data": "^3.0.0",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
