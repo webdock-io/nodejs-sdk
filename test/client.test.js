@@ -1,11 +1,10 @@
-const { OpenAPI } = require("../dist");
-const WebdockApi = require("../dist/services");
+const WebdockApi = require("../dist");
 
 // can be set in .env file at the package root
-OpenAPI.TOKEN = process.env.WEBDOCK_TOKEN;
+WebdockApi.OpenAPI.TOKEN = process.env.WEBDOCK_TOKEN;
 
 test("Ensure token is set", () => {
-    expect(OpenAPI.TOKEN).toBeTruthy();
+    expect(WebdockApi.OpenAPI.TOKEN).toBeTruthy();
 });
 
 test("Ping", async () => {
