@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { PublicKeyDTO } from './PublicKeyDTO';
+import type { PublicKeyDTO } from './PublicKeyDTO';
 
 /**
  * Shell user model

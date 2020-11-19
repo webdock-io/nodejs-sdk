@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { MetricsSamplingDTO } from './MetricsSamplingDTO';
+import type { MetricsSamplingDTO } from './MetricsSamplingDTO';
 
 /**
  * Instant network metrics model. Ingress and Egress in MiB last ~24 hours. To get a more accurate reading, query the general metrics endpoint.

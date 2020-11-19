@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { MetricsSamplingDTO } from './MetricsSamplingDTO';
+import type { MetricsSamplingDTO } from './MetricsSamplingDTO';
 
 /**
  * Disk metrics model. Returns disk utilization in 24 hour intervals last 7 days, in MiB.

@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { HookFilterDTO } from './HookFilterDTO';
+import type { HookFilterDTO } from './HookFilterDTO';
 
 /**
  * Hook model

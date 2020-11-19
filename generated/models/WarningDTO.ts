@@ -2,8 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Dictionary } from './Dictionary';
-
 /**
  * Warning model
  */
@@ -19,5 +17,5 @@ export interface WarningDTO {
     /**
      * Warning message
      */
-    data?: Dictionary<any>;
+    data?: Record<string, any>;
 }

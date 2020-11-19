@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { ChargeSummaryDTO } from './ChargeSummaryDTO';
-import { WarningDTO } from './WarningDTO';
+import type { ChargeSummaryDTO } from './ChargeSummaryDTO';
+import type { WarningDTO } from './WarningDTO';
 
 /**
  * Server resize model

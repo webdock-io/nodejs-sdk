@@ -1,9 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 export { ApiError } from './core/ApiError';
-export { isSuccess } from './core/isSuccess';
 export { OpenAPI } from './core/OpenAPI';
 
 export type { AccountInformationDTO } from './models/AccountInformationDTO';

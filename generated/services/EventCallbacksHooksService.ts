@@ -1,10 +1,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { CreateEventHookModelDTO } from '../models/CreateEventHookModelDTO';
-import { HookDTO } from '../models/HookDTO';
-import { ApiError, catchGenericError } from '../core/ApiError';
+import type { CreateEventHookModelDTO } from '../models/CreateEventHookModelDTO';
+import type { HookDTO } from '../models/HookDTO';
 import { request as __request } from '../core/request';
 
 export class EventCallbacksHooksService {
@@ -15,14 +13,10 @@ export class EventCallbacksHooksService {
      * @throws ApiError
      */
     public static async eventCallbacksHooks(): Promise<Array<HookDTO>> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/hooks`,
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -36,21 +30,14 @@ export class EventCallbacksHooksService {
     public static async creteHook(
         requestBody: CreateEventHookModelDTO,
     ): Promise<HookDTO> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/hooks`,
             body: requestBody,
+            errors: {
+                400: `Bad request`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -64,21 +51,14 @@ export class EventCallbacksHooksService {
     public static async getHookById(
         hookId: number,
     ): Promise<HookDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/hooks/${hookId}`,
+            errors: {
+                400: `Bad request`,
+                404: `Hook not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Hook not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -92,20 +72,13 @@ export class EventCallbacksHooksService {
     public static async deleteHookById(
         hookId: number,
     ): Promise<any> {
-
         const result = await __request({
-            method: 'delete',
+            method: 'DELETE',
             path: `/hooks/${hookId}`,
+            errors: {
+                404: `Hook not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Hook not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 

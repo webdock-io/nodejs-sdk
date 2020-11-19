@@ -1,9 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { SnapshotDTO } from '../models/SnapshotDTO';
-import { ApiError, catchGenericError } from '../core/ApiError';
+import type { SnapshotDTO } from '../models/SnapshotDTO';
 import { request as __request } from '../core/request';
 
 export class ServerSnapshotsService {
@@ -18,20 +16,13 @@ export class ServerSnapshotsService {
     public static async getServerSnapshots(
         serverSlug: string,
     ): Promise<Array<SnapshotDTO>> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/servers/${serverSlug}/snapshots`,
+            errors: {
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -47,20 +38,13 @@ export class ServerSnapshotsService {
         serverSlug: string,
         snapshotId: number,
     ): Promise<SnapshotDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/servers/${serverSlug}/snapshots/${snapshotId}`,
+            errors: {
+                404: `Server or snapshot not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server or snapshot not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -78,21 +62,14 @@ export class ServerSnapshotsService {
         serverSlug: string,
         snapshotId: number,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'delete',
+            method: 'DELETE',
             path: `/servers/${serverSlug}/snapshots/${snapshotId}`,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                404: `Server or snapshot not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server or snapshot not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 

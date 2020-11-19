@@ -1,11 +1,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { CreateShellUserModelDTO } from '../models/CreateShellUserModelDTO';
-import { PatchShellUserModelDTO } from '../models/PatchShellUserModelDTO';
-import { ShellUserDTO } from '../models/ShellUserDTO';
-import { ApiError, catchGenericError } from '../core/ApiError';
+import type { CreateShellUserModelDTO } from '../models/CreateShellUserModelDTO';
+import type { PatchShellUserModelDTO } from '../models/PatchShellUserModelDTO';
+import type { ShellUserDTO } from '../models/ShellUserDTO';
 import { request as __request } from '../core/request';
 
 export class ShellUsersService {
@@ -20,20 +18,13 @@ export class ShellUsersService {
     public static async getServerShellUsers(
         serverSlug: string,
     ): Promise<Array<ShellUserDTO>> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/servers/${serverSlug}/shellUsers`,
+            errors: {
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -49,23 +40,16 @@ export class ShellUsersService {
         serverSlug: string,
         requestBody: CreateShellUserModelDTO,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/shellUsers`,
             body: requestBody,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -81,21 +65,14 @@ export class ShellUsersService {
         serverSlug: string,
         shellUserId: number,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'delete',
+            method: 'DELETE',
             path: `/servers/${serverSlug}/shellUsers/${shellUserId}`,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                404: `Server or shell user not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server or shell user not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -115,23 +92,16 @@ export class ShellUsersService {
         shellUserId: number,
         requestBody: PatchShellUserModelDTO,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'patch',
+            method: 'PATCH',
             path: `/servers/${serverSlug}/shellUsers/${shellUserId}`,
             body: requestBody,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server or shell user not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server or shell user not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 

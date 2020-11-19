@@ -1,9 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { ScriptDTO } from '../models/ScriptDTO';
-import { catchGenericError } from '../core/ApiError';
+import type { ScriptDTO } from '../models/ScriptDTO';
 import { request as __request } from '../core/request';
 
 export class ScriptLibraryService {
@@ -14,14 +12,10 @@ export class ScriptLibraryService {
      * @throws ApiError
      */
     public static async getScripts(): Promise<Array<ScriptDTO>> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/scripts`,
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 

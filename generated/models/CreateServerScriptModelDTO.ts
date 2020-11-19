@@ -2,7 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 
-
 /**
  * Server script model
  */

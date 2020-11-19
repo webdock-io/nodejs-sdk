@@ -1,11 +1,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { ServerImageDTO } from '../models/ServerImageDTO';
-import { ServerLocationDTO } from '../models/ServerLocationDTO';
-import { ServerProfileDTO } from '../models/ServerProfileDTO';
-import { catchGenericError } from '../core/ApiError';
+import type { ServerImageDTO } from '../models/ServerImageDTO';
+import type { ServerLocationDTO } from '../models/ServerLocationDTO';
+import type { ServerProfileDTO } from '../models/ServerProfileDTO';
 import { request as __request } from '../core/request';
 
 export class ServerConfigurationsService {
@@ -17,14 +15,10 @@ export class ServerConfigurationsService {
      * @throws ApiError
      */
     public static async getServersLocations(): Promise<ServerLocationDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/locations`,
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -38,17 +32,13 @@ export class ServerConfigurationsService {
     public static async getServersProfiles(
         locationId?: any,
     ): Promise<ServerProfileDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/profiles`,
             query: {
                 'locationId': locationId,
             },
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -59,14 +49,10 @@ export class ServerConfigurationsService {
      * @throws ApiError
      */
     public static async getServersImages(): Promise<ServerImageDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/images`,
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 

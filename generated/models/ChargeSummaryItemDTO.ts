@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { PriceDTO } from './PriceDTO';
+import type { PriceDTO } from './PriceDTO';
 
 /**
  * Charge summary items model

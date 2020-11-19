@@ -1,93 +1,210 @@
+
+
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import FormData from 'form-data';
+import fetch, { BodyInit, Headers, RequestInit, Response } from 'node-fetch';
+import { types } from 'util';
 
-import { getFormData } from './getFormData';
-import { getQueryString } from './getQueryString';
+import { ApiError } from './ApiError';
+import type { ApiRequestOptions } from './ApiRequestOptions';
+import type { ApiResult } from './ApiResult';
 import { OpenAPI } from './OpenAPI';
-import { RequestOptions } from './RequestOptions';
-import { requestUsingFetch } from './requestUsingFetch';
-import { requestUsingXHR } from './requestUsingXHR';
-import { requestUsingNodeFetch } from './requestUsingNodeFetch';
-import { Result } from './Result';
 
-const H = typeof Headers !== 'undefined' ? Headers : require('node-fetch').Headers
+function isDefined<T>(value: T | null | undefined): value is Exclude<T, null | undefined> {
+    return value !== undefined && value !== null;
+}
 
-/**
- * Create the request.
- * @param options Request method options.
- * @returns Result object (see above)
- */
-export async function request(options: Readonly<RequestOptions>): Promise<Result> {
+function isString(value: any): value is string {
+    return typeof value === 'string';
+}
 
-    // Escape path (RFC3986) and create the request URL
-    let path = options.path.replace(/[:]/g, '_');
-    let url = `${OpenAPI.BASE}${path}`;
+function isStringWithValue(value: any): value is string {
+    return isString(value) && value !== '';
+}
 
-    // Create request headers
-    const headers = new H({
-        ...options.headers,
-        ...OpenAPI.WITH_HEADERS,
+function isBinary(value: any): value is Buffer | ArrayBuffer | ArrayBufferView {
+    const isBuffer = Buffer.isBuffer(value);
+    const isArrayBuffer = types.isArrayBuffer(value);
+    const isArrayBufferView = types.isArrayBufferView(value);
+    return isBuffer || isArrayBuffer || isArrayBufferView;
+}
+
+function getQueryString(params: Record<string, any>): string {
+    const qs: string[] = [];
+    Object.keys(params).forEach(key => {
+        const value = params[key];
+        if (isDefined(value)) {
+            if (Array.isArray(value)) {
+                value.forEach(value => {
+                    qs.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
+                });
+            } else {
+                qs.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`);
+            }
+        }
+    });
+    if (qs.length > 0) {
+        return `?${qs.join('&')}`;
+    }
+    return '';
+}
+
+function getUrl(options: ApiRequestOptions): string {
+    const path = options.path.replace(/[:]/g, '_');
+    const url = `${OpenAPI.BASE}${path}`;
+
+    if (options.query) {
+        return `${url}${getQueryString(options.query)}`;
+    }
+    return url;
+}
+
+function getFormData(params: Record<string, any>): FormData {
+    const formData = new FormData();
+    Object.keys(params).forEach(key => {
+        const value = params[key];
+        if (isDefined(value)) {
+            formData.append(key, value);
+        }
+    });
+    return formData;
+}
+
+type Resolver<T> = () => Promise<T>;
+
+async function resolve<T>(resolver?: T | Resolver<T>): Promise<T | undefined> {
+    if (typeof resolver === 'function') {
+        return (resolver as Resolver<T>)();
+    }
+    return resolver;
+}
+
+async function getHeaders(options: ApiRequestOptions): Promise<Headers> {
+    const headers = new Headers({
         Accept: 'application/json',
+        ...OpenAPI.HEADERS,
+        ...options.headers,
     });
 
-    // Create request settings
-    const request: RequestInit = {
-        headers,
-        method: options.method,
-    };
+    const token = await resolve(OpenAPI.TOKEN);
+    const username = await resolve(OpenAPI.USERNAME);
+    const password = await resolve(OpenAPI.PASSWORD);
 
-    // If we specified to send requests with credentials, then we
-    // set the request credentials options to include. This is only
-    // needed if you make cross-origin calls.
-    if (OpenAPI.WITH_CREDENTIALS) {
-        request.credentials = 'include';
+    if (isStringWithValue(token)) {
+        headers.append('Authorization', `Bearer ${token}`);
     }
 
-    // If we have a bearer token then we set the authentication header.
-    if (OpenAPI.TOKEN !== null && OpenAPI.TOKEN !== '') {
-        headers.append('Authorization', `Bearer ${OpenAPI.TOKEN}`);
+    if (isStringWithValue(username) && isStringWithValue(password)) {
+        const credentials = Buffer.from(`${username}:${password}`).toString('base64');
+        headers.append('Authorization', `Basic ${credentials}`);
     }
 
-    // Add the query parameters (if defined).
-    if (options.query) {
-        url += getQueryString(options.query);
-    }
-
-    // Append formData as body
-    if (options.formData) {
-        request.body = getFormData(options.formData);
-    } else if (options.body) {
-
-        // If this is blob data, then pass it directly to the body and set content type.
-        // Otherwise we just convert request data to JSON string (needed for fetch api)
-        if (typeof Blob !== 'undefined' && options.body instanceof Blob) {
-            request.body = options.body;
-            if (options.body.type) {
-                headers.append('Content-Type', options.body.type);
-            }
+    if (options.body) {
+        if (isBinary(options.body)) {
+            headers.append('Content-Type', 'application/octet-stream');
+        } else if (isString(options.body)) {
+            headers.append('Content-Type', 'text/plain');
         } else {
-            request.body = JSON.stringify(options.body);
             headers.append('Content-Type', 'application/json');
         }
     }
+    return headers;
+}
 
+function getRequestBody(options: ApiRequestOptions): BodyInit | undefined {
+    if (options.formData) {
+        return getFormData(options.formData);
+    }
+    if (options.body) {
+        if (isString(options.body) || isBinary(options.body)) {
+            return options.body;
+        } else {
+            return JSON.stringify(options.body);
+        }
+    }
+    return undefined;
+}
+
+async function sendRequest(options: ApiRequestOptions, url: string): Promise<Response> {
+    const request: RequestInit = {
+        method: options.method,
+        headers: await getHeaders(options),
+        body: getRequestBody(options),
+    };
+    return await fetch(url, request);
+}
+
+function getResponseHeader(response: Response, responseHeader?: string): string | null {
+    if (responseHeader) {
+        const content = response.headers.get(responseHeader);
+        if (isString(content)) {
+            return content;
+        }
+    }
+    return null;
+}
+
+async function getResponseBody(response: Response): Promise<any> {
     try {
-        switch (OpenAPI.CLIENT) {
-            case 'xhr':
-                return await requestUsingXHR(url, request, options.responseHeader);
-            case 'node-fetch':
-                return await requestUsingNodeFetch(url, request, options.responseHeader)
-            default:
-                return await requestUsingFetch(url, request, options.responseHeader);
+        const contentType = response.headers.get('Content-Type');
+        if (contentType) {
+            const isJSON = contentType.toLowerCase().startsWith('application/json');
+            if (isJSON) {
+                return await response.json();
+            } else {
+                return await response.text();
+            }
         }
     } catch (error) {
-        return {
-            url,
-            ok: false,
-            status: 0,
-            statusText: '',
-            body: error,
-        };
+        console.error(error);
     }
+    return null;
+}
+
+function catchErrors(options: ApiRequestOptions, result: ApiResult): void {
+    const errors: Record<number, string> = {
+        400: 'Bad Request',
+        401: 'Unauthorized',
+        403: 'Forbidden',
+        404: 'Not Found',
+        500: 'Internal Server Error',
+        502: 'Bad Gateway',
+        503: 'Service Unavailable',
+        ...options.errors,
+    }
+
+    const error = errors[result.status];
+    if (error) {
+        throw new ApiError(result, error);
+    }
+
+    if (!result.ok) {
+        throw new ApiError(result, 'Generic Error');
+    }
+}
+
+/**
+* Request using node-fetch client
+* @param options The request options from the the service
+* @result ApiResult
+* @throws ApiError
+*/
+export async function request(options: ApiRequestOptions): Promise<ApiResult> {
+    const url = getUrl(options);
+    const response = await sendRequest(options, url);
+    const responseBody = await getResponseBody(response);
+    const responseHeader = getResponseHeader(response, options.responseHeader);
+
+    const result: ApiResult = {
+        url,
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        body: responseHeader || responseBody,
+    };
+
+    catchErrors(options, result);
+    return result;
 }

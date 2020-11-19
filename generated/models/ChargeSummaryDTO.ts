@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { ChargeSummaryItemDTO } from './ChargeSummaryItemDTO';
-import { ChargeSummaryTotalDTO } from './ChargeSummaryTotalDTO';
+import type { ChargeSummaryItemDTO } from './ChargeSummaryItemDTO';
+import type { ChargeSummaryTotalDTO } from './ChargeSummaryTotalDTO';
 
 /**
  * Server resize model

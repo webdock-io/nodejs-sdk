@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { MetricsSamplingDTO } from './MetricsSamplingDTO';
+import type { MetricsSamplingDTO } from './MetricsSamplingDTO';
 
 /**
  * Instant memory metrics model. Memory use in MiB right now.

@@ -1,11 +1,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { CreateServerScriptModelDTO } from '../models/CreateServerScriptModelDTO';
-import { FetchServerFileModelDTO } from '../models/FetchServerFileModelDTO';
-import { ServerScriptDTO } from '../models/ServerScriptDTO';
-import { ApiError, catchGenericError } from '../core/ApiError';
+import type { CreateServerScriptModelDTO } from '../models/CreateServerScriptModelDTO';
+import type { FetchServerFileModelDTO } from '../models/FetchServerFileModelDTO';
+import type { ServerScriptDTO } from '../models/ServerScriptDTO';
 import { request as __request } from '../core/request';
 
 export class ServerScriptsFilesService {
@@ -20,20 +18,13 @@ export class ServerScriptsFilesService {
     public static async getServerScripts(
         serverSlug: string,
     ): Promise<Array<ServerScriptDTO>> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/servers/${serverSlug}/scripts`,
+            errors: {
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -51,23 +42,16 @@ export class ServerScriptsFilesService {
         serverSlug: string,
         requestBody: CreateServerScriptModelDTO,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/scripts`,
             body: requestBody,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server or script not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server or script not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -83,20 +67,13 @@ export class ServerScriptsFilesService {
         serverSlug: string,
         scriptId: number,
     ): Promise<ServerScriptDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/servers/${serverSlug}/scripts/${scriptId}`,
+            errors: {
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -112,21 +89,14 @@ export class ServerScriptsFilesService {
         serverSlug: string,
         scriptId: number,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'delete',
+            method: 'DELETE',
             path: `/servers/${serverSlug}/scripts/${scriptId}`,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                404: `Server or script not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server or script not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -144,21 +114,14 @@ export class ServerScriptsFilesService {
         serverSlug: string,
         scriptId: number,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/scripts/${scriptId}/execute`,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                404: `Server or script not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server or script not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -176,22 +139,15 @@ export class ServerScriptsFilesService {
         serverSlug: string,
         requestBody: FetchServerFileModelDTO,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/fetchFile`,
             body: requestBody,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 

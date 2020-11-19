@@ -1,10 +1,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { CreatePublicKeyModelDTO } from '../models/CreatePublicKeyModelDTO';
-import { PublicKeyDTO } from '../models/PublicKeyDTO';
-import { ApiError, catchGenericError } from '../core/ApiError';
+import type { CreatePublicKeyModelDTO } from '../models/CreatePublicKeyModelDTO';
+import type { PublicKeyDTO } from '../models/PublicKeyDTO';
 import { request as __request } from '../core/request';
 
 export class PublicKeysService {
@@ -16,14 +14,10 @@ export class PublicKeysService {
      * @throws ApiError
      */
     public static async getPublicKeys(): Promise<Array<PublicKeyDTO>> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/account/publicKeys`,
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -37,21 +31,14 @@ export class PublicKeysService {
     public static async postPublicKeys(
         requestBody: CreatePublicKeyModelDTO,
     ): Promise<PublicKeyDTO> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/account/publicKeys`,
             body: requestBody,
+            errors: {
+                400: `Bad request`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -65,20 +52,13 @@ export class PublicKeysService {
     public static async deletePublicKey(
         id: number,
     ): Promise<any> {
-
         const result = await __request({
-            method: 'delete',
+            method: 'DELETE',
             path: `/account/publicKeys/${id}`,
+            errors: {
+                404: `PublicKey not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `PublicKey not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 

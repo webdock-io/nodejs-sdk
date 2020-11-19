@@ -1,9 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { AccountInformationDTO } from '../models/AccountInformationDTO';
-import { catchGenericError } from '../core/ApiError';
+import type { AccountInformationDTO } from '../models/AccountInformationDTO';
 import { request as __request } from '../core/request';
 
 export class AccountInformationService {
@@ -14,14 +12,10 @@ export class AccountInformationService {
      * @throws ApiError
      */
     public static async getAccountInformation(): Promise<Array<AccountInformationDTO>> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/account/accountInformation`,
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 

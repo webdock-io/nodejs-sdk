@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { MetricsSamplingDTO } from './MetricsSamplingDTO';
+import type { MetricsSamplingDTO } from './MetricsSamplingDTO';
 
 /**
  * Instant disk metrics model. Disk utilization right now in MiB.

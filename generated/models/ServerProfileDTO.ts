@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { CPUDTO } from './CPUDTO';
-import { PriceDTO } from './PriceDTO';
+import type { CPUDTO } from './CPUDTO';
+import type { PriceDTO } from './PriceDTO';
 
 /**
  * ServerProfile model

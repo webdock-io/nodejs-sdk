@@ -1,10 +1,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { InstantServerMetricsDTO } from '../models/InstantServerMetricsDTO';
-import { ServerMetricsDTO } from '../models/ServerMetricsDTO';
-import { ApiError, catchGenericError } from '../core/ApiError';
+import type { InstantServerMetricsDTO } from '../models/InstantServerMetricsDTO';
+import type { ServerMetricsDTO } from '../models/ServerMetricsDTO';
 import { request as __request } from '../core/request';
 
 export class ServerMetricsService {
@@ -19,20 +17,13 @@ export class ServerMetricsService {
     public static async getServerMetrics(
         serverSlug: string,
     ): Promise<ServerMetricsDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/servers/${serverSlug}/metrics`,
+            errors: {
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -46,20 +37,13 @@ export class ServerMetricsService {
     public static async getInstantMetrics(
         serverSlug: string,
     ): Promise<InstantServerMetricsDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/servers/${serverSlug}/metrics/now`,
+            errors: {
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 

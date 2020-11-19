@@ -2,11 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { CpuMetricsDTO } from './CpuMetricsDTO';
-import { DiskMetricsDTO } from './DiskMetricsDTO';
-import { MemoryMetricsDTO } from './MemoryMetricsDTO';
-import { NetworkMetricsDTO } from './NetworkMetricsDTO';
-import { ProcessesMetricsDTO } from './ProcessesMetricsDTO';
+import type { CpuMetricsDTO } from './CpuMetricsDTO';
+import type { DiskMetricsDTO } from './DiskMetricsDTO';
+import type { MemoryMetricsDTO } from './MemoryMetricsDTO';
+import type { NetworkMetricsDTO } from './NetworkMetricsDTO';
+import type { ProcessesMetricsDTO } from './ProcessesMetricsDTO';
 
 /**
  * Server metrics model

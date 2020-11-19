@@ -1,23 +1,25 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+type Resolver<T> = () => Promise<T>;
+type Headers = Record<string, string>;
 
 interface Config {
     BASE: string;
     VERSION: string;
-    CLIENT: 'fetch' | 'xhr' | 'node-fetch';
     WITH_CREDENTIALS: boolean;
-    TOKEN: string;
-    WITH_HEADERS: { [key: string]: any };
+    TOKEN?: string | Resolver<string>;
+    USERNAME?: string | Resolver<string>;
+    PASSWORD?: string | Resolver<string>;
+    HEADERS?: Headers | Resolver<Headers>;
 }
 
 export const OpenAPI: Config = {
     BASE: 'https://api.webdock.io/v1',
     VERSION: '1.0.0',
-    CLIENT: 'node-fetch',
     WITH_CREDENTIALS: false,
-    TOKEN: '',
-    WITH_HEADERS: {
-        'X-Client': 'webdock-nodejs-sdk/0.1.7'
-    }
+    TOKEN: undefined,
+    USERNAME: undefined,
+    PASSWORD: undefined,
+    HEADERS: undefined,
 };

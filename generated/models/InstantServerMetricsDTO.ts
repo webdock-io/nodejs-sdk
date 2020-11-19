@@ -2,11 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { InstantCpuMetricsDTO } from './InstantCpuMetricsDTO';
-import { InstantDiskMetricsDTO } from './InstantDiskMetricsDTO';
-import { InstantMemoryMetricsDTO } from './InstantMemoryMetricsDTO';
-import { InstantNetworkMetricsDTO } from './InstantNetworkMetricsDTO';
-import { InstantProcessesMetricsDTO } from './InstantProcessesMetricsDTO';
+import type { InstantCpuMetricsDTO } from './InstantCpuMetricsDTO';
+import type { InstantDiskMetricsDTO } from './InstantDiskMetricsDTO';
+import type { InstantMemoryMetricsDTO } from './InstantMemoryMetricsDTO';
+import type { InstantNetworkMetricsDTO } from './InstantNetworkMetricsDTO';
+import type { InstantProcessesMetricsDTO } from './InstantProcessesMetricsDTO';
 
 /**
  * Instant Server metrics model

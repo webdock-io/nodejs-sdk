@@ -1,10 +1,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { CreateUserScriptModelDTO } from '../models/CreateUserScriptModelDTO';
-import { ScriptDTO } from '../models/ScriptDTO';
-import { ApiError, catchGenericError } from '../core/ApiError';
+import type { CreateUserScriptModelDTO } from '../models/CreateUserScriptModelDTO';
+import type { ScriptDTO } from '../models/ScriptDTO';
 import { request as __request } from '../core/request';
 
 export class AccountScriptsFilesService {
@@ -16,14 +14,10 @@ export class AccountScriptsFilesService {
      * @throws ApiError
      */
     public static async getUserScripts(): Promise<Array<ScriptDTO>> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/account/scripts`,
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -37,21 +31,14 @@ export class AccountScriptsFilesService {
     public static async createUserScript(
         requestBody: CreateUserScriptModelDTO,
     ): Promise<ScriptDTO> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/account/scripts`,
             body: requestBody,
+            errors: {
+                400: `Bad request`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -65,20 +52,13 @@ export class AccountScriptsFilesService {
     public static async getUserScriptById(
         scriptId: number,
     ): Promise<ScriptDTO> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/account/scripts/${scriptId}`,
+            errors: {
+                404: `Script not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Script not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -92,20 +72,13 @@ export class AccountScriptsFilesService {
     public static async deleteUserScript(
         scriptId: number,
     ): Promise<any> {
-
         const result = await __request({
-            method: 'delete',
+            method: 'DELETE',
             path: `/account/scripts/${scriptId}`,
+            errors: {
+                404: `Script not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 404: throw new ApiError(result, `Script not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -121,22 +94,15 @@ export class AccountScriptsFilesService {
         scriptId: number,
         requestBody: CreateUserScriptModelDTO,
     ): Promise<ScriptDTO> {
-
         const result = await __request({
-            method: 'patch',
+            method: 'PATCH',
             path: `/account/scripts/${scriptId}`,
             body: requestBody,
+            errors: {
+                400: `Bad request`,
+                404: `Script not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Script not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 

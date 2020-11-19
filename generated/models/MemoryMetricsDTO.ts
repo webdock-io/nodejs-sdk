@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { MetricsSamplingDTO } from './MetricsSamplingDTO';
+import type { MetricsSamplingDTO } from './MetricsSamplingDTO';
 
 /**
  * Memory metrics model. Memory use in 1 hour intervals last 24 hours, in MiB

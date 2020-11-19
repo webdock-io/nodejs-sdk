@@ -1,13 +1,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { CreateServerSnapshotModelDTO } from '../models/CreateServerSnapshotModelDTO';
-import { ReinstallServerModelDTO } from '../models/ReinstallServerModelDTO';
-import { ResizeServerModelDTO } from '../models/ResizeServerModelDTO';
-import { RestoreSnapshotModelDTO } from '../models/RestoreSnapshotModelDTO';
-import { ServerResizeDTO } from '../models/ServerResizeDTO';
-import { ApiError, catchGenericError } from '../core/ApiError';
+import type { CreateServerSnapshotModelDTO } from '../models/CreateServerSnapshotModelDTO';
+import type { ReinstallServerModelDTO } from '../models/ReinstallServerModelDTO';
+import type { ResizeServerModelDTO } from '../models/ResizeServerModelDTO';
+import type { RestoreSnapshotModelDTO } from '../models/RestoreSnapshotModelDTO';
+import type { ServerResizeDTO } from '../models/ServerResizeDTO';
 import { request as __request } from '../core/request';
 
 export class ServerActionsService {
@@ -22,22 +20,15 @@ export class ServerActionsService {
     public static async startServer(
         serverSlug: string,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/start`,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -51,22 +42,15 @@ export class ServerActionsService {
     public static async stopServer(
         serverSlug: string,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/stop`,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -80,22 +64,15 @@ export class ServerActionsService {
     public static async rebootServer(
         serverSlug: string,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/reboot`,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -111,22 +88,15 @@ export class ServerActionsService {
     public static async suspendServer(
         serverSlug: string,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/suspend`,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -144,23 +114,16 @@ export class ServerActionsService {
         serverSlug: string,
         requestBody: ReinstallServerModelDTO,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/reinstall`,
             body: requestBody,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -176,23 +139,16 @@ export class ServerActionsService {
         serverSlug: string,
         requestBody: CreateServerSnapshotModelDTO,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/snapshot`,
             body: requestBody,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -208,23 +164,16 @@ export class ServerActionsService {
         serverSlug: string,
         requestBody: RestoreSnapshotModelDTO,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/restore`,
             body: requestBody,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server or snapshot not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server or snapshot not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -240,22 +189,15 @@ export class ServerActionsService {
         serverSlug: string,
         requestBody: ResizeServerModelDTO,
     ): Promise<ServerResizeDTO> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/resize/dryrun`,
             body: requestBody,
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 
@@ -274,23 +216,16 @@ export class ServerActionsService {
         serverSlug: string,
         requestBody: ResizeServerModelDTO,
     ): Promise<string> {
-
         const result = await __request({
-            method: 'post',
+            method: 'POST',
             path: `/servers/${serverSlug}/actions/resize`,
             body: requestBody,
             responseHeader: 'X-Callback-ID',
+            errors: {
+                400: `Bad request`,
+                404: `Server not found`,
+            },
         });
-
-        if (!result.ok) {
-            switch (result.status) {
-                case 400: throw new ApiError(result, `Bad request`);
-                case 404: throw new ApiError(result, `Server not found`);
-            }
-        }
-
-        catchGenericError(result);
-
         return result.body;
     }
 

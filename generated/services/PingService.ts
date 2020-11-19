@@ -1,9 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
-import { Ping } from '../models/Ping';
-import { catchGenericError } from '../core/ApiError';
+import type { Ping } from '../models/Ping';
 import { request as __request } from '../core/request';
 
 export class PingService {
@@ -15,14 +13,10 @@ export class PingService {
      * @throws ApiError
      */
     public static async getPing(): Promise<Ping> {
-
         const result = await __request({
-            method: 'get',
+            method: 'GET',
             path: `/ping`,
         });
-
-        catchGenericError(result);
-
         return result.body;
     }
 
