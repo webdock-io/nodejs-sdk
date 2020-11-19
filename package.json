@@ -1,6 +1,6 @@
 {
   "name": "webdock",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "NodeJS SDK Library / Wrapper for the Webdock API",
   "scripts": {
     "release": "release-it",
