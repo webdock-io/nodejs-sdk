@@ -2,7 +2,7 @@ const yaml = require('js-yaml')
 const { mapValues } = require('lodash')
 
 exports.preprocessSchema = (yamlSchema) => {
-    const openApiSchema = yaml.safeLoad(yamlSchema);
+    const openApiSchema = yaml.load(yamlSchema);
 
     /** Temp hack */
     openApiSchema.components.schemas.WarningDTO.properties.data = {
