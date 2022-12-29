@@ -5,7 +5,7 @@
 /**
  * User script model
  */
-export interface CreateUserScriptModelDTO {
+export type CreateUserScriptModelDTO = {
     /**
      * Name of the script
      */
@@ -18,4 +18,5 @@ export interface CreateUserScriptModelDTO {
      * The script
      */
     content: string;
-}
+};
+

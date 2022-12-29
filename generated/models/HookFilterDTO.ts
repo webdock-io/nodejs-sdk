@@ -5,7 +5,7 @@
 /**
  * Hook Filter model
  */
-export interface HookFilterDTO {
+export type HookFilterDTO = {
     /**
      * Filter type
      */
@@ -14,4 +14,5 @@ export interface HookFilterDTO {
      * Filter Value
      */
     value?: string;
-}
+};
+

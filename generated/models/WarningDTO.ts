@@ -5,7 +5,7 @@
 /**
  * Warning model
  */
-export interface WarningDTO {
+export type WarningDTO = {
     /**
      * Warning type
      */
@@ -18,4 +18,5 @@ export interface WarningDTO {
      * Warning message
      */
     data?: Record<string, any>;
-}
+};
+

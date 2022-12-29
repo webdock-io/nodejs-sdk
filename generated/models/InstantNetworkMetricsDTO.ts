@@ -7,7 +7,7 @@ import type { MetricsSamplingDTO } from './MetricsSamplingDTO';
 /**
  * Instant network metrics model. Ingress and Egress in MiB last ~24 hours. To get a more accurate reading, query the general metrics endpoint.
  */
-export interface InstantNetworkMetricsDTO {
+export type InstantNetworkMetricsDTO = {
     /**
      * Total network usage (in GiB) this month.
      */
@@ -18,4 +18,5 @@ export interface InstantNetworkMetricsDTO {
     allowed?: number;
     latestIngressSampling?: MetricsSamplingDTO;
     latestEgressSampling?: MetricsSamplingDTO;
-}
+};
+

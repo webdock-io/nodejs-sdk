@@ -7,7 +7,7 @@ import type { PublicKeyDTO } from './PublicKeyDTO';
 /**
  * Shell user model
  */
-export interface ShellUserDTO {
+export type ShellUserDTO = {
     /**
      * Shell user ID
      */
@@ -32,4 +32,5 @@ export interface ShellUserDTO {
      * Shell user creation datetime
      */
     created?: string;
-}
+};
+

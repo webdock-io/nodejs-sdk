@@ -5,7 +5,7 @@
 /**
  * CPU model
  */
-export interface CPUDTO {
+export type CPUDTO = {
     /**
      * Number of cores
      */
@@ -14,4 +14,5 @@ export interface CPUDTO {
      * Number of threads
      */
     threads?: number;
-}
+};
+

@@ -5,9 +5,10 @@
 /**
  * Fetch server file model
  */
-export interface FetchServerFileModelDTO {
+export type FetchServerFileModelDTO = {
     /**
      * Path of the file to fetch
      */
     filePath: string;
-}
+};
+

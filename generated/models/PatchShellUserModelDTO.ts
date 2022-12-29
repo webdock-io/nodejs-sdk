@@ -5,9 +5,10 @@
 /**
  * Shell user model
  */
-export interface PatchShellUserModelDTO {
+export type PatchShellUserModelDTO = {
     /**
      * List of PublicKeys IDs to be assigned to the shell user
      */
     publicKeys: Array<number>;
-}
+};
+

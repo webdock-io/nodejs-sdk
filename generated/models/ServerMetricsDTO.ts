@@ -11,10 +11,11 @@ import type { ProcessesMetricsDTO } from './ProcessesMetricsDTO';
 /**
  * Server metrics model
  */
-export interface ServerMetricsDTO {
+export type ServerMetricsDTO = {
     disk?: DiskMetricsDTO;
     network?: NetworkMetricsDTO;
     cpu?: CpuMetricsDTO;
     processes?: ProcessesMetricsDTO;
     memory?: MemoryMetricsDTO;
-}
+};
+

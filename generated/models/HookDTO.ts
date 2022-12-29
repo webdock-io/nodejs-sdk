@@ -7,7 +7,7 @@ import type { HookFilterDTO } from './HookFilterDTO';
 /**
  * Hook model
  */
-export interface HookDTO {
+export type HookDTO = {
     /**
      * Hook ID
      */
@@ -20,4 +20,5 @@ export interface HookDTO {
      * Event filters
      */
     filters?: Array<HookFilterDTO>;
-}
+};
+

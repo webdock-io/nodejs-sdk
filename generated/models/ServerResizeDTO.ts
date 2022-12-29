@@ -8,7 +8,8 @@ import type { WarningDTO } from './WarningDTO';
 /**
  * Server resize model
  */
-export interface ServerResizeDTO {
+export type ServerResizeDTO = {
     warnings?: Array<WarningDTO>;
     chargeSummary?: ChargeSummaryDTO;
-}
+};
+

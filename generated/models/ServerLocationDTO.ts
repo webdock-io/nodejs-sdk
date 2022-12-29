@@ -5,7 +5,7 @@
 /**
  * ServerLocation model
  */
-export interface ServerLocationDTO {
+export type ServerLocationDTO = {
     /**
      * Location ID
      */
@@ -30,4 +30,5 @@ export interface ServerLocationDTO {
      * Location Icon
      */
     icon?: string;
-}
+};
+

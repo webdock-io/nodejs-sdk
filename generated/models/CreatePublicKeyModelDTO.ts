@@ -5,7 +5,7 @@
 /**
  * PublicKey model
  */
-export interface CreatePublicKeyModelDTO {
+export type CreatePublicKeyModelDTO = {
     /**
      * PublicKey name
      */
@@ -14,4 +14,5 @@ export interface CreatePublicKeyModelDTO {
      * PublicKey
      */
     publicKey: string;
-}
+};
+

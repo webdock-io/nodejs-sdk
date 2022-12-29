@@ -2,21 +2,23 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { AccountInformationDTO } from '../models/AccountInformationDTO';
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class AccountInformationService {
 
     /**
      * Get Account Information
-     * @result AccountInformationDTO Account Information
+     * @returns AccountInformationDTO Account Information
      * @throws ApiError
      */
-    public static async getAccountInformation(): Promise<Array<AccountInformationDTO>> {
-        const result = await __request({
+    public static getAccountInformation(): CancelablePromise<Array<AccountInformationDTO>> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/account/accountInformation`,
+            url: '/account/accountInformation',
         });
-        return result.body;
     }
 
 }

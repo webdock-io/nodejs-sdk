@@ -5,7 +5,7 @@
 /**
  * PatchServer model
  */
-export interface PatchServerModelDTO {
+export type PatchServerModelDTO = {
     /**
      * Name of the server
      */
@@ -22,4 +22,5 @@ export interface PatchServerModelDTO {
      * Next action of the server
      */
     nextActionDate: string;
-}
+};
+

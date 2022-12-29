@@ -5,9 +5,10 @@
 /**
  * Create Server Snapshot model
  */
-export interface CreateServerSnapshotModelDTO {
+export type CreateServerSnapshotModelDTO = {
     /**
      * Name of the snapshot
      */
     name: string;
-}
+};
+

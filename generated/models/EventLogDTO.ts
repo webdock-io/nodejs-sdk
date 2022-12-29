@@ -5,7 +5,7 @@
 /**
  * Event log model
  */
-export interface EventLogDTO {
+export type EventLogDTO = {
     /**
      * Event log ID
      */
@@ -46,7 +46,7 @@ export interface EventLogDTO {
      * Any &quot;Message&quot; or return data from the action once finished executing.
      */
     message?: string;
-}
+};
 
 export namespace EventLogDTO {
 
@@ -62,3 +62,4 @@ export namespace EventLogDTO {
 
 
 }
+

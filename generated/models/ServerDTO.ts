@@ -5,7 +5,7 @@
 /**
  * Server model
  */
-export interface ServerDTO {
+export type ServerDTO = {
     /**
      * Server slug
      */
@@ -43,6 +43,10 @@ export interface ServerDTO {
      */
     status?: ServerDTO.status;
     /**
+     * Server virtualization type indicating whether it's a Webdock LXD VPS or a KVM Virtual Machine
+     */
+    virtualization?: ServerDTO.virtualization;
+    /**
      * Webserver type
      */
     webServer?: ServerDTO.webServer;
@@ -74,7 +78,7 @@ export interface ServerDTO {
      * Next Action date/time as entered by admin in Server Metadata
      */
     nextActionDate?: string;
-}
+};
 
 export namespace ServerDTO {
 
@@ -93,6 +97,14 @@ export namespace ServerDTO {
     }
 
     /**
+     * Server virtualization type indicating whether it's a Webdock LXD VPS or a KVM Virtual Machine
+     */
+    export enum virtualization {
+        CONTAINER = 'container',
+        KVM = 'kvm',
+    }
+
+    /**
      * Webserver type
      */
     export enum webServer {
@@ -103,3 +115,4 @@ export namespace ServerDTO {
 
 
 }
+

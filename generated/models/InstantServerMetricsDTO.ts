@@ -11,10 +11,11 @@ import type { InstantProcessesMetricsDTO } from './InstantProcessesMetricsDTO';
 /**
  * Instant Server metrics model
  */
-export interface InstantServerMetricsDTO {
+export type InstantServerMetricsDTO = {
     disk?: InstantDiskMetricsDTO;
     network?: InstantNetworkMetricsDTO;
     cpu?: InstantCpuMetricsDTO;
     processes?: InstantProcessesMetricsDTO;
     memory?: InstantMemoryMetricsDTO;
-}
+};
+

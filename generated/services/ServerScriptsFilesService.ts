@@ -4,6 +4,9 @@
 import type { CreateServerScriptModelDTO } from '../models/CreateServerScriptModelDTO';
 import type { FetchServerFileModelDTO } from '../models/FetchServerFileModelDTO';
 import type { ServerScriptDTO } from '../models/ServerScriptDTO';
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class ServerScriptsFilesService {
@@ -12,20 +15,22 @@ export class ServerScriptsFilesService {
      * Get a list of server scripts
      * This method does not actually reach out to your server and fetches a list of scripts or files - it merely lists the scripts you have deployed as it is known by Webdock.
      * @param serverSlug Slug of the server
-     * @result ServerScriptDTO List of server scripts
+     * @returns ServerScriptDTO List of server scripts
      * @throws ApiError
      */
-    public static async getServerScripts(
+    public static getServerScripts(
         serverSlug: string,
-    ): Promise<Array<ServerScriptDTO>> {
-        const result = await __request({
+    ): CancelablePromise<Array<ServerScriptDTO>> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/servers/${serverSlug}/scripts`,
+            url: '/servers/{serverSlug}/scripts',
+            path: {
+                'serverSlug': serverSlug,
+            },
             errors: {
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -35,24 +40,26 @@ export class ServerScriptsFilesService {
      * Here you reference a script in your Account Scripts by ID which will be deployed to your server.
      * @param serverSlug Slug of the server
      * @param requestBody User script to be created
-     * @result string Server script deployment initiated
+     * @returns ServerScriptDTO Server script deployment initiated
      * @throws ApiError
      */
-    public static async createServerScript(
+    public static createServerScript(
         serverSlug: string,
         requestBody: CreateServerScriptModelDTO,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<ServerScriptDTO> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/scripts`,
+            url: '/servers/{serverSlug}/scripts',
+            path: {
+                'serverSlug': serverSlug,
+            },
             body: requestBody,
-            responseHeader: 'X-Callback-ID',
+            mediaType: 'application/json',
             errors: {
                 400: `Bad request`,
                 404: `Server or script not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -60,21 +67,24 @@ export class ServerScriptsFilesService {
      * This method does not fetch any data from your server but merely returns the script by ID from the list of scripts as known by Webdock. If you want to get a physical file from your server, use the Pull a server script method
      * @param serverSlug Slug of the server
      * @param scriptId ID of the script
-     * @result ServerScriptDTO Server script
+     * @returns ServerScriptDTO Server script
      * @throws ApiError
      */
-    public static async getServerScriptById(
+    public static getServerScriptById(
         serverSlug: string,
         scriptId: number,
-    ): Promise<ServerScriptDTO> {
-        const result = await __request({
+    ): CancelablePromise<ServerScriptDTO> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/servers/${serverSlug}/scripts/${scriptId}`,
+            url: '/servers/{serverSlug}/scripts/{scriptId}',
+            path: {
+                'serverSlug': serverSlug,
+                'scriptId': scriptId,
+            },
             errors: {
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -82,22 +92,25 @@ export class ServerScriptsFilesService {
      *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
      * @param serverSlug Slug of the server
      * @param scriptId ID of the script
-     * @result string Server script deletion initiated
+     * @returns string Server script deletion initiated
      * @throws ApiError
      */
-    public static async deleteServerScriptById(
+    public static deleteServerScriptById(
         serverSlug: string,
         scriptId: number,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'DELETE',
-            path: `/servers/${serverSlug}/scripts/${scriptId}`,
+            url: '/servers/{serverSlug}/scripts/{scriptId}',
+            path: {
+                'serverSlug': serverSlug,
+                'scriptId': scriptId,
+            },
             responseHeader: 'X-Callback-ID',
             errors: {
                 404: `Server or script not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -107,22 +120,25 @@ export class ServerScriptsFilesService {
      * Executes an already deployed server script.
      * @param serverSlug Slug of the server
      * @param scriptId ID of the script
-     * @result string Server script execution initiated
+     * @returns string Server script execution initiated
      * @throws ApiError
      */
-    public static async executeServerScript(
+    public static executeServerScript(
         serverSlug: string,
         scriptId: number,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/scripts/${scriptId}/execute`,
+            url: '/servers/{serverSlug}/scripts/{scriptId}/execute',
+            path: {
+                'serverSlug': serverSlug,
+                'scriptId': scriptId,
+            },
             responseHeader: 'X-Callback-ID',
             errors: {
                 404: `Server or script not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -132,23 +148,26 @@ export class ServerScriptsFilesService {
      * Fetches a file from the server. Please note that the file contents will be returned in the event result &quot;message&quot; field as Base64 encoded data. If the Base64 encoded data is longer than 120.000 characters the callback from this method will return an error.
      * @param serverSlug Slug of the server
      * @param requestBody Fetch server file model
-     * @result string Fetch initiated
+     * @returns string Fetch initiated
      * @throws ApiError
      */
-    public static async fetchServerFile(
+    public static fetchServerFile(
         serverSlug: string,
         requestBody: FetchServerFileModelDTO,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/fetchFile`,
+            url: '/servers/{serverSlug}/fetchFile',
+            path: {
+                'serverSlug': serverSlug,
+            },
             body: requestBody,
+            mediaType: 'application/json',
             responseHeader: 'X-Callback-ID',
             errors: {
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
 }

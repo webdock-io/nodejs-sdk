@@ -8,7 +8,7 @@ import type { PriceDTO } from './PriceDTO';
 /**
  * ServerProfile model
  */
-export interface ServerProfileDTO {
+export type ServerProfileDTO = {
     /**
      * Profile slug
      */
@@ -27,4 +27,5 @@ export interface ServerProfileDTO {
     disk?: number;
     cpu?: CPUDTO;
     price?: PriceDTO;
-}
+};
+

@@ -4,6 +4,9 @@
 import type { ServerImageDTO } from '../models/ServerImageDTO';
 import type { ServerLocationDTO } from '../models/ServerLocationDTO';
 import type { ServerProfileDTO } from '../models/ServerProfileDTO';
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class ServerConfigurationsService {
@@ -11,49 +14,46 @@ export class ServerConfigurationsService {
     /**
      * Possible server locations
      * Get a list of possible server datacenter locations
-     * @result ServerLocationDTO List of locations
+     * @returns ServerLocationDTO List of locations
      * @throws ApiError
      */
-    public static async getServersLocations(): Promise<ServerLocationDTO> {
-        const result = await __request({
+    public static getServersLocations(): CancelablePromise<ServerLocationDTO> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/locations`,
+            url: '/locations',
         });
-        return result.body;
     }
 
     /**
      * Possible server profiles
      * Get a list of possible server hardware profiles
      * @param locationId Location of the profile
-     * @result ServerProfileDTO List of available server hardware profiles
+     * @returns ServerProfileDTO List of available server hardware profiles
      * @throws ApiError
      */
-    public static async getServersProfiles(
+    public static getServersProfiles(
         locationId?: any,
-    ): Promise<ServerProfileDTO> {
-        const result = await __request({
+    ): CancelablePromise<ServerProfileDTO> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/profiles`,
+            url: '/profiles',
             query: {
                 'locationId': locationId,
             },
         });
-        return result.body;
     }
 
     /**
      * Possible server images
      * Get a list of possible server software images
-     * @result ServerImageDTO List of available server images
+     * @returns ServerImageDTO List of available server images
      * @throws ApiError
      */
-    public static async getServersImages(): Promise<ServerImageDTO> {
-        const result = await __request({
+    public static getServersImages(): CancelablePromise<ServerImageDTO> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/images`,
+            url: '/images',
         });
-        return result.body;
     }
 
 }

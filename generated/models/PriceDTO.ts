@@ -5,7 +5,7 @@
 /**
  * Price model
  */
-export interface PriceDTO {
+export type PriceDTO = {
     /**
      * Price amount
      */
@@ -14,7 +14,7 @@ export interface PriceDTO {
      * Price currency
      */
     currency?: PriceDTO.currency;
-}
+};
 
 export namespace PriceDTO {
 
@@ -29,3 +29,4 @@ export namespace PriceDTO {
 
 
 }
+

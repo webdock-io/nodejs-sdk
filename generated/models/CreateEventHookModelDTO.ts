@@ -5,7 +5,7 @@
 /**
  * Event hook model
  */
-export interface CreateEventHookModelDTO {
+export type CreateEventHookModelDTO = {
     /**
      * Callback URL
      */
@@ -18,7 +18,7 @@ export interface CreateEventHookModelDTO {
      * (Optional) Event Type
      */
     eventType?: CreateEventHookModelDTO.eventType | null;
-}
+};
 
 export namespace CreateEventHookModelDTO {
 
@@ -53,3 +53,4 @@ export namespace CreateEventHookModelDTO {
 
 
 }
+

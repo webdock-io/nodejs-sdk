@@ -7,8 +7,9 @@ import type { PriceDTO } from './PriceDTO';
 /**
  * Server resize model
  */
-export interface ChargeSummaryTotalDTO {
+export type ChargeSummaryTotalDTO = {
     subTotal?: PriceDTO;
     vat?: PriceDTO;
     total?: PriceDTO;
-}
+};
+

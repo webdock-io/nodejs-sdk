@@ -3,6 +3,9 @@
 /* eslint-disable */
 import type { CreatePublicKeyModelDTO } from '../models/CreatePublicKeyModelDTO';
 import type { PublicKeyDTO } from '../models/PublicKeyDTO';
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class PublicKeysService {
@@ -10,56 +13,57 @@ export class PublicKeysService {
     /**
      * Get a list of public keys
      * Get a list of public keys in your Webdock account
-     * @result PublicKeyDTO List of public keys
+     * @returns PublicKeyDTO List of public keys
      * @throws ApiError
      */
-    public static async getPublicKeys(): Promise<Array<PublicKeyDTO>> {
-        const result = await __request({
+    public static getPublicKeys(): CancelablePromise<Array<PublicKeyDTO>> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/account/publicKeys`,
+            url: '/account/publicKeys',
         });
-        return result.body;
     }
 
     /**
      * Add a new public key
      * Add a new public key to your Webdock account
      * @param requestBody PublicKey that will be added
-     * @result PublicKeyDTO PublicKey Created
+     * @returns PublicKeyDTO PublicKey Created
      * @throws ApiError
      */
-    public static async postPublicKeys(
+    public static postPublicKeys(
         requestBody: CreatePublicKeyModelDTO,
-    ): Promise<PublicKeyDTO> {
-        const result = await __request({
+    ): CancelablePromise<PublicKeyDTO> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/account/publicKeys`,
+            url: '/account/publicKeys',
             body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 400: `Bad request`,
             },
         });
-        return result.body;
     }
 
     /**
      * Delete a PublicKey
      * Delete a PublicKey from your Webdock account
      * @param id PublicKey ID to delete
-     * @result any PublicKey deleted succesfully
+     * @returns any PublicKey deleted succesfully
      * @throws ApiError
      */
-    public static async deletePublicKey(
+    public static deletePublicKey(
         id: number,
-    ): Promise<any> {
-        const result = await __request({
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
             method: 'DELETE',
-            path: `/account/publicKeys/${id}`,
+            url: '/account/publicKeys/{id}',
+            path: {
+                'id': id,
+            },
             errors: {
                 404: `PublicKey not found`,
             },
         });
-        return result.body;
     }
 
 }

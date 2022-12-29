@@ -5,7 +5,7 @@
 /**
  * AccountInformation model
  */
-export interface AccountInformationDTO {
+export type AccountInformationDTO = {
     /**
      * User ID
      */
@@ -46,4 +46,5 @@ export interface AccountInformationDTO {
      * Account credit balance currency
      */
     accountBalanceRawCurrency?: string;
-}
+};
+

@@ -8,7 +8,7 @@ import type { ChargeSummaryTotalDTO } from './ChargeSummaryTotalDTO';
 /**
  * Server resize model
  */
-export interface ChargeSummaryDTO {
+export type ChargeSummaryDTO = {
     /**
      * List of charges to be applied or refunded
      */
@@ -18,4 +18,5 @@ export interface ChargeSummaryDTO {
      */
     isRefund?: boolean;
     total?: ChargeSummaryTotalDTO;
-}
+};
+

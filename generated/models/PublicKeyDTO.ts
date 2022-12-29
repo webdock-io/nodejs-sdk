@@ -5,7 +5,7 @@
 /**
  * PublicKey model
  */
-export interface PublicKeyDTO {
+export type PublicKeyDTO = {
     /**
      * PublicKey ID
      */
@@ -22,4 +22,5 @@ export interface PublicKeyDTO {
      * PublicKey creation datetime
      */
     created?: string;
-}
+};
+

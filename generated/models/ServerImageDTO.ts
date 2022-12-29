@@ -5,7 +5,7 @@
 /**
  * ServerImage model
  */
-export interface ServerImageDTO {
+export type ServerImageDTO = {
     /**
      * Image slug
      */
@@ -22,7 +22,7 @@ export interface ServerImageDTO {
      * PHP Version. For example &quot;7.4&quot;
      */
     phpVersion?: string | null;
-}
+};
 
 export namespace ServerImageDTO {
 
@@ -36,3 +36,4 @@ export namespace ServerImageDTO {
 
 
 }
+

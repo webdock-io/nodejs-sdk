@@ -3,83 +3,89 @@
 /* eslint-disable */
 import type { CreateEventHookModelDTO } from '../models/CreateEventHookModelDTO';
 import type { HookDTO } from '../models/HookDTO';
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class EventCallbacksHooksService {
 
     /**
      * Get a list of event hooks
-     * @result HookDTO List of hooks
+     * @returns HookDTO List of hooks
      * @throws ApiError
      */
-    public static async eventCallbacksHooks(): Promise<Array<HookDTO>> {
-        const result = await __request({
+    public static eventCallbacksHooks(): CancelablePromise<Array<HookDTO>> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/hooks`,
+            url: '/hooks',
         });
-        return result.body;
     }
 
     /**
      * Creates an event hook
      * Creates an event hook
      * @param requestBody Create an event hook
-     * @result HookDTO Hook Created
+     * @returns HookDTO Hook Created
      * @throws ApiError
      */
-    public static async creteHook(
+    public static creteHook(
         requestBody: CreateEventHookModelDTO,
-    ): Promise<HookDTO> {
-        const result = await __request({
+    ): CancelablePromise<HookDTO> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/hooks`,
+            url: '/hooks',
             body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 400: `Bad request`,
             },
         });
-        return result.body;
     }
 
     /**
      * Get an event hook by ID
      * Get an event hooks by ID
      * @param hookId ID of the hook
-     * @result HookDTO Hook
+     * @returns HookDTO Hook
      * @throws ApiError
      */
-    public static async getHookById(
+    public static getHookById(
         hookId: number,
-    ): Promise<HookDTO> {
-        const result = await __request({
+    ): CancelablePromise<HookDTO> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/hooks/${hookId}`,
+            url: '/hooks/{hookId}',
+            path: {
+                'hookId': hookId,
+            },
             errors: {
                 400: `Bad request`,
                 404: `Hook not found`,
             },
         });
-        return result.body;
     }
 
     /**
      * Deletes an event hook
      * Deletes an event hook
      * @param hookId ID of the hook
-     * @result any Hook deleted
+     * @returns any Hook deleted
      * @throws ApiError
      */
-    public static async deleteHookById(
+    public static deleteHookById(
         hookId: number,
-    ): Promise<any> {
-        const result = await __request({
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
             method: 'DELETE',
-            path: `/hooks/${hookId}`,
+            url: '/hooks/{hookId}',
+            path: {
+                'hookId': hookId,
+            },
             errors: {
                 404: `Hook not found`,
             },
         });
-        return result.body;
     }
 
 }

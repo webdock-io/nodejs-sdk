@@ -5,6 +5,7 @@
 /**
  * Restore Snapshot model
  */
-export interface RestoreSnapshotModelDTO {
+export type RestoreSnapshotModelDTO = {
     snapshotId: number;
-}
+};
+

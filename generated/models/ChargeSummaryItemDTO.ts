@@ -7,10 +7,11 @@ import type { PriceDTO } from './PriceDTO';
 /**
  * Charge summary items model
  */
-export interface ChargeSummaryItemDTO {
+export type ChargeSummaryItemDTO = {
     /**
      * Charge text
      */
     text?: string;
     price?: PriceDTO;
-}
+};
+

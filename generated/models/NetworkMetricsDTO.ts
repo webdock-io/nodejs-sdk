@@ -7,7 +7,7 @@ import type { MetricsSamplingDTO } from './MetricsSamplingDTO';
 /**
  * Network metrics model. Ingress and egress in 24 hour intervals last 7 days, in MiB.
  */
-export interface NetworkMetricsDTO {
+export type NetworkMetricsDTO = {
     /**
      * Total network usage (in GiB) this month
      */
@@ -24,4 +24,5 @@ export interface NetworkMetricsDTO {
      * Egress Traffic Sampling
      */
     egressSamplings?: Array<MetricsSamplingDTO>;
-}
+};
+

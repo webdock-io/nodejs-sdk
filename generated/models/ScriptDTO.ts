@@ -5,7 +5,7 @@
 /**
  * Script model
  */
-export interface ScriptDTO {
+export type ScriptDTO = {
     /**
      * Script ID
      */
@@ -26,4 +26,5 @@ export interface ScriptDTO {
      * Script content
      */
     content?: string;
-}
+};
+

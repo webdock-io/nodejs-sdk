@@ -4,28 +4,29 @@
 import type { PatchServerModelDTO } from '../models/PatchServerModelDTO';
 import type { PostServerModelDTO } from '../models/PostServerModelDTO';
 import type { ServerDTO } from '../models/ServerDTO';
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class ServersService {
 
     /**
      * Get a list of servers
-     * webServer can be one of
      * @param status Filter by current status of the server
-     * @result ServerDTO List of servers
+     * @returns ServerDTO List of servers
      * @throws ApiError
      */
-    public static async getServers(
+    public static getServers(
         status: 'all' | 'suspended' | 'active' = 'all',
-    ): Promise<Array<ServerDTO>> {
-        const result = await __request({
+    ): CancelablePromise<Array<ServerDTO>> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/servers`,
+            url: '/servers',
             query: {
                 'status': status,
             },
         });
-        return result.body;
     }
 
     /**
@@ -34,42 +35,43 @@ export class ServersService {
      * \
      * You need to query the Server Configurations endpoints first in order to gather appropriate data for this method.
      * @param requestBody Post server model
-     * @result string Server provisioning initiated
+     * @returns ServerDTO Server provisioning initiated
      * @throws ApiError
      */
-    public static async createServer(
+    public static createServer(
         requestBody: PostServerModelDTO,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<ServerDTO> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers`,
+            url: '/servers',
             body: requestBody,
-            responseHeader: 'X-Callback-ID',
+            mediaType: 'application/json',
             errors: {
                 400: `Bad Request`,
             },
         });
-        return result.body;
     }
 
     /**
      * Get a specific server by slug
      * Get a specific server by slug (shortname)
      * @param serverSlug Slug of the server
-     * @result ServerDTO Server
+     * @returns ServerDTO Server
      * @throws ApiError
      */
-    public static async getServerBySlug(
+    public static getServerBySlug(
         serverSlug: string,
-    ): Promise<ServerDTO> {
-        const result = await __request({
+    ): CancelablePromise<ServerDTO> {
+        return __request(OpenAPI, {
             method: 'GET',
-            path: `/servers/${serverSlug}`,
+            url: '/servers/{serverSlug}',
+            path: {
+                'serverSlug': serverSlug,
+            },
             errors: {
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -80,43 +82,48 @@ export class ServersService {
      * \
      * _**Server Deletion requires special privileges which cannot be obtained in the Webdock dashboard without first contacting Webdock Support!**_
      * @param serverSlug Slug of the server
-     * @result string Server deletion initiated
+     * @returns string Server deletion initiated
      * @throws ApiError
      */
-    public static async deleteServer(
+    public static deleteServer(
         serverSlug: string,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'DELETE',
-            path: `/servers/${serverSlug}`,
+            url: '/servers/{serverSlug}',
+            path: {
+                'serverSlug': serverSlug,
+            },
             responseHeader: 'X-Callback-ID',
             errors: {
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
      * Update server metadata
      * @param serverSlug Slug of the server
      * @param requestBody Patch server model
-     * @result ServerDTO Server Updated
+     * @returns ServerDTO Server Updated
      * @throws ApiError
      */
-    public static async patchServer(
+    public static patchServer(
         serverSlug: string,
         requestBody: PatchServerModelDTO,
-    ): Promise<ServerDTO> {
-        const result = await __request({
+    ): CancelablePromise<ServerDTO> {
+        return __request(OpenAPI, {
             method: 'PATCH',
-            path: `/servers/${serverSlug}`,
+            url: '/servers/{serverSlug}',
+            path: {
+                'serverSlug': serverSlug,
+            },
             body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
 }

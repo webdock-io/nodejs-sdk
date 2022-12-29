@@ -5,7 +5,7 @@
 /**
  * Metric metrics model
  */
-export interface MetricsSamplingDTO {
+export type MetricsSamplingDTO = {
     /**
      * Sampling value
      */
@@ -14,4 +14,5 @@ export interface MetricsSamplingDTO {
      * Timestamp of the sampling
      */
     timestamp?: string;
-}
+};
+

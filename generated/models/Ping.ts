@@ -5,12 +5,12 @@
 /**
  * Ping model
  */
-export interface Ping {
+export type Ping = {
     /**
      * Just returns webdock:rocks
      */
     webdock?: Ping.webdock;
-}
+};
 
 export namespace Ping {
 
@@ -23,3 +23,4 @@ export namespace Ping {
 
 
 }
+

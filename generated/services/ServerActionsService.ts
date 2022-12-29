@@ -6,6 +6,10 @@ import type { ReinstallServerModelDTO } from '../models/ReinstallServerModelDTO'
 import type { ResizeServerModelDTO } from '../models/ResizeServerModelDTO';
 import type { RestoreSnapshotModelDTO } from '../models/RestoreSnapshotModelDTO';
 import type { ServerResizeDTO } from '../models/ServerResizeDTO';
+import type { SnapshotDTO } from '../models/SnapshotDTO';
+
+import type { CancelablePromise } from '../core/CancelablePromise';
+import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
 
 export class ServerActionsService {
@@ -14,66 +18,72 @@ export class ServerActionsService {
      * Start a server
      *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
      * @param serverSlug Slug of the server
-     * @result string Server start initiated.
+     * @returns string Server start initiated.
      * @throws ApiError
      */
-    public static async startServer(
+    public static startServer(
         serverSlug: string,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/start`,
+            url: '/servers/{serverSlug}/actions/start',
+            path: {
+                'serverSlug': serverSlug,
+            },
             responseHeader: 'X-Callback-ID',
             errors: {
                 400: `Bad request`,
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
      * Stop a server
      *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
      * @param serverSlug Slug of the server
-     * @result string Server shutdown initiated.
+     * @returns string Server shutdown initiated.
      * @throws ApiError
      */
-    public static async stopServer(
+    public static stopServer(
         serverSlug: string,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/stop`,
+            url: '/servers/{serverSlug}/actions/stop',
+            path: {
+                'serverSlug': serverSlug,
+            },
             responseHeader: 'X-Callback-ID',
             errors: {
                 400: `Bad request`,
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
      * Reboot a server
      *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
      * @param serverSlug Slug of the server
-     * @result string Server reboot initiated.
+     * @returns string Server reboot initiated.
      * @throws ApiError
      */
-    public static async rebootServer(
+    public static rebootServer(
         serverSlug: string,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/reboot`,
+            url: '/servers/{serverSlug}/actions/reboot',
+            path: {
+                'serverSlug': serverSlug,
+            },
             responseHeader: 'X-Callback-ID',
             errors: {
                 400: `Bad request`,
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -82,22 +92,24 @@ export class ServerActionsService {
      * \
      * Please note that you typically have a cap of 3 suspended servers at any one time. If you need more suspended server slots you can get these against a small monthly fee. Be in touch with Webdock support for more information.
      * @param serverSlug Slug of the server
-     * @result string Server suspend initiated.
+     * @returns string Server suspend initiated.
      * @throws ApiError
      */
-    public static async suspendServer(
+    public static suspendServer(
         serverSlug: string,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/suspend`,
+            url: '/servers/{serverSlug}/actions/suspend',
+            path: {
+                'serverSlug': serverSlug,
+            },
             responseHeader: 'X-Callback-ID',
             errors: {
                 400: `Bad request`,
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -107,24 +119,27 @@ export class ServerActionsService {
      * **Please note:** Reinstall means you will be deleting your server and replacing it with a fresh image of your choice. You will keep your server name and metadata, server shortname (slug), monitoring rules and IP addresses. Otherwise it will behave as a freshly provisioned server. Any existing snapshots for this server will be deleted. If you install a LAMP/LEMP stack Webdock will generate new credentials for your server (Database, FTP and admin Shell/SSH user).
      * @param serverSlug Slug of the server
      * @param requestBody Reinstall server model
-     * @result string Server reinstall initiated.
+     * @returns string Server reinstall initiated.
      * @throws ApiError
      */
-    public static async reinstallServer(
+    public static reinstallServer(
         serverSlug: string,
         requestBody: ReinstallServerModelDTO,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/reinstall`,
+            url: '/servers/{serverSlug}/actions/reinstall',
+            path: {
+                'serverSlug': serverSlug,
+            },
             body: requestBody,
+            mediaType: 'application/json',
             responseHeader: 'X-Callback-ID',
             errors: {
                 400: `Bad request`,
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -132,24 +147,26 @@ export class ServerActionsService {
      *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
      * @param serverSlug Slug of the server
      * @param requestBody Server snapshot to be created
-     * @result string Snapshot initiated
+     * @returns SnapshotDTO Snapshot initiated
      * @throws ApiError
      */
-    public static async createServerSnapshot(
+    public static createServerSnapshot(
         serverSlug: string,
         requestBody: CreateServerSnapshotModelDTO,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<SnapshotDTO> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/snapshot`,
+            url: '/servers/{serverSlug}/actions/snapshot',
+            path: {
+                'serverSlug': serverSlug,
+            },
             body: requestBody,
-            responseHeader: 'X-Callback-ID',
+            mediaType: 'application/json',
             errors: {
                 400: `Bad request`,
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -157,24 +174,27 @@ export class ServerActionsService {
      *  ![Asynchronous Request](https://api.webdock.io/application/themes/webdock/img/api-docs/async.png)
      * @param serverSlug Slug of the server
      * @param requestBody Restore snapshot model
-     * @result string Snapshot restore initiated
+     * @returns string Snapshot restore initiated
      * @throws ApiError
      */
-    public static async restoreServerToSnapshot(
+    public static restoreServerToSnapshot(
         serverSlug: string,
         requestBody: RestoreSnapshotModelDTO,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/restore`,
+            url: '/servers/{serverSlug}/actions/restore',
+            path: {
+                'serverSlug': serverSlug,
+            },
             body: requestBody,
+            mediaType: 'application/json',
             responseHeader: 'X-Callback-ID',
             errors: {
                 400: `Bad request`,
                 404: `Server or snapshot not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -182,23 +202,26 @@ export class ServerActionsService {
      * You should call this method before trying to resize a server in order to discover what implications changing the Server hardware profile will have with regards to Billing. You will also be notified of any validation errors such as whether the requested profile has enough storage to accommodate your server.
      * @param serverSlug Slug of the server
      * @param requestBody Resize server model
-     * @result ServerResizeDTO Dry run result
+     * @returns ServerResizeDTO Dry run result
      * @throws ApiError
      */
-    public static async resizeDryRun(
+    public static resizeDryRun(
         serverSlug: string,
         requestBody: ResizeServerModelDTO,
-    ): Promise<ServerResizeDTO> {
-        const result = await __request({
+    ): CancelablePromise<ServerResizeDTO> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/resize/dryrun`,
+            url: '/servers/{serverSlug}/actions/resize/dryrun',
+            path: {
+                'serverSlug': serverSlug,
+            },
             body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 400: `Bad request`,
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
     /**
@@ -209,24 +232,27 @@ export class ServerActionsService {
      * _**You should always call the Change Profile Dry Run method first in order to make sure the requested profile can acccommodate your server!**_
      * @param serverSlug Slug of the server
      * @param requestBody Resize server model
-     * @result string Server Profile Change initiated
+     * @returns string Server Profile Change initiated
      * @throws ApiError
      */
-    public static async resizeServer(
+    public static resizeServer(
         serverSlug: string,
         requestBody: ResizeServerModelDTO,
-    ): Promise<string> {
-        const result = await __request({
+    ): CancelablePromise<string> {
+        return __request(OpenAPI, {
             method: 'POST',
-            path: `/servers/${serverSlug}/actions/resize`,
+            url: '/servers/{serverSlug}/actions/resize',
+            path: {
+                'serverSlug': serverSlug,
+            },
             body: requestBody,
+            mediaType: 'application/json',
             responseHeader: 'X-Callback-ID',
             errors: {
                 400: `Bad request`,
                 404: `Server not found`,
             },
         });
-        return result.body;
     }
 
 }

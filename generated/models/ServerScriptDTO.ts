@@ -5,7 +5,7 @@
 /**
  * ServerScript model
  */
-export interface ServerScriptDTO {
+export type ServerScriptDTO = {
     /**
      * Script ID
      */
@@ -30,4 +30,5 @@ export interface ServerScriptDTO {
      * Creation date/time
      */
     created?: string;
-}
+};
+

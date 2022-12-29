@@ -5,7 +5,7 @@
 /**
  * Snapshot model
  */
-export interface SnapshotDTO {
+export type SnapshotDTO = {
     /**
      * ID
      */
@@ -23,6 +23,10 @@ export interface SnapshotDTO {
      */
     type?: SnapshotDTO.type;
     /**
+     * Virtualization type
+     */
+    virtualization?: SnapshotDTO.virtualization;
+    /**
      * Snapshot completed
      */
     completed?: boolean;
@@ -30,7 +34,7 @@ export interface SnapshotDTO {
      * Can the snapshot be deleted
      */
     deletable?: boolean;
-}
+};
 
 export namespace SnapshotDTO {
 
@@ -43,5 +47,14 @@ export namespace SnapshotDTO {
         MONTHLY = 'monthly',
     }
 
+    /**
+     * Virtualization type
+     */
+    export enum virtualization {
+        CONTAINER = 'container',
+        KVM = 'kvm',
+    }
+
 
 }
+

@@ -7,10 +7,11 @@ import type { MetricsSamplingDTO } from './MetricsSamplingDTO';
 /**
  * Instant disk metrics model. Disk utilization right now in MiB.
  */
-export interface InstantDiskMetricsDTO {
+export type InstantDiskMetricsDTO = {
     /**
      * Maximum allowed disk size(in Mb)
      */
     allowed?: number;
     lastSamplings?: MetricsSamplingDTO;
-}
+};
+

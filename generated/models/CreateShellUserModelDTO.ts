@@ -5,7 +5,7 @@
 /**
  * Shell user model
  */
-export interface CreateShellUserModelDTO {
+export type CreateShellUserModelDTO = {
     /**
      * Shell username. Aphanumeric. Underscore allowed. [a-zA-Z0-9_]
      */
@@ -26,4 +26,5 @@ export interface CreateShellUserModelDTO {
      * List of PublicKeys IDs to be assigned to the shell user
      */
     publicKeys?: Array<number>;
-}
+};
+
