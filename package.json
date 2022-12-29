@@ -43,5 +43,6 @@
     ]
   },
   "author": "Alex0007 <Alex0007lolpvp@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": "github:webdock-io/nodejs-sdk"
 }
