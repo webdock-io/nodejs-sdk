@@ -1,6 +1,6 @@
 {
   "name": "@webdock/sdk",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/webdock-io/nodejs-sdk#readme",
   "description": "SDK for Webdock's API",
   "exports": {
