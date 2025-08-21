@@ -1,7 +1,7 @@
 {
   "name": "@webdock/sdk",
   "version": "0.0.0",
-  "homepage": "https://github.com/webdock-io/serverless#readme",
+  "homepage": "https://github.com/webdock-io/nodejs-sdk#readme",
   "description": "SDK for Webdock's API",
   "exports": {
     "types": "./dist/index.d.ts",
