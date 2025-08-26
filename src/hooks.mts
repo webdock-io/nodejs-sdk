@@ -1,24 +1,27 @@
+import { Type, type } from "arktype";
 import { Webdock } from "./index.mts";
 import { req } from "./utils/req.mts";
 
-export type HookFilter = {
-	type: string;
-	value: string;
-};
+export const HookFilter = type({
+	type: "string",
+	value: "string",
+});
 
-export type Hook = {
-	id: number;
-	callbackUrl: string;
-	filters: HookFilter[];
-};
+export const Hook = type({
+	id: "number",
+	callbackUrl: "string",
+	filters: [HookFilter]
+});
 
-export type GetHookByIdResponseType = {
-	body: Hook;
-};
+export const GetHookByIdResponseType = type({
 
-export type ListHooksResponseType = {
-	body: Hook[];
-};
+	body: Hook
+
+});
+
+export const ListHooksResponseType = type({
+	body: [Hook]
+});
 
 export class HooksClass {
 	private parent: Webdock;
@@ -31,12 +34,12 @@ export class HooksClass {
 	}: {
 		id: number;
 	}) {
-		return await req<GetHookByIdResponseType>(
+		return await req(
 			{
 				endpoint: `hooks/${id}`,
 				method: "GET",
 				token: this.parent.string_token,
-			},
+			}, ListHooksResponseType
 		);
 	}
 	async create({
@@ -48,7 +51,7 @@ export class HooksClass {
 		callbackUrl: string;
 		callbackId?: number;
 	}) {
-		return await req<GetHookByIdResponseType>(
+		return await req(
 			{
 				endpoint: `/hooks`,
 				method: "POST",
@@ -59,6 +62,7 @@ export class HooksClass {
 					eventType: eventType,
 				},
 			},
+			GetHookByIdResponseType
 		);
 	}
 	async deleteById({ id }: { id: number }) {
@@ -68,15 +72,17 @@ export class HooksClass {
 				method: "DELETE",
 				token: this.parent.string_token,
 			},
+			type("never")
 		);
 	}
 	async list() {
-		return await req<ListHooksResponseType>(
+		return await req(
 			{
 				token: this.parent.string_token,
 				endpoint: "/hooks",
 				method: "GET",
 			},
+			ListHooksResponseType
 		);
 	}
 }
