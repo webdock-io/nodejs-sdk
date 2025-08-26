@@ -1,4 +1,4 @@
-import { Webdock } from "./index.js";
+import { Webdock } from "./index.mjs";
 import { isE2EEnabled } from "./testUtils.js";
 
 describe("Webhooks API", () => {

@@ -1,4 +1,4 @@
-import { Webdock } from "./index.js";
+import { Webdock } from "./index.mjs";
 
 describe("Server Images API - List and Validation", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";

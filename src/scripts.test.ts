@@ -1,4 +1,4 @@
-import { Webdock } from "./index.js";
+import { Webdock } from "./index.mjs";
 import { waitForCallback } from "./testUtils.js";
 
 describe("Scripts API Integration Tests", () => {

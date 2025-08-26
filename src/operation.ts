@@ -1,5 +1,5 @@
-import { Webdock } from "./index.js";
-import { req } from "./utils/req"
+import { Webdock } from "./index.mjs";
+import { req } from "./utils/req.mjs"
 
 interface EventLog {
     id: number;

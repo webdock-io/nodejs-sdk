@@ -1,19 +1,19 @@
 import { config } from "dotenv"
 config()
 
-import { AccountClass } from "./account.js";
-import { EventsClass } from "./events.js";
-import { HooksClass } from "./hooks.js";
-import { ImagesClass } from "./images.js";
-import { LocationClass } from "./locations.js";
-import { ProfilesClass } from "./profiles.js";
-import { ScriptsClass } from "./scripts.js";
-import { ServersClass } from "./servers.js";
-import { ShellUsersClass } from "./shellusers.js";
-import { SshKeysClass } from "./sshkeys.js";
-import { SnapshotsClass } from "./snapshots.js";
+import { AccountClass } from "./account.mts";
+import { EventsClass } from "./events.mts";
+import { HooksClass } from "./hooks.ts";
+import { ImagesClass } from "./images.ts";
+import { LocationClass } from "./locations.ts";
+import { ProfilesClass } from "./profiles.ts";
+import { ScriptsClass } from "./scripts.ts";
+import { ServersClass } from "./servers.ts";
+import { ShellUsersClass } from "./shellusers.ts";
+import { SshKeysClass } from "./sshkeys.ts";
+import { SnapshotsClass } from "./snapshots.ts";
 import * as OldWebdock from "webdock"
-import { OperationClass } from "./operation.js";
+import { OperationClass } from "./operation.ts";
 
 export const oldWebdock = OldWebdock
 
@@ -25,7 +25,7 @@ export type WebdockApiRequestReturn<T> = Promise<
   | {
     success: false;
     error: string;
-    errorType: "network" | "server";
+    errorType: "network" | "server" | "client";
     code: number;
   }
 >;

@@ -1,4 +1,4 @@
-import { Webdock } from "./index.js";
+import { Webdock } from "./index.mjs";
 import { isE2EEnabled, waitForCallback } from "./testUtils.js";
 
 describe("Snapshots API", () => {

@@ -1,4 +1,4 @@
-import { Webdock } from "./index.js";
+import { Webdock } from "./index.mjs";
 
 
 describe("Events API - List and Structure Validation", () => {

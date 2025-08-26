@@ -1,5 +1,5 @@
-import { Webdock } from "./index";
-import { req } from "./utils/req";
+import { Webdock } from "./index.mts";
+import { req } from "./utils/req.mts";
 
 export type ShellUser = {
 	id: number;

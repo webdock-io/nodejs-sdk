@@ -1,7 +1,10 @@
-import { Webdock } from "./index";
-import { req } from "./utils/req";
+import { Webdock } from "./index.mts";
+import { req } from "./utils/req.mts";
+
+import { type } from "arktype"
 
 export type EventStatus = "waiting" | "working" | "finished" | "error";
+const EventStatus = type(`"waiting" | "working" | "finished" | "error"`);
 
 export type EventsType = {
 	id: number;
@@ -16,13 +19,31 @@ export type EventsType = {
 	status: EventStatus;
 };
 
+const EventsType = type({
+	id: "number",
+	startTime: "Date",
+	endTime: "Date | null",
+	callbackId: "string",
+	serverSlug: "string",
+	eventType: "string",
+	action: "string",
+	actionData: "string",
+	message: "string",
+	status: EventStatus,
+});
+
 export type EventTypeListResponse = {
 	body: EventsType[];
 	headers: {
 		"x-total-count": string;
 	};
 };
-
+const EventTypeListResponse = type({
+	body: [EventsType],
+	headers: type({
+		"x-total-count": "string",
+	})
+});
 export class EventsClass {
 	private parent: Webdock;
 	constructor(parent: Webdock) {
@@ -51,11 +72,11 @@ export class EventsClass {
 		}
 
 
-		return await req<EventTypeListResponse>({
+		return await req({
 			token: this.parent.string_token,
 			endpoint,
 			headers: ["x-total-count"],
 			method: "GET",
-		});
+		}, EventTypeListResponse);
 	}
 }

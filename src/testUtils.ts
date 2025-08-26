@@ -1,4 +1,4 @@
-import { Webdock } from "./index.js";
+import { Webdock } from "./index.mjs";
 
 export function getClient(): Webdock {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
