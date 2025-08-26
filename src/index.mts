@@ -3,9 +3,9 @@ config()
 
 import { AccountClass } from "./account.mts";
 import { EventsClass } from "./events.mts";
-import { HooksClass } from "./hooks.ts";
-import { ImagesClass } from "./images.ts";
-import { LocationClass } from "./locations.ts";
+import { HooksClass } from "./hooks.mts";
+import { ImagesClass } from "./images.mts";
+import { LocationClass } from "./locations.mts";
 import { ProfilesClass } from "./profiles.ts";
 import { ScriptsClass } from "./scripts.ts";
 import { ServersClass } from "./servers.ts";
@@ -13,7 +13,7 @@ import { ShellUsersClass } from "./shellusers.ts";
 import { SshKeysClass } from "./sshkeys.ts";
 import { SnapshotsClass } from "./snapshots.ts";
 import * as OldWebdock from "webdock"
-import { OperationClass } from "./operation.ts";
+import { OperationClass } from "./operation.mts";
 
 export const oldWebdock = OldWebdock
 

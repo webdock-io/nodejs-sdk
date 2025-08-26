@@ -1,5 +1,4 @@
 import { Webdock } from "./index.mjs";
-import { isE2EEnabled } from "./testUtils.js";
 
 describe("Webhooks API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";

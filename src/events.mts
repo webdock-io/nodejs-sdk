@@ -3,21 +3,9 @@ import { req } from "./utils/req.mts";
 
 import { type } from "arktype"
 
-export type EventStatus = "waiting" | "working" | "finished" | "error";
-const EventStatus = type(`"waiting" | "working" | "finished" | "error"`);
+export const EventStatus = type(`"waiting" | "working" | "finished" | "error"`);
 
-export type EventsType = {
-	id: number;
-	startTime: Date;
-	endTime?: Date;
-	callbackId: string;
-	serverSlug: string;
-	eventType: string;
-	action: string;
-	actionData: string;
-	message: string;
-	status: EventStatus;
-};
+
 
 const EventsType = type({
 	id: "number",
@@ -32,18 +20,14 @@ const EventsType = type({
 	status: EventStatus,
 });
 
-export type EventTypeListResponse = {
-	body: EventsType[];
-	headers: {
-		"x-total-count": string;
-	};
-};
+
 const EventTypeListResponse = type({
 	body: [EventsType],
 	headers: type({
 		"x-total-count": "string",
 	})
 });
+
 export class EventsClass {
 	private parent: Webdock;
 	constructor(parent: Webdock) {

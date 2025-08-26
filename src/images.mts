@@ -1,19 +1,18 @@
+import { type } from "arktype";
 import { Webdock } from "./index.mts";
 import { req } from "./utils/req.mts";
 
-export type ServerImage = {
-	slug: string;
 
-	name: string;
+const ServerImage = type({
+	slug: "string",
+	name: "string",
+	webServer: `"Apache" | "Nginx" | null`,
+	phpVersion: "string | null",
+});
 
-	webServer: "Apache" | "Nginx" | null;
-
-	phpVersion: string | null;
-};
-
-export type ListImageTypeResponse = {
-	body: ServerImage[];
-};
+export const ListImageTypeResponse = type({
+	body: [ServerImage]
+});
 
 export class ImagesClass {
 	private parent: Webdock;
@@ -22,11 +21,11 @@ export class ImagesClass {
 	}
 
 	async list() {
-		return await req<ListImageTypeResponse>({
+		return await req({
 			token: this.parent.string_token,
 			endpoint: "/images",
 			headers: [],
 			method: "GET",
-		});
+		}, ListImageTypeResponse);
 	}
 }

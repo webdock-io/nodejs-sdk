@@ -39,7 +39,7 @@ export class HooksClass {
 				endpoint: `hooks/${id}`,
 				method: "GET",
 				token: this.parent.string_token,
-			}, ListHooksResponseType
+			}, GetHookByIdResponseType
 		);
 	}
 	async create({
