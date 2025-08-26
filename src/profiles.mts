@@ -49,6 +49,9 @@ export class ProfilesClass {
 		return res
 
 	}
+
+	// TODO: implement
+	// move getProfileBySlug to its own method
 }
 
 

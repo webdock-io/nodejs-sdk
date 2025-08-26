@@ -6,7 +6,7 @@ import { EventsClass } from "./events.mts";
 import { HooksClass } from "./hooks.mts";
 import { ImagesClass } from "./images.mts";
 import { LocationClass } from "./locations.mts";
-import { ProfilesClass } from "./profiles.ts";
+import { ProfilesClass } from "./profiles.mts";
 import { ScriptsClass } from "./scripts.ts";
 import { ServersClass } from "./servers.ts";
 import { ShellUsersClass } from "./shellusers.ts";
