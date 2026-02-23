@@ -185,30 +185,34 @@ export class ServersClass {
 		profileSlug,
 		imageSlug,
 		virtualization,
-		slug,
 		snapshotId,
+		userScriptId,
+		slug
 	}: {
 		name: string;
 		locationId: string;
 		profileSlug?: string;
-		imageSlug?: string;
 		virtualization?: string;
 		slug?: string;
-		snapshotId?: number;
-	}) {
+		userScriptId?: number;
+	} & (
+			| { snapshotId?: number; imageSlug?: never }
+			| { imageSlug?: string; snapshotId?: never }
+		)) {
 		return req<CreateServerResponseType>(
 			{
 				token: this.parent.string_token,
 				endpoint: "/servers",
 				method: "POST",
 				body: {
-					name: name,
-					locationId: locationId,
-					profileSlug: profileSlug,
-					imageSlug: imageSlug,
-					virtualization: virtualization,
-					slug: slug,
+					name,
+					locationId,
+					profileSlug,
+					imageSlug,
+					virtualization,
 					snapshotId,
+					userScriptId,
+					slug
 				},
 				headers: ["x-callback-id"],
 			},
@@ -224,14 +228,14 @@ export class ServersClass {
 			},
 		);
 	}
-	fetchFile({
+	async fetchFile({
 		path,
 		slug,
 	}: {
 		path: string;
 		slug: string;
 	}) {
-		return req<FetchFileResponsePayload>(
+		const init = await req<FetchFileResponsePayload>(
 			{
 				endpoint: `servers/${slug}/fetchFile`,
 				method: "POST",
@@ -242,6 +246,39 @@ export class ServersClass {
 				headers: ["x-callback-id"],
 			},
 		);
+		if (!init.success) return {
+			success: false,
+			message: `Failed to initiate file fetch for '${path}' on server '${slug}'`,
+		};
+
+		const callbackId = init.response.headers["x-callback-id"];
+		let event = await this.parent.operation.fetch(callbackId);
+		if (!event.success) return {
+			success: false,
+			message: `Failed to retrieve operation status (callback ID: ${callbackId})`,
+		};
+
+		while (true) {
+			let res = event.response.body[0];
+			if (res.status === "finished") {
+				return {
+					success: true,
+					content: res.message,
+				};
+			} else if (res.status === "error") {
+				return {
+					success: false,
+					message: `File fetch failed for '${path}': ${res.message}`,
+				};
+			}
+
+			await new Promise((resolve) => setTimeout(resolve, 3000));
+			event = await this.parent.operation.fetch(callbackId);
+			if (!event.success) return {
+				success: false,
+				message: `Lost connection to operation (callback ID: ${callbackId}) while fetching '${path}'`,
+			};
+		}
 	}
 	getBySlug({ serverSlang, }: { serverSlang: string; }) {
 		return req<CreateServerResponseType>({
@@ -281,9 +318,11 @@ export class ServersClass {
 			},
 		);
 	}
-	reinstall({ imageSlug, serverSlug, }: {
-		imageSlug: string;
+	reinstall({ imageSlug, serverSlug, userScriptId, deleteSnapshots }: {
+		deleteSnapshots?: boolean;
 		serverSlug: string;
+		userScriptId: number;
+		imageSlug: string;
 	}) {
 		return req<ReinstallServerResponseType>(
 			{
@@ -291,7 +330,7 @@ export class ServersClass {
 				endpoint: `/servers/${serverSlug}/actions/reinstall`,
 				method: "POST",
 				body: {
-					imageSlug,
+					imageSlug, serverSlug, userScriptId, deleteSnapshots
 				},
 				headers: ["x-callback-id"],
 			},

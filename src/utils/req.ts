@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
-
+import fs from "fs"
 export async function req<T extends unknown | undefined>(
     opts: WebdockApiRequestOptions<T>
 ): Promise<WebdockApiRequestReturn<T>> {
@@ -34,6 +34,7 @@ export async function req<T extends unknown | undefined>(
                 returnHeaders[e] = response.headers?.[e ?? ""];
             }
         });
+
 
         return {
             success: true,

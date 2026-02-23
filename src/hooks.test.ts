@@ -1,3 +1,4 @@
+import { error } from "console";
 import { Webdock } from "./index.js";
 import { isE2EEnabled } from "./testUtils.js";
 
@@ -25,13 +26,14 @@ describe("Webhooks API", () => {
 	});
 
 	it("create, getById, delete webhook", async () => {
-		const randomTestUrl = "http://apitest.vps.webdock.cloud/?" + Math.random().toString(36).slice(2);
+		const randomTestUrl = "https://http.dog/200.jpg";
 		const testEventType = "backup";
 		const createRes = await client.hooks.create({ callbackUrl: randomTestUrl, eventType: testEventType });
 
 
 		expect(createRes.success).toBe(true);
 		if (!createRes.success) return;
+
 		createdId = createRes.response.body.id;
 		expect(createRes.response.body).toMatchObject({
 			id: expect.any(Number),

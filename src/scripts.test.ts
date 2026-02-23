@@ -1,3 +1,4 @@
+import { writeFileSync } from "fs";
 import { Webdock } from "./index.js";
 import { waitForCallback } from "./testUtils.js";
 
@@ -14,8 +15,7 @@ describe("Scripts API Integration Tests", () => {
 		const response = await client.servers.create({
 			name: "test-script-server",
 			locationId: "dk",
-			slug: `server-${Math.random().toString(36).slice(2)}`,
-			profileSlug: "webdockepyc-bit",
+			profileSlug: "vps-epyc-pro-2025",
 			imageSlug: "webdock-ubuntu-jammy-cloud",
 		});
 

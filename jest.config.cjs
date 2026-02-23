@@ -16,6 +16,6 @@ module.exports = {
 		"^(\\.{1,2}/.*)\\.js$": "$1",
 	},
 	setupFilesAfterEnv: ["<rootDir>/test/jest.setup.ts"],
-	testMatch: ["**/*.jest.test.ts"],
+	testMatch: ["**/*.test.ts"],
 };
 

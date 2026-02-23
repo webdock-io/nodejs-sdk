@@ -133,6 +133,7 @@ export class ShellUsersClass {
 			token: this.parent.string_token,
 		});
 	}
+
 	websshToken(
 		{ serverSlug, username, }: {
 			serverSlug: string;
