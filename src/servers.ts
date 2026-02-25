@@ -228,6 +228,28 @@ export class ServersClass {
 			},
 		);
 	}
+
+	async fetchFileAsync({
+		path,
+		slug,
+	}: {
+		path: string;
+		slug: string;
+	}) {
+		return req<FetchFileResponsePayload>(
+			{
+				endpoint: `servers/${slug}/fetchFile`,
+				method: "POST",
+				token: this.parent.string_token,
+				body: {
+					filePath: path,
+				},
+				headers: ["x-callback-id"],
+			},
+		);
+
+
+	}
 	async fetchFile({
 		path,
 		slug,

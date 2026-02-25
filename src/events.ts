@@ -15,7 +15,9 @@ export type EventsType = {
 	message: string;
 	status: EventStatus;
 };
-
+type EventLogResponse = {
+	body: EventsType[];
+};
 export type EventTypeListResponse = {
 	body: EventsType[];
 	headers: {
@@ -57,5 +59,31 @@ export class EventsClass {
 			headers: ["x-total-count"],
 			method: "GET",
 		});
+	}
+	async waitForEventToEnd(callbackId: string) {
+
+		while (true) {
+
+
+			const result = await req<EventLogResponse>({
+				endpoint: `/events?callbackId=${callbackId}`,
+				log: false,
+				method: "GET",
+			});
+
+			if (!result.success) {
+				console.error(result.error);
+				return;
+			}
+
+			if (result.success && result.response.body[0].status == "error") {
+				console.error(result.response.body[0].message);
+				return;
+			}
+
+			if (result.success && result.response.body[0].status == "finished") {
+				return result;
+			}
+		}
 	}
 }

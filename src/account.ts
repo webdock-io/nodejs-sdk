@@ -42,7 +42,7 @@ export class AccountClass {
 	}
 
 	async info() {
-		return await req({
+		return await req<AccountInformationReturnType>({
 			token: this.parent.string_token,
 			endpoint: "/account/accountInformation",
 			headers: [],
