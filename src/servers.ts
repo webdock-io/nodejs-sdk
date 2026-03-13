@@ -175,8 +175,10 @@ export type MetricsNowResponseType = {
 
 export class ServersClass {
 	private parent: Webdock;
+	scripts: ServerScriptsClass
 	constructor(parent: Webdock) {
 		this.parent = parent;
+		this.scripts = new ServerScriptsClass(parent)
 	}
 
 	create({
@@ -430,4 +432,172 @@ export class ServersClass {
 			body: { nextActionDate, name, description, notes },
 		});
 	}
+}
+
+export type CreateScriptBodyType = {
+	name: string;
+	filename: string;
+	content: string;
+};
+
+export type CreateScriptResponseType = {
+	body: {
+		id: number;
+		name: string;
+		description: string;
+		filename: string;
+		content: string;
+	};
+};
+
+export type DeleteScriptServerReturnType = {
+	body: Script;
+	headers: {
+		"x-callback-id": string;
+	};
+};
+
+export type ExecuteScriptOnServerReturnType = {
+	body: Script;
+	headers: {
+		"x-callback-id": string;
+	};
+};
+
+export type GetScriptByIdTResponseType = {
+	body: {
+		id: number;
+		name: string;
+		description: string;
+		filename: string;
+		content: string;
+	};
+};
+export interface ResponseHeaders {
+	"x-callback-id": string;
+}
+
+/**
+ * Response Schema (application/json)
+ */
+export interface Script {
+	/** Script ID (int64) */
+	id: number;
+	/** Script name */
+	name: string;
+	/** Script path */
+	path: string;
+	/** Date/time of the last run */
+	lastRun: string | null;
+	/** Callback ID of the last script run */
+	lastRunCallbackId: string | null;
+	/** Creation date/time */
+	created: string;
+}
+
+export type CreateScriptOnServerResponse = {
+	headers: ResponseHeaders;
+	body: Script;
+};
+export type ListScriptsOnServerResponseType = {
+	body: {
+		id: number;
+		name: string;
+		path: string;
+		lastRun: Date | null;
+		lastRunCallbackId: string;
+		created: Date;
+	}[];
+};
+export type ListScriptsResponse = {
+	body: {
+		id: number;
+		name: string;
+		description: string;
+		filename: string;
+		content: string;
+	}[];
+};
+
+export class ServerScriptsClass {
+	private parent: Webdock;
+	constructor(parent: Webdock) {
+		this.parent = parent;
+	}
+
+
+	create({
+		scriptId,
+		path,
+		makeScriptExecutable,
+		executeImmediately,
+		serverSlug,
+	}: {
+		scriptId: number;
+		path: string;
+		makeScriptExecutable: boolean;
+		executeImmediately: boolean;
+		serverSlug: string;
+	}) {
+		return req<CreateScriptOnServerResponse>(
+			{
+				token: this.parent.string_token,
+				endpoint: `/servers/${serverSlug}/scripts`,
+				method: "POST",
+				body: {
+					scriptId,
+					path,
+					makeScriptExecutable,
+					executeImmediately,
+				},
+				headers: ["x-callback-id"],
+			},
+		);
+	}
+
+	delete(
+		{ serverSlug, scriptId }: {
+			serverSlug: string;
+			scriptId: number;
+		},
+	) {
+		return req<DeleteScriptServerReturnType>(
+			{
+				token: this.parent.string_token,
+				endpoint: `/servers/${serverSlug}/scripts/${scriptId}`,
+				method: "DELETE",
+			},
+		);
+	}
+	execute(
+		{ serverSlug, scriptID }: {
+			serverSlug: string;
+			scriptID: number;
+		},
+	) {
+		return req<ExecuteScriptOnServerReturnType>(
+			{
+				token: this.parent.string_token,
+				endpoint: `/servers/${serverSlug}/scripts/${scriptID}/execute`,
+				method: "POST",
+				headers: ["x-callback-id"],
+			},
+		);
+	}
+
+	listOnServer({ serverSlug }: {
+		token?: string;
+		serverSlug: string;
+	}) {
+		return req<ListScriptsOnServerResponseType>(
+			{
+				token: this.parent.string_token,
+				endpoint: `/servers/${serverSlug}/scripts`,
+				method: "GET",
+			},
+		);
+	}
+
+
+
 }

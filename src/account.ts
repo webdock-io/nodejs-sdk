@@ -1,5 +1,5 @@
 import { Webdock } from "./index";
-import { CreateScriptResponseType, GetScriptByIdTResponseType, ListScriptsResponse } from "./scripts";
+import { CreateScriptResponseType, GetScriptByIdTResponseType, ListScriptsResponse } from "./servers";
 import { req } from "./utils/req";
 
 export type AccountInformation = {

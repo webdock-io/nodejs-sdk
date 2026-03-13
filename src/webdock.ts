@@ -1,4 +1,4 @@
-import { Webdock } from "./index";
+import { Webdock } from ".";
 import { req } from "./utils/req";
 
 export type CreateScriptBodyType = {
@@ -86,93 +86,23 @@ export type ListScriptsResponse = {
 	}[];
 };
 
-export class ScriptsClass {
+export class WebdockClass {
 	private parent: Webdock;
 	constructor(parent: Webdock) {
 		this.parent = parent;
 	}
 
 
-	createOnServer({
-		scriptId,
-		path,
-		makeScriptExecutable,
-		executeImmediately,
-		serverSlug,
-	}: {
-		scriptId: number;
-		path: string;
-		makeScriptExecutable: boolean;
-		executeImmediately: boolean;
-		serverSlug: string;
-	}) {
-		return req<CreateScriptOnServerResponse>(
+	listScripts() {
+		return req<ListScriptsResponse>(
 			{
 				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts`,
-				method: "POST",
-				body: {
-					scriptId,
-					path,
-					makeScriptExecutable,
-					executeImmediately,
-				},
-				headers: ["x-callback-id"],
-			},
-		);
-	}
-
-	deleteScriptFromServer(
-		{ serverSlug, scriptId }: {
-			serverSlug: string;
-			scriptId: number;
-		},
-	) {
-		return req<DeleteScriptServerReturnType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts/${scriptId}`,
-				method: "DELETE",
-			},
-		);
-	}
-	executeOnServer(
-		{ serverSlug, scriptID }: {
-			serverSlug: string;
-			scriptID: number;
-		},
-	) {
-		return req<ExecuteScriptOnServerReturnType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts/${scriptID}/execute`,
-				method: "POST",
-				headers: ["x-callback-id"],
-			},
-		);
-	}
-
-	listOnServer({ serverSlug }: {
-		token?: string;
-		serverSlug: string;
-	}) {
-		return req<ListScriptsOnServerResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts`,
+				endpoint: `/scripts`,
 				method: "GET",
 			},
 		);
 	}
 
 
-	async list() {
-		return await req<ListScriptsResponse>({
-			token: this.parent.string_token,
-			endpoint: "/scripts",
-			headers: [],
-			method: "GET",
-		});
-	}
 
 }
