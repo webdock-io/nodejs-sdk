@@ -92,26 +92,7 @@ export class ScriptsClass {
 		this.parent = parent;
 	}
 
-	create(
-		{ content, filename, name }: {
-			name: string;
-			filename: string;
-			content: string;
-		},
-	) {
-		return req<CreateScriptResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: "/account/scripts",
-				method: "POST",
-				body: {
-					content,
-					filename,
-					name,
-				},
-			},
-		);
-	}
+
 	createOnServer({
 		scriptId,
 		path,
@@ -140,15 +121,7 @@ export class ScriptsClass {
 			},
 		);
 	}
-	delete({ id }: { id: number }) {
-		return req<undefined>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/account/scripts/${id}`,
-				method: "DELETE",
-			},
-		);
-	}
+
 	deleteScriptFromServer(
 		{ serverSlug, scriptId }: {
 			serverSlug: string;
@@ -178,22 +151,7 @@ export class ScriptsClass {
 			},
 		);
 	}
-	getById({ scriptId }: { token?: string; scriptId: number }) {
-		return req<GetScriptByIdTResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/account/scripts/${scriptId}`,
-				method: "GET",
-			},
-		);
-	}
-	list(token?: string) {
-		return req<ListScriptsResponse>({
-			token: this.parent.string_token,
-			endpoint: "/account/scripts",
-			method: "GET",
-		});
-	}
+
 	listOnServer({ serverSlug }: {
 		token?: string;
 		serverSlug: string;
@@ -206,28 +164,15 @@ export class ScriptsClass {
 			},
 		);
 	}
-	update({
-		id,
-		name,
-		filename,
-		content,
-	}: {
-		id: number;
-		name: string;
-		filename: string;
-		content: string;
-	}) {
-		return req<CreateScriptResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/account/scripts/${id}`,
-				method: "PATCH",
-				body: {
-					name,
-					filename,
-					content,
-				},
-			},
-		);
+
+
+	async list() {
+		return await req<ListScriptsResponse>({
+			token: this.parent.string_token,
+			endpoint: "/scripts",
+			headers: [],
+			method: "GET",
+		});
 	}
+
 }

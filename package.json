@@ -1,11 +1,11 @@
 {
   "name": "@webdock/sdk",
-  "version": "1.0.592",
+  "version": "1.0.59689",
   "homepage": "https://github.com/webdock-io/nodejs-sdk#readme",
   "description": "SDK for Webdock's API",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/index.d",
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs"
     }

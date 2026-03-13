@@ -1,7 +1,5 @@
 import { config } from "dotenv";
+config()
 
-if (process.env.MODE != "PROD") {
-    config()
-}
 jest.setTimeout(900000000);
 

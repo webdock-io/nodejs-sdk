@@ -343,7 +343,7 @@ export class ServersClass {
 	reinstall({ imageSlug, serverSlug, userScriptId, deleteSnapshots }: {
 		deleteSnapshots?: boolean;
 		serverSlug: string;
-		userScriptId: number;
+		userScriptId?: number;
 		imageSlug: string;
 	}) {
 		return req<ReinstallServerResponseType>(

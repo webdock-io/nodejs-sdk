@@ -12,6 +12,6 @@
     "isolatedModules": true,
     "types": ["node", "mocha", "jest"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test/**/*"],
   "exclude": ["node_modules", "dist"]
 }

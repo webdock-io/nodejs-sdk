@@ -1,8 +1,4 @@
-import { config } from "dotenv"
-if (process.env.MODE != "PROD") {
-  config()
-}
-
+  
 
 import { AccountClass } from "./account.js";
 import { EventsClass } from "./events.js";

@@ -32,4 +32,30 @@ export class OperationClass {
             method: "GET",
         })
     }
+
+    async waitForEventToEnd(callbackId: string) : Promise<{ success: true; data : string } | { success: false; error: string }> {
+        while (true) {
+            const res = await this.fetch(callbackId);
+            if (!res.success) {
+                return {
+                    success: false,
+                    error: res.error,
+                }
+            }
+            const event = res.response.body[0];
+            if (event.status === "finished") {
+                return {
+                    success: true,
+                    data: event.message,
+                }
+            }
+            if (event.status === "error") {
+                return {
+                    success: false,
+                    error: event.message,
+                }
+            }
+            await new Promise((resolve) => setTimeout(resolve, 3000));
+        }
+    }
 }

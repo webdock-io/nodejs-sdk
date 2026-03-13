@@ -1,6 +1,6 @@
 import { error } from "console";
-import { Webdock } from "./index.js";
-import { isE2EEnabled } from "./testUtils.js";
+import { Webdock } from "./index";
+import { isE2EEnabled } from "./testUtils";
 
 describe("Webhooks API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd \"C:\\\\Users\\\\ahmad\\\\Documents\\\\GitHub\\\\nodejs-sdk\" && pnpm run test 2>&1 | head -80)",
+      "Bash(cd \"C:\\\\Users\\\\ahmad\\\\Documents\\\\GitHub\\\\nodejs-sdk\" && pnpm run test 2>&1 | head -60)"
+    ]
+  }
+}

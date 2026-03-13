@@ -11,11 +11,11 @@ module.exports = {
 			},
 		],
 	},
-	extensionsToTreatAsEsm: [".ts"],
 	moduleNameMapper: {
 		"^(\\.{1,2}/.*)\\.js$": "$1",
 	},
 	setupFilesAfterEnv: ["<rootDir>/test/jest.setup.ts"],
 	testMatch: ["**/*.test.ts"],
+	extensionsToTreatAsEsm: [".ts"],
 };
 

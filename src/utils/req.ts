@@ -1,6 +1,8 @@
 import axios, { AxiosError } from "axios";
 import { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
-import fs from "fs"
+import os from "os"
+import { version } from "../../package.json" with { type: "json" }
+
 export async function req<T extends unknown | undefined>(
     opts: WebdockApiRequestOptions<T>
 ): Promise<WebdockApiRequestReturn<T>> {
@@ -19,6 +21,9 @@ export async function req<T extends unknown | undefined>(
                 Authorization: `Bearer ${opts.token}`,
                 "Content-Type": "application/json",
                 "Cache-Control": "no-cache, no-store, must-revalidate",
+                "X-Client": "node-sdk",
+                "X-Application": os.hostname(),
+                "X-Version": version,
             },
             data: opts.body as unknown as T,
             family: 4,

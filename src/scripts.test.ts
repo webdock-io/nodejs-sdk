@@ -31,7 +31,7 @@ describe("Scripts API Integration Tests", () => {
 
 	it("list() - Retrieve all available scripts", async () => {
 
-		const response = await client.scripts.list();
+		const response = await client.account.scripts.list();
 		expect(response.success).toBe(true);
 		if (!response.success) {
 			return;
@@ -60,7 +60,7 @@ describe("Scripts API Integration Tests", () => {
 			content: "echo 'Hello World'"
 		};
 
-		const response = await client.scripts.create(testScript);
+		const response = await client.account.scripts.create(testScript);
 		expect(response.success).toBe(true);
 		if (!response.success) {
 			return;
@@ -84,7 +84,7 @@ describe("Scripts API Integration Tests", () => {
 			return;
 		}
 
-		const response = await client.scripts.getById({ scriptId: testScriptId });
+		const response = await client.account.scripts.getById({ scriptId: testScriptId });
 		expect(response.success).toBe(true);
 		if (!response.success) {
 			return;
@@ -108,7 +108,7 @@ describe("Scripts API Integration Tests", () => {
 			content: "echo 'Updated Test'"
 		};
 
-		const response = await client.scripts.update(updatedScript);
+		const response = await client.account.scripts.update(updatedScript);
 		expect(response.success).toBe(true);
 		if (!response.success) {
 			return;
@@ -218,7 +218,7 @@ describe("Scripts API Integration Tests", () => {
 			return;
 		}
 
-		const response = await client.scripts.delete({ id: testScriptId });
+		const response = await client.account.scripts.delete({ id: testScriptId });
 		expect(response.success).toBe(true);
 
 	});
