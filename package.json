@@ -1,6 +1,6 @@
 {
   "name": "@webdock/sdk",
-  "version": "1.0.59694",
+  "version": "1.0.59695",
   "homepage": "https://github.com/webdock-io/nodejs-sdk#readme",
   "description": "SDK for Webdock's API",
   "exports": {
@@ -59,7 +59,8 @@
   "pnpm": {
     "overrides": {
       "minimatch": ">=10.2.3",
-      "ajv": ">=8.18.0"
+      "ajv": ">=8.18.0",
+      "handlebars": ">=4.7.9"
     }
   }
 }
