@@ -93,6 +93,7 @@ describe("Shell Users API", () => {
 		expect(res.success).toBe(true);
 		if (!res.success) return;
 		expect(res.response.body).toHaveProperty("token");
+		expect(res.response.body).toHaveProperty("webSshUrl");
 		expect(typeof res.response.body.token).toBe("string");
 	});
 
