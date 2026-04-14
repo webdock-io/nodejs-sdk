@@ -35,7 +35,7 @@ export interface WebdockApiRequestOptions<T> {
   endpoint: string;
   method: string;
   body?: unknown;
-  headers?: string[] | undefined;
+  headers?: ("x-callback-id" | (string & {}))[];
   log?: boolean | undefined;
 }
 

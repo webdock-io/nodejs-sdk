@@ -93,16 +93,14 @@ export class WebdockClass {
 	}
 
 
-	listScripts() {
-		return req<ListScriptsResponse>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/scripts`,
-				method: "GET",
-			},
-		);
+	async ping() {
+		return req<{
+			webdock: "rocks"
+		}>({
+			method: "GET",
+			endpoint: "/ping"
+		})
 	}
-
 
 
 }

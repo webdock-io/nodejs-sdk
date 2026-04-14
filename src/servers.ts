@@ -176,10 +176,28 @@ export type MetricsNowResponseType = {
 export class ServersClass {
 	private parent: Webdock;
 	scripts: ServerScriptsClass
+	identity: ServerIdentityClass
+	settings: ServerSettingsClass
+
 	constructor(parent: Webdock) {
 		this.parent = parent;
 		this.scripts = new ServerScriptsClass(parent)
+		this.identity = new ServerIdentityClass(parent)
+		this.settings = new ServerSettingsClass(parent)
 	}
+
+
+
+
+	cancelDelete({ serverSlug }: { serverSlug: string }) {
+		return req<CreateServerResponseType>({
+			endpoint: `/servers/${serverSlug}/uncancel`,
+			method: "POST",
+			headers: ["x-callback-id"]
+		})
+	}
+
+
 
 	create({
 		name,
@@ -600,4 +618,87 @@ export class ServerScriptsClass {
 
 
 
+}
+class ServerIdentityClass {
+	private parent: Webdock
+	constructor(parent: Webdock) {
+		this.parent = parent
+	}
+
+	update({
+		serverSlug,
+		maindomain,
+		aliasdomains,
+		removeDefaultAlias
+	}: {
+		serverSlug: string,
+		maindomain: string,
+		aliasdomains?: string,
+		removeDefaultAlias?: boolean
+	}) {
+		return req<CreateScriptOnServerResponse>({
+			method: "PATCH",
+			endpoint: `/servers/${serverSlug}/identity`,
+			headers: ["x-callback-id"],
+			body: {
+				maindomain,
+				aliasdomains,
+				removeDefaultAlias
+			}
+		})
+	}
+
+	renewCertificates({
+		serverSlug,
+		domains,
+		email,
+		forceSSL
+	}: {
+		serverSlug: string;
+		domains: string[];
+		email: string;
+		forceSSL: boolean
+	}) {
+		return req<void>({
+			endpoint: `/servers/${serverSlug}/actions/run-certbot`,
+			method: "POST",
+			headers: ["x-callback-id"],
+			body: {
+				domains,
+				email,
+				forceSSL
+			}
+		})
+	}
+}
+
+class ServerSettingsClass {
+	private parent: Webdock
+	constructor(parent: Webdock) {
+		this.parent = parent
+	}
+
+	update({
+		webroot,
+		updateWebserver,
+		updateLetsencrypt,
+		serverSlug
+	}: {
+		webroot: string,
+		updateWebserver: boolean,
+		updateLetsencrypt: boolean,
+		serverSlug: string
+	}) {
+
+		return req<CreateScriptOnServerResponse>({
+			endpoint: `/servers/${serverSlug}/actions/settings`,
+			method: "POST",
+			headers: ["x-callback-id"],
+			body: {
+				webroot: webroot,
+				updateWebserver: updateWebserver,
+				updateLetsencrypt: updateLetsencrypt,
+			}
+		})
+	}
 }
