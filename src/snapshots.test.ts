@@ -19,7 +19,7 @@ describe("Snapshots API", () => {
 			imageSlug: "webdock-ubuntu-noble-cloud",
 		});
 
-		expect(localServer.success).toBe(true, `Create server failed: ${JSON.stringify(localServer, null, 2)}`);
+		expect(localServer.success).toBe(true);
 		if (!localServer.success) return;
 		testServerSlug = localServer.response.body.slug;
 		await waitForCallback(client, localServer.response.headers["x-callback-id"]);
@@ -28,7 +28,7 @@ describe("Snapshots API", () => {
 	it("list() - Retrieve all snapshots", async () => {
 		if (!testServerSlug) return;
 		const snapshots = await client.snapshots.list({ serverSlug: testServerSlug });
-		expect(snapshots.success).toBe(true, `List snapshots failed: ${JSON.stringify(snapshots, null, 2)}`);
+		expect(snapshots.success).toBe(true);
 		if (!snapshots.success) return;
 		expect(snapshots.response.body).toBeInstanceOf(Array);
 	});
@@ -36,7 +36,7 @@ describe("Snapshots API", () => {
 	it("create() - Create temporary snapshot", async () => {
 		if (!testServerSlug) return;
 		const localSnapshot = await client.snapshots.create({ serverSlug: testServerSlug, name: `test-snapshot-${Date.now()}` });
-		expect(localSnapshot.success).toBe(true, `Create snapshot failed: ${JSON.stringify(localSnapshot, null, 2)}`);
+		expect(localSnapshot.success).toBe(true);
 		if (!localSnapshot.success) return;
 		snapshotId = localSnapshot.response.body.id;
 		await waitForCallback(client, localSnapshot.response.headers["x-callback-id"]);
@@ -45,7 +45,7 @@ describe("Snapshots API", () => {
 	it("restore() - Restore from snapshot", async () => {
 		if (!testServerSlug || !snapshotId) return;
 		const restoreRes = await client.snapshots.restore({ serverSlug: testServerSlug, snapshotId });
-		expect(restoreRes.success).toBe(true, `Restore snapshot failed: ${JSON.stringify(restoreRes, null, 2)}`);
+		expect(restoreRes.success).toBe(true);
 		if (!restoreRes.success) return;
 		await waitForCallback(client, restoreRes.response.headers["x-callback-id"]);
 	});
@@ -53,7 +53,7 @@ describe("Snapshots API", () => {
 	it("delete() - Remove temporary snapshot", async () => {
 		if (!testServerSlug || !snapshotId) return;
 		const deleteSnapshot = await client.snapshots.delete({ serverSlug: testServerSlug, snapshotId });
-		expect(deleteSnapshot.success).toBe(true, `Delete snapshot failed: ${JSON.stringify(deleteSnapshot, null, 2)}`);
+		expect(deleteSnapshot.success).toBe(true);
 		if (!deleteSnapshot.success) return;
 		await waitForCallback(client, deleteSnapshot.response.headers["x-callback-id"]);
 	});

@@ -191,6 +191,7 @@ export class ServersClass {
 
 	cancelDelete({ serverSlug }: { serverSlug: string }) {
 		return req<CreateServerResponseType>({
+			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/uncancel`,
 			method: "POST",
 			headers: ["x-callback-id"]
@@ -637,6 +638,7 @@ class ServerIdentityClass {
 		removeDefaultAlias?: boolean
 	}) {
 		return req<CreateScriptOnServerResponse>({
+			token: this.parent.string_token,
 			method: "PATCH",
 			endpoint: `/servers/${serverSlug}/identity`,
 			headers: ["x-callback-id"],
@@ -660,6 +662,7 @@ class ServerIdentityClass {
 		forceSSL: boolean
 	}) {
 		return req<void>({
+			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/actions/run-certbot`,
 			method: "POST",
 			headers: ["x-callback-id"],
@@ -691,6 +694,7 @@ class ServerSettingsClass {
 	}) {
 
 		return req<CreateScriptOnServerResponse>({
+			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/actions/settings`,
 			method: "POST",
 			headers: ["x-callback-id"],

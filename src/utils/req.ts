@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
 import { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
 import os from "os"
-import { version } from "../../package.json" with { type: "json" }
+
+const { version }: { version: string } = require("../../package.json");
 
 export async function req<T extends unknown | undefined>(
     opts: WebdockApiRequestOptions<T>

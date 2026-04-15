@@ -62,7 +62,11 @@ export class AccountClass {
 
 
 	async listArchivedServers() {
-		return req<ListArchivedServersRepose>({ endpoint: "/servers/snapshots", method: "GET" })
+		return req<ListArchivedServersRepose>({
+			token: this.parent.string_token,
+			endpoint: "/servers/snapshots",
+			method: "GET",
+		})
 	}
 
 	async info() {

@@ -1,8 +1,11 @@
 import { Webdock } from "./index.js";
+import { isE2EEnabled } from "./testUtils.js";
 
 describe("Account API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
 	const api = new Webdock(token);
+	const enabled = Boolean(token) && isE2EEnabled();
+	const e2eIt = enabled ? test : test.skip;
 
 	it("Validate Authentication Token", async () => {
 		const res = await api.account.info();
@@ -40,5 +43,27 @@ describe("Account API", () => {
 			});
 		}
 	});
-});
 
+	e2eIt("listArchivedServers() - List archived server backups", async () => {
+		const res = await api.account.listArchivedServers();
+		expect(res.success).toBe(true);
+		if (!res.success) return;
+
+		expect(res.response.body).toBeInstanceOf(Array);
+		res.response.body.forEach((backup) => {
+			expect(backup).toMatchObject({
+				id: expect.any(Number),
+				name: expect.any(String),
+				virtualization: "kvm",
+				completed: expect.any(Boolean),
+				date: expect.any(String),
+				deletable: expect.any(Boolean),
+				serverSlug: expect.any(String),
+			});
+			expect(["daily", "weekly", "archived"]).toContain(backup.type);
+			expect(
+				backup.callbackId === null || typeof backup.callbackId === "string",
+			).toBe(true);
+		});
+	});
+});

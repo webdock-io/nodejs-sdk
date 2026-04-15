@@ -86,6 +86,12 @@ export type ListScriptsResponse = {
 	}[];
 };
 
+type PingResponseType = {
+	body: {
+		webdock: "rocks";
+	};
+};
+
 export class WebdockClass {
 	private parent: Webdock;
 	constructor(parent: Webdock) {
@@ -94,9 +100,7 @@ export class WebdockClass {
 
 
 	async ping() {
-		return req<{
-			webdock: "rocks"
-		}>({
+		return req<PingResponseType>({
 			method: "GET",
 			endpoint: "/ping"
 		})
