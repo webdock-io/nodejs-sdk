@@ -25,35 +25,35 @@ bun install @webdock/sdk
 We don't like throwing errors, and to be honest, neither should you. That's why we designed this package with Go-style error handling:
 
 ```ts
-import { Webdock } from "@webdock/sdk"
+import { Webdock } from "@webdock/sdk";
 
 async function main() {
-    const client = new Webdock("your-token-here")
-    const accountInfo = await client.account.info()
-    
-    if (accountInfo.success) {
-        console.log(accountInfo.response.body.userId)
-    } else {
-        console.error("Failed to fetch account info:", accountInfo.error)
-    }
+  const client = new Webdock("your-token-here");
+  const accountInfo = await client.account.info();
+
+  if (accountInfo.success) {
+    console.log(accountInfo.response.body.userId);
+  } else {
+    console.error("Failed to fetch account info:", accountInfo.error);
+  }
 }
 
-main()
+main();
 ```
 
 ## Quick Start
 
 ```ts
-import { Webdock } from "@webdock/sdk"
+import { Webdock } from "@webdock/sdk";
 
-const client = new Webdock("your-token-here")
+const client = new Webdock("your-token-here");
 
 // Example usage with error handling
-const servers = await client.servers.list()
+const servers = await client.servers.list();
 if (servers.success) {
-    console.log("Servers:", servers.response.body)
+  console.log("Servers:", servers.response.body);
 } else {
-    console.error("Error:", servers.error)
+  console.error("Error:", servers.error);
 }
 ```
 
@@ -77,10 +77,9 @@ This package is designed for modern TypeScript projects:
 The legacy package is still available but deprecated. You can import it for existing projects:
 
 ```ts
-import { oldWebdock } from "@webdock/sdk"
+import { oldWebdock } from "@webdock/sdk";
 
-const pong = await oldWebdock.PingService.getPing()
+const pong = await oldWebdock.PingService.getPing();
 ```
 
 > **Note**: The [old package](https://github.com/webdock-io/nodejs-sdk) is now deprecated. Please migrate to the new SDK for continued support and updates.
-
