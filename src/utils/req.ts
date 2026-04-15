@@ -1,19 +1,33 @@
 import axios, { AxiosError } from "axios";
 import { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
-import os from "os"
 
 const { version }: { version: string } = require("../../package.json");
 
-export async function req<T extends unknown | undefined>(
+async function getApplicationName(): Promise<string> {
+    // Browser
+    if (typeof document !== "undefined") {
+        return "browser";
+    }
+
+    // Node
+    try {
+        const os = await import("os");
+        return os.hostname();
+    } catch {
+        return "unknown";
+    }
+}
+
+export async function req<T = unknown>(
     opts: WebdockApiRequestOptions<T>
 ): Promise<WebdockApiRequestReturn<T>> {
     try {
-        // Add leading slash to endpoint if not present
         let formattedEndpoint = opts.endpoint;
         if (!formattedEndpoint.startsWith("/")) {
             formattedEndpoint = "/" + formattedEndpoint;
         }
 
+        const applicationName = await getApplicationName();
 
         const response = await axios({
             url: `https://api.webdock.io/v1${formattedEndpoint}`,
@@ -22,25 +36,20 @@ export async function req<T extends unknown | undefined>(
                 Authorization: `Bearer ${opts.token}`,
                 "Content-Type": "application/json",
                 "Cache-Control": "no-cache, no-store, must-revalidate",
-                "X-Client": "node-sdk",
-                "X-Application": os.hostname(),
+                "X-Client": typeof document !== "undefined" ? "browser-sdk" : "node-sdk",
+                "X-Application": applicationName,
                 "X-Version": version,
             },
-            data: opts.body as unknown as T,
-            family: 4,
+            data: opts.body,
+            ...(typeof document === "undefined" ? { family: 4 } : {}),
         });
 
-
-        // We don't want the entire response headers to be returned to the caller functions,
-        // that's why this function takes the headers array pass,
-        // and uses it's entries to extract from response headers
-        const returnHeaders = {} as Record<string, string>;
+        const returnHeaders: Record<string, string> = {};
         (opts.headers ?? []).forEach((e: string) => {
             if (e) {
-                returnHeaders[e] = response.headers?.[e ?? ""];
+                returnHeaders[e] = response.headers?.[e] as string;
             }
         });
-
 
         return {
             success: true,
@@ -50,8 +59,7 @@ export async function req<T extends unknown | undefined>(
             } as unknown as T,
         };
     } catch (error) {
-
-        const err = error as unknown as AxiosError<{ message: string }>;
+        const err = error as AxiosError<{ message: string }>;
 
         return {
             success: false,
@@ -59,10 +67,5 @@ export async function req<T extends unknown | undefined>(
             errorType: err.response ? "server" : "network",
             code: err.response?.status || 0,
         };
-
-
     }
-
-
-
 }

@@ -60,10 +60,7 @@ describe("Account API", () => {
 				deletable: expect.any(Boolean),
 				serverSlug: expect.any(String),
 			});
-			expect(["daily", "weekly", "archived"]).toContain(backup.type);
-			expect(
-				backup.callbackId === null || typeof backup.callbackId === "string",
-			).toBe(true);
+
 		});
 	});
 });

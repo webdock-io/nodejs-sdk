@@ -33,6 +33,7 @@ export default class PlatformsClass {
     }
     async list({ currency = "" }: { currency: string }) {
         return req<PlatformsResponse>({
+            token: this.parent.string_token,
             endpoint: `/platforms?currency=${currency}`,
             method: "GET",
         })

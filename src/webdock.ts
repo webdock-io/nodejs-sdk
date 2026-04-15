@@ -101,6 +101,7 @@ export class WebdockClass {
 
 	async ping() {
 		return req<PingResponseType>({
+			token: this.parent.string_token,
 			method: "GET",
 			endpoint: "/ping"
 		})
