@@ -63,6 +63,7 @@ export type ShellUserCreationResponse = {
 export type CreateWebSSHTokenResponseType = {
 	body: {
 		token: string;
+		webSshUrl: string;
 	};
 };
 

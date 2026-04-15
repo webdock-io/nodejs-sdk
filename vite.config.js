@@ -38,7 +38,8 @@ export default defineConfig({
     },
     target: "node16",
     minify: true,
-    sourcemap: true,
-     emptyOutDir: true, // Don't clear dist folder too aggressively
+    sourcemap: false,
+    emptyOutDir: true, // Don't clear dist folder too aggressively
+
   },
 });

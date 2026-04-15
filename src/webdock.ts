@@ -86,6 +86,12 @@ export type ListScriptsResponse = {
 	}[];
 };
 
+type PingResponseType = {
+	body: {
+		webdock: "rocks";
+	};
+};
+
 export class WebdockClass {
 	private parent: Webdock;
 	constructor(parent: Webdock) {
@@ -93,16 +99,13 @@ export class WebdockClass {
 	}
 
 
-	listScripts() {
-		return req<ListScriptsResponse>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/scripts`,
-				method: "GET",
-			},
-		);
+	async ping() {
+		return req<PingResponseType>({
+			token: this.parent.string_token,
+			method: "GET",
+			endpoint: "/ping"
+		})
 	}
-
 
 
 }

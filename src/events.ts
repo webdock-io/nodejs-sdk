@@ -66,6 +66,7 @@ export class EventsClass {
 
 
 			const result = await req<EventLogResponse>({
+				token: this.parent.string_token,
 				endpoint: `/events?callbackId=${callbackId}`,
 				log: false,
 				method: "GET",

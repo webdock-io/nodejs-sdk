@@ -14,6 +14,7 @@ import { SnapshotsClass } from "./snapshots.js";
 import * as OldWebdock from "webdock"
 import { OperationClass } from "./operation.js";
 import { WebdockClass } from "./webdock.js";
+import PlatformsClass from "./platforms.js";
 
 export const oldWebdock = OldWebdock
 
@@ -34,7 +35,7 @@ export interface WebdockApiRequestOptions<T> {
   endpoint: string;
   method: string;
   body?: unknown;
-  headers?: string[] | undefined;
+  headers?: ("x-callback-id" | (string & {}))[];
   log?: boolean | undefined;
 }
 
@@ -54,6 +55,8 @@ export class Webdock {
   snapshots: SnapshotsClass;
   operation: OperationClass;
   webdock: WebdockClass
+  platforms: PlatformsClass
+
   string_token: string;
   constructor(token: string) {
     this.string_token = token
@@ -69,5 +72,6 @@ export class Webdock {
     this.snapshots = new SnapshotsClass(this);
     this.operation = new OperationClass(this);
     this.webdock = new WebdockClass(this)
+    this.platforms = new PlatformsClass(this)
   }
 }
