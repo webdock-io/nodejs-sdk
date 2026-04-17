@@ -2,3 +2,5 @@ node_modules
 dist
 .env
 dev
+test.ts
+.claude

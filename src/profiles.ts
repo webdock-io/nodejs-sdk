@@ -14,7 +14,7 @@ export type Price = {
 	currency: string;
 };
 
-export type Platform = "epyc_vps" | "intel_vps"
+export type Platform = "epyc_vps" | "intel_vps" | (string & {})
 
 export type Profile = {
 	slug: string;

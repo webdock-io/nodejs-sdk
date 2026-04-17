@@ -1,5 +1,5 @@
-// import { config } from "dotenv";
-// config()
+import { config } from "dotenv";
+config()
 
 jest.setTimeout(900000000);
 
