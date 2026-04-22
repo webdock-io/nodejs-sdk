@@ -466,6 +466,7 @@ export type CreateScriptResponseType = {
 		description: string;
 		filename: string;
 		content: string;
+		slug: string;
 	};
 };
 
@@ -490,6 +491,7 @@ export type GetScriptByIdTResponseType = {
 		description: string;
 		filename: string;
 		content: string;
+		slug: string;
 	};
 };
 export interface ResponseHeaders {
@@ -512,6 +514,7 @@ export interface Script {
 	lastRunCallbackId: string | null;
 	/** Creation date/time */
 	created: string;
+	slug: string;
 }
 
 export type CreateScriptOnServerResponse = {
@@ -526,6 +529,7 @@ export type ListScriptsOnServerResponseType = {
 		lastRun: Date | null;
 		lastRunCallbackId: string;
 		created: Date;
+		slug: string;
 	}[];
 };
 export type ListScriptsResponse = {
@@ -535,6 +539,7 @@ export type ListScriptsResponse = {
 		description: string;
 		filename: string;
 		content: string;
+		slug: string;
 	}[];
 };
 
