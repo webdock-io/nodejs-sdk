@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
 
-const { version }: { version: string } = require("../../package.json");
 
 async function getApplicationName(): Promise<string> {
     // Browser
@@ -38,7 +37,7 @@ export async function req<T = unknown>(
                 "Cache-Control": "no-cache, no-store, must-revalidate",
                 "X-Client": typeof document !== "undefined" ? "browser-sdk" : "node-sdk",
                 "X-Application": applicationName,
-                "X-Version": version,
+                "X-Version": "1.1.109",
             },
             data: opts.body,
             ...(typeof document === "undefined" ? { family: 4 } : {}),

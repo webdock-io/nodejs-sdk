@@ -24,7 +24,7 @@ type PingResponseType = {
 
 export class WebdockClass {
 	private parent: Webdock;
-	private scripts: WebdockScripts
+	scripts: WebdockScripts
 	constructor(parent: Webdock) {
 		this.parent = parent;
 		this.scripts = new WebdockScripts(parent)
@@ -42,7 +42,7 @@ export class WebdockClass {
 
 }
 
-class WebdockScripts {
+export class WebdockScripts {
 
 	private parent: Webdock;
 

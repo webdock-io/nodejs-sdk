@@ -56,10 +56,18 @@ export class Webdock {
   operation: OperationClass;
   webdock: WebdockClass
   platforms: PlatformsClass
-
+  private secret_dev_client: string
   string_token: string;
-  constructor(token: string) {
+  constructor({
+    token,
+    secret_dev_client = "node-sdk"
+  }: {
+    token: string,
+    secret_dev_client?: any
+
+  }) {
     this.string_token = token
+    this.secret_dev_client = secret_dev_client
     this.account = new AccountClass(this);
     this.images = new ImagesClass(this);
     this.profiles = new ProfilesClass(this);
