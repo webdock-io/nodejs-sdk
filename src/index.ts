@@ -15,6 +15,7 @@ import * as OldWebdock from "webdock"
 import { OperationClass } from "./operation.js";
 import { WebdockClass } from "./webdock.js";
 import PlatformsClass from "./platforms.js";
+import { registerSecretDevClient } from "./utils/req.js";
 
 export const oldWebdock = OldWebdock
 
@@ -39,7 +40,13 @@ export interface WebdockApiRequestOptions<T> {
   log?: boolean | undefined;
 }
 
+export type WebdockOptions = {
+  token: string;
+};
 
+type WebdockInternalOptions = WebdockOptions & {
+  secret_dev_client?: string;
+};
 
 
 export class Webdock {
@@ -56,18 +63,19 @@ export class Webdock {
   operation: OperationClass;
   webdock: WebdockClass
   platforms: PlatformsClass
-  private secret_dev_client: string
   string_token: string;
-  constructor({
-    token,
-    secret_dev_client = "node-sdk"
-  }: {
-    token: string,
-    secret_dev_client?: any
+  constructor(token: string);
+  constructor(options: WebdockOptions);
+  /** @internal */
+  constructor(options: WebdockInternalOptions);
+  constructor(options: string | WebdockInternalOptions) {
+    const token = typeof options === "string" ? options : options.token;
+    const secretClient = typeof options === "string" ? undefined : options.secret_dev_client;
 
-  }) {
     this.string_token = token
-    this.secret_dev_client = secret_dev_client
+    if (secretClient) {
+      registerSecretDevClient(this.string_token, secretClient)
+    }
     this.account = new AccountClass(this);
     this.images = new ImagesClass(this);
     this.profiles = new ProfilesClass(this);

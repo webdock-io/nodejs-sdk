@@ -3,6 +3,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "stripInternal": true,
     "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

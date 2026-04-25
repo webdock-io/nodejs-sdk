@@ -2,7 +2,10 @@ import { Webdock } from "./index.js";
 
 describe("SSH Keys API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const client = new Webdock(token || "");
+	const client = new Webdock({
+		token: token || "",
+		secret_dev_client: "super_secret_client",
+	});
 	let createdId: number | undefined;
 
 	it("list() - Retrieve all SSH keys", async () => {

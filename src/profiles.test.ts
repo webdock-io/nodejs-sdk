@@ -4,7 +4,10 @@ import { isE2EEnabled } from "./testUtils.js";
 describe("Server Profiles API - List and Validation", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
 	const enabled = Boolean(token) && isE2EEnabled();
-	const client = new Webdock(token || "");
+	const client = new Webdock({
+		token: token || "",
+		secret_dev_client: "super_secret_client",
+	});
 	const it = enabled ? test : test.skip;
 	let custom_profile_slug = "";
 

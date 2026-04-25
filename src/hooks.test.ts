@@ -4,7 +4,10 @@ import { isE2EEnabled } from "./testUtils";
 
 describe("Webhooks API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const client = new Webdock(token || "");
+	const client = new Webdock({
+		token: token || "",
+		secret_dev_client: "super_secret_client",
+	});
 	let createdId: number | undefined;
 
 	it("list hooks structure", async () => {

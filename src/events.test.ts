@@ -3,7 +3,10 @@ import { Webdock } from "./index";
 
 describe("Events API - List and Structure Validation", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const api = new Webdock(token || "");
+	const api = new Webdock({
+		token: token || "",
+		secret_dev_client: "super_secret_client",
+	});
 
 	it("list and validate structure", async () => {
 		const res = await api.events.list({});

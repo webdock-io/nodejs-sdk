@@ -4,7 +4,10 @@ import { isE2EEnabled, waitForCallback } from "./testUtils.js";
 describe("Shell Users API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
 	const enabled = Boolean(token) && isE2EEnabled();
-	const client = new Webdock(token || "");
+	const client = new Webdock({
+		token: token || "",
+		secret_dev_client: "super_secret_client",
+	});
 	const it = enabled ? test : test.skip;
 	let newTestPubKeyId: number = 0
 	let testServerSlug: string | undefined;

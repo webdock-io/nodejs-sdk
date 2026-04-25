@@ -3,7 +3,10 @@ import { isE2EEnabled } from "./testUtils.js";
 
 describe("Account API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const api = new Webdock(token);
+	const api = new Webdock({
+		token,
+		secret_dev_client: "super_secret_client",
+	});
 	const enabled = Boolean(token) && isE2EEnabled();
 	const e2eIt = enabled ? test : test.skip;
 

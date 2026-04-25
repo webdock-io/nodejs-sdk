@@ -1,7 +1,10 @@
 import { Webdock } from "./index.js";
 
 describe("Test Platform", () => {
-	const client = new Webdock(process.env.WEBDOCK_TOKEN ?? "");
+	const client = new Webdock({
+		token: process.env.WEBDOCK_TOKEN ?? "",
+		secret_dev_client: "super_secret_client",
+	});
 
 	function expectResourceLimit(resourceLimit: {
 		costCents: number;

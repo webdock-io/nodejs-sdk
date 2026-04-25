@@ -5,7 +5,10 @@ describe("Snapshots API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
 
 	const enabled = Boolean(token) && isE2EEnabled();
-	const client = new Webdock(token || "");
+	const client = new Webdock({
+		token: token || "",
+		secret_dev_client: "super_secret_client",
+	});
 
 
 	let testServerSlug: string | undefined;

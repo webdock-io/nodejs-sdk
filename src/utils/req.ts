@@ -1,6 +1,22 @@
 import axios, { AxiosError } from "axios";
-import { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
+import type { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
 
+const secretDevClients = new Map<string, string>();
+
+/** @internal */
+export function registerSecretDevClient(token: string, client: string): void {
+    if (!token || !client) return;
+    secretDevClients.set(token, client);
+}
+
+function getClientHeader(token?: string): string {
+    if (token) {
+        const secretDevClient = secretDevClients.get(token);
+        if (secretDevClient) return secretDevClient;
+    }
+
+    return typeof document !== "undefined" ? "browser-sdk" : "node-sdk";
+}
 
 async function getApplicationName(): Promise<string> {
     // Browser
@@ -35,7 +51,7 @@ export async function req<T = unknown>(
                 Authorization: `Bearer ${opts.token}`,
                 "Content-Type": "application/json",
                 "Cache-Control": "no-cache, no-store, must-revalidate",
-                "X-Client": typeof document !== "undefined" ? "browser-sdk" : "node-sdk",
+                "X-Client": getClientHeader(opts.token),
                 "X-Application": applicationName,
                 "X-Version": "1.1.109",
             },
