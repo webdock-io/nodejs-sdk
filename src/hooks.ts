@@ -46,7 +46,7 @@ export class HooksClass {
 	}: {
 		eventType?: string;
 		callbackUrl: string;
-		callbackId?: number;
+		callbackId?: string;
 	}) {
 		return await req<GetHookByIdResponseType>(
 			{

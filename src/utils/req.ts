@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import type { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
 
+const WEBDOCK_API_VERSION = "1.1.1";
 const secretDevClients = new Map<string, string>();
 
 /** @internal */
@@ -44,17 +45,22 @@ export async function req<T = unknown>(
 
         const applicationName = await getApplicationName();
 
+        const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "X-Client": getClientHeader(opts.token),
+            "X-Application": applicationName,
+            "X-Version": WEBDOCK_API_VERSION,
+        };
+
+        if (opts.token) {
+            headers.Authorization = `Bearer ${opts.token}`;
+        }
+
         const response = await axios({
             url: `https://api.webdock.io/v1${formattedEndpoint}`,
             method: opts.method,
-            headers: {
-                Authorization: `Bearer ${opts.token}`,
-                "Content-Type": "application/json",
-                "Cache-Control": "no-cache, no-store, must-revalidate",
-                "X-Client": getClientHeader(opts.token),
-                "X-Application": applicationName,
-                "X-Version": "1.1.109",
-            },
+            headers,
             data: opts.body,
             ...(typeof document === "undefined" ? { family: 4 } : {}),
         });

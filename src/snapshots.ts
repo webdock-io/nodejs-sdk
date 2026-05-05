@@ -5,10 +5,11 @@ export type Snapshot = {
 	id: number;
 	name: string;
 	date: string; // ISO 8601 datetime string
-	type: "daily" | "weekly" | "monthly";
+	type: "daily" | "weekly" | "monthly" | "user" | "archived";
 	virtualization: "container" | "kvm";
 	completed: boolean;
 	deletable: boolean;
+	serverSlug: string | null;
 };
 
 export type SnapshotsCreateResponseType = {
@@ -69,6 +70,14 @@ export class SnapshotsClass {
 		return req<ListSnapshotResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/snapshots`,
+			method: "GET",
+		});
+	}
+
+	listAll() {
+		return req<ListSnapshotResponseType>({
+			token: this.parent.string_token,
+			endpoint: "/servers/snapshots",
 			method: "GET",
 		});
 	}

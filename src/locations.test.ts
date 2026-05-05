@@ -1,11 +1,8 @@
-import { Webdock } from "./index.js";
+import { createTestClient } from "./testUtils.js";
 
 describe("Locations API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const client = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient(token);
 
 	it("locations.list() returns array", async () => {
 		const locations = await client.location.list();

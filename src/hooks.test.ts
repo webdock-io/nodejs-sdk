@@ -1,16 +1,13 @@
-import { error } from "console";
-import { Webdock } from "./index";
-import { isE2EEnabled } from "./testUtils";
+import { createTestClient, isE2EEnabled } from "./testUtils";
 
 describe("Webhooks API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const client = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient(token);
+	const enabled = Boolean(token) && isE2EEnabled();
+	const e2eIt = enabled ? test : test.skip;
 	let createdId: number | undefined;
 
-	it("list hooks structure", async () => {
+	e2eIt("list hooks structure", async () => {
 		const response = await client.hooks.list();
 		expect(response.success).toBe(true);
 		if (!response.success) return;
@@ -28,7 +25,7 @@ describe("Webhooks API", () => {
 		});
 	});
 
-	it("create, getById, delete webhook", async () => {
+	e2eIt("create, getById, delete webhook", async () => {
 		const randomTestUrl = "https://http.dog/200.jpg";
 		const testEventType = "backup";
 		const createRes = await client.hooks.create({ callbackUrl: randomTestUrl, eventType: testEventType });

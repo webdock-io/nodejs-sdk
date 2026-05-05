@@ -1,14 +1,13 @@
-import { Webdock } from "./index";
+import { createTestClient, isE2EEnabled } from "./testUtils";
 
 
 describe("Events API - List and Structure Validation", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const api = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const api = createTestClient(token);
+	const enabled = Boolean(token) && isE2EEnabled();
+	const e2eIt = enabled ? test : test.skip;
 
-	it("list and validate structure", async () => {
+	e2eIt("list and validate structure", async () => {
 		const res = await api.events.list({});
 		expect(res.success).toBe(true);
 		if (!res.success) return;

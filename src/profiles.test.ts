@@ -1,13 +1,9 @@
-import { Webdock } from "./index.js";
-import { isE2EEnabled } from "./testUtils.js";
+import { createTestClient, isE2EEnabled } from "./testUtils.js";
 
 describe("Server Profiles API - List and Validation", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
 	const enabled = Boolean(token) && isE2EEnabled();
-	const client = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient(token);
 	const it = enabled ? test : test.skip;
 	let custom_profile_slug = "";
 
@@ -18,7 +14,8 @@ describe("Server Profiles API - List and Validation", () => {
 		disk: number;
 		cpu: { cores: number; threads: number };
 		price: { amount: number; currency: string };
-		platform: string;
+		network_bandwidth: number;
+		platform: string | null;
 	}) {
 		expect(profile).toMatchObject({
 			slug: expect.any(String),
@@ -33,7 +30,7 @@ describe("Server Profiles API - List and Validation", () => {
 				amount: expect.any(Number),
 				currency: expect.any(String),
 			},
-			platform: expect.any(String),
+			network_bandwidth: expect.any(Number),
 		});
 		expect(profile.slug).toMatch(/^[\w-]+$/);
 		expect(profile.name.length).toBeGreaterThan(0);
@@ -41,7 +38,10 @@ describe("Server Profiles API - List and Validation", () => {
 		expect(profile.disk).toBeGreaterThan(0);
 		expect(profile.price.amount).toBeGreaterThan(0);
 		expect(profile.price.currency).toMatch(/^[A-Z]{3}$/);
-		expect(["epyc_vps", "intel_vps"]).toContain(profile.platform);
+		expect(profile.network_bandwidth).toBeGreaterThanOrEqual(0);
+		if (profile.platform !== null) {
+			expect(profile.platform.length).toBeGreaterThan(0);
+		}
 	}
 
 	it("list() - list profiles and validate schema", async () => {

@@ -13,28 +13,82 @@ export type ServerStatus =
 	| "suspended";
 export type VirtualizationType = "container" | "kvm";
 export type ServerType = "Apache" | "Nginx" | "None";
+export type ServerScriptReference = number | string;
+
+export type CPU = {
+	cores: number;
+	threads: number;
+};
+
+export type ServerMetadata = {
+	default_alias_disabled?: boolean;
+	has_set_domains?: boolean;
+	certbot_lastrun_time?: string | null;
+	certbot_lastrun_result?: string | null;
+	icon?: string | null;
+	description?: string | null;
+	notes?: string | null;
+	invoice_date?: string | null;
+	auto_stop_on_bandwidth_cap?: boolean;
+	[key: string]: unknown;
+};
+
+export type ServerServices = {
+	is_managed_server?: boolean;
+	service_list?: Record<string, unknown>[];
+	[key: string]: unknown;
+};
+
+export type ServerImageData = {
+	slug: string;
+	name: string;
+	webServer: ServerType | null;
+	phpVersion: string | null;
+};
+
+export type ServerProfileData = {
+	slug: string;
+	name: string;
+	ram: number;
+	disk: number;
+	cpu: CPU;
+	price: {
+		amount: number;
+		currency: string;
+	};
+	network_bandwidth: number;
+	platform: string | null;
+};
 
 export type Server = {
 	slug: string;
 	name: string;
 	date: string;
-	location: string;
+	location: string | null;
 	image: string;
-	profile: string;
+	profile: string | null;
 	ipv4: string | null;
 	ipv6: string | null;
 	status: ServerStatus;
+	pendingDeletion?: boolean;
 	virtualization: VirtualizationType;
 	webServer: ServerType;
-	aliases: [
-		string,
-	];
-	snapshotRunTime: 0;
+	aliases: string[];
+	snapshotRunTime: number;
 	description: string;
 	WordPressLockDown: boolean;
 	SSHPasswordAuthEnabled: boolean;
+	passwordlessSudoEnabled?: boolean;
 	notes: string;
 	nextActionDate: string;
+	metadata?: ServerMetadata;
+	services?: ServerServices;
+	secondaryIps?: string[];
+	secondary_ips?: string[];
+	lastChecked?: string | null;
+	lastchecked?: string | null;
+	imageData?: ServerImageData;
+	profileData?: ServerProfileData;
 };
 
 export type CreateServerResponseType = {
@@ -133,6 +187,21 @@ export type UpdateServerResponseType = {
 	body: Server;
 };
 
+export type CancelDeleteServerResponseType = {
+	body: Server;
+	headers: Partial<ResponseHeaders>;
+};
+
+export type UpdateServerIdentityResponseType = {
+	body: Server;
+	headers: ResponseHeaders;
+};
+
+export type AsyncActionResponseType = {
+	body: unknown;
+	headers: ResponseHeaders;
+};
+
 /** */
 interface MetricsSamplingDTO {
 	amount: number;
@@ -190,11 +259,10 @@ export class ServersClass {
 
 
 	cancelDelete({ serverSlug }: { serverSlug: string }) {
-		return req<CreateServerResponseType>({
+		return req<CancelDeleteServerResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/uncancel`,
 			method: "POST",
-			headers: ["x-callback-id"]
 		})
 	}
 
@@ -215,7 +283,7 @@ export class ServersClass {
 		profileSlug?: string;
 		virtualization?: string;
 		slug?: string;
-		userScriptId?: string;
+		userScriptId?: ServerScriptReference;
 	} & (
 			| { snapshotId?: number; imageSlug?: never }
 			| { imageSlug?: string; snapshotId?: never }
@@ -323,17 +391,19 @@ export class ServersClass {
 			};
 		}
 	}
-	getBySlug({ serverSlang, }: { serverSlang: string; }) {
+	getBySlug({ serverSlug }: { serverSlug?: string; }) {
+		const slug = serverSlug;
+
 		return req<CreateServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlang}`,
+			endpoint: `/servers/${slug}`,
 			method: "GET",
 		});
 	}
-	list() {
+	list({ status = "all" }: { status?: "all" | "suspended" | "active" } = {}) {
 		return req<ListServersResponseType>({
 			token: this.parent.string_token,
-			endpoint: "/servers",
+			endpoint: `/servers?status=${status}`,
 			method: "GET",
 		});
 	}
@@ -364,7 +434,7 @@ export class ServersClass {
 	reinstall({ imageSlug, serverSlug, userScriptId, deleteSnapshots }: {
 		deleteSnapshots?: boolean;
 		serverSlug: string;
-		userScriptId?: string;
+		userScriptId?: ServerScriptReference;
 		imageSlug: string;
 	}) {
 		return req<ReinstallServerResponseType>(
@@ -471,10 +541,7 @@ export type CreateScriptResponseType = {
 };
 
 export type DeleteScriptServerReturnType = {
-	body: Script;
-	headers: {
-		"x-callback-id": string;
-	};
+	headers: ResponseHeaders;
 };
 
 export type ExecuteScriptOnServerReturnType = {
@@ -557,7 +624,7 @@ export class ServerScriptsClass {
 		executeImmediately,
 		serverSlug,
 	}: {
-		scriptId: number;
+		scriptId: ServerScriptReference;
 		path: string;
 		makeScriptExecutable: boolean;
 		executeImmediately: boolean;
@@ -590,6 +657,7 @@ export class ServerScriptsClass {
 				token: this.parent.string_token,
 				endpoint: `/servers/${serverSlug}/scripts/${scriptId}`,
 				method: "DELETE",
+				headers: ["x-callback-id"],
 			},
 		);
 	}
@@ -642,7 +710,7 @@ class ServerIdentityClass {
 		aliasdomains?: string,
 		removeDefaultAlias?: boolean
 	}) {
-		return req<CreateScriptOnServerResponse>({
+		return req<UpdateServerIdentityResponseType>({
 			token: this.parent.string_token,
 			method: "PATCH",
 			endpoint: `/servers/${serverSlug}/identity`,
@@ -662,11 +730,11 @@ class ServerIdentityClass {
 		forceSSL
 	}: {
 		serverSlug: string;
-		domains: string[];
-		email: string;
-		forceSSL: boolean
+		domains?: string[];
+		email?: string;
+		forceSSL?: boolean
 	}) {
-		return req<void>({
+		return req<AsyncActionResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/actions/run-certbot`,
 			method: "POST",
@@ -698,7 +766,7 @@ class ServerSettingsClass {
 		serverSlug: string
 	}) {
 
-		return req<CreateScriptOnServerResponse>({
+		return req<AsyncActionResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/actions/settings`,
 			method: "POST",

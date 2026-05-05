@@ -1,12 +1,11 @@
-import { Webdock } from "./index.js";
+import { createTestClient, isE2EEnabled } from "./testUtils.js";
 
 describe("Webdock API", () => {
-	const client = new Webdock({
-		token: process.env.WEBDOCK_TOKEN ?? "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient();
+	const enabled = Boolean(process.env.WEBDOCK_TOKEN) && isE2EEnabled();
+	const e2eIt = enabled ? test : test.skip;
 
-	test("ping() - Return the public healthcheck response", async () => {
+	e2eIt("ping() - Return the healthcheck response", async () => {
 		const res = await client.webdock.ping();
 		expect(res.success).toBe(true);
 		if (!res.success) return;

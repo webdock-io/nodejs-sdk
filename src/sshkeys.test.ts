@@ -1,14 +1,13 @@
-import { Webdock } from "./index.js";
+import { createTestClient, isE2EEnabled } from "./testUtils.js";
 
 describe("SSH Keys API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const client = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient(token);
+	const enabled = Boolean(token) && isE2EEnabled();
+	const e2eIt = enabled ? test : test.skip;
 	let createdId: number | undefined;
 
-	it("list() - Retrieve all SSH keys", async () => {
+	e2eIt("list() - Retrieve all SSH keys", async () => {
 		const response = await client.sshkeys.list();
 		expect(response.success).toBe(true);
 		if (!response.success) return;
@@ -23,7 +22,7 @@ describe("SSH Keys API", () => {
 		});
 	});
 
-	it("create() - Create a new SSH key", async () => {
+	e2eIt("create() - Create a new SSH key", async () => {
 		const dummyKey =
 			"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGtest1234567890abcdefghijklmnopqrstuvwxyz test-sdk@webdock";
 		const createRes = await client.sshkeys.create({
@@ -41,13 +40,14 @@ describe("SSH Keys API", () => {
 		});
 	});
 
-	it("delete() - Remove the created SSH key", async () => {
+	e2eIt("delete() - Remove the created SSH key", async () => {
 		if (!createdId) return;
 		const delRes = await client.sshkeys.delete({ id: createdId });
 		expect(delRes.success).toBe(true);
 	});
 
 	afterAll(async () => {
+		if (!enabled) return;
 		// Cleanup in case delete test didn't run
 		if (createdId) {
 			await client.sshkeys.delete({ id: createdId }).catch(() => {});

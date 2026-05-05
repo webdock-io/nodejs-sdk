@@ -1,11 +1,8 @@
-import { Webdock } from "./index.js";
+import { createTestClient } from "./testUtils.js";
 
 describe("Server Images API - List and Validation", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const client = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient(token);
 
 	it("list images and validate fields", async () => {
 		const response = await client.images.list();

@@ -14,7 +14,7 @@ export type Price = {
 	currency: string;
 };
 
-export type Platform = "epyc_vps" | "intel_vps"
+export type Platform = "epyc_vps" | "intel_vps" | "ryzen_vps" | (string & {})
 
 export type Profile = {
 	slug: string;
@@ -23,17 +23,18 @@ export type Profile = {
 	disk: number;
 	cpu: CPU;
 	price: Price;
-	platform: Platform
+	network_bandwidth: number;
+	platform: Platform | null;
 };
 export type DeleteCustomProfilesParams = {
 	profileSlug: string
 }
 export type CreateCustomProfilesParams = {
 	platform: Platform;
-	cpu_threads: Number;
-	ram: Number;
-	disk_space: Number;
-	network_bandwidth: Number;
+	cpu_threads: number;
+	ram: number;
+	disk_space: number;
+	network_bandwidth: number;
 }
 
 export type CreateCustomProfileResponseType = {
@@ -80,11 +81,18 @@ export class ProfilesClass {
 	async list({
 		locationId = "dk",
 		profileSlug = ""
-	}) {
+	}: {
+		locationId?: string;
+		profileSlug?: string;
+	} = {}) {
+		const searchParams = new URLSearchParams();
+		if (locationId) searchParams.set("locationId", locationId);
+		if (profileSlug) searchParams.set("profileSlug", profileSlug);
+		const query = searchParams.toString();
 
 		const res = await req<ListProfilesResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/profiles?locationId=${locationId}&profileSlug=${profileSlug}`,
+			endpoint: `/profiles${query ? `?${query}` : ""}`,
 			method: "GET",
 		});
 

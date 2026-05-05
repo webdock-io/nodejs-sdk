@@ -1,20 +1,17 @@
-import { Webdock } from "./index.js";
-import { isE2EEnabled, waitForCallback } from "./testUtils.js";
+import { createTestClient, isE2EEnabled, waitForCallback } from "./testUtils.js";
 
 describe("Snapshots API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
 
 	const enabled = Boolean(token) && isE2EEnabled();
-	const client = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient(token);
+	const e2eIt = enabled ? test : test.skip;
 
 
 	let testServerSlug: string | undefined;
 	let snapshotId: number | undefined;
 
-	it("Setup: Create temporary server", async () => {
+	e2eIt("Setup: Create temporary server", async () => {
 		const localServer = await client.servers.create({
 			name: `temp-${Date.now()}`,
 			locationId: "dk",
@@ -28,7 +25,7 @@ describe("Snapshots API", () => {
 		await waitForCallback(client, localServer.response.headers["x-callback-id"]);
 	});
 
-	it("list() - Retrieve all snapshots", async () => {
+	e2eIt("list() - Retrieve all snapshots", async () => {
 		if (!testServerSlug) return;
 		const snapshots = await client.snapshots.list({ serverSlug: testServerSlug });
 		expect(snapshots.success).toBe(true);
@@ -36,7 +33,7 @@ describe("Snapshots API", () => {
 		expect(snapshots.response.body).toBeInstanceOf(Array);
 	});
 
-	it("create() - Create temporary snapshot", async () => {
+	e2eIt("create() - Create temporary snapshot", async () => {
 		if (!testServerSlug) return;
 		const localSnapshot = await client.snapshots.create({ serverSlug: testServerSlug, name: `test-snapshot-${Date.now()}` });
 		expect(localSnapshot.success).toBe(true);
@@ -45,7 +42,7 @@ describe("Snapshots API", () => {
 		await waitForCallback(client, localSnapshot.response.headers["x-callback-id"]);
 	});
 
-	it("restore() - Restore from snapshot", async () => {
+	e2eIt("restore() - Restore from snapshot", async () => {
 		if (!testServerSlug || !snapshotId) return;
 		const restoreRes = await client.snapshots.restore({ serverSlug: testServerSlug, snapshotId });
 		expect(restoreRes.success).toBe(true);
@@ -53,7 +50,7 @@ describe("Snapshots API", () => {
 		await waitForCallback(client, restoreRes.response.headers["x-callback-id"]);
 	});
 
-	it("delete() - Remove temporary snapshot", async () => {
+	e2eIt("delete() - Remove temporary snapshot", async () => {
 		if (!testServerSlug || !snapshotId) return;
 		const deleteSnapshot = await client.snapshots.delete({ serverSlug: testServerSlug, snapshotId });
 		expect(deleteSnapshot.success).toBe(true);

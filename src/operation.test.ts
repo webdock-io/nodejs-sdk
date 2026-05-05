@@ -1,13 +1,12 @@
-import { Webdock } from "./index.js";
+import { createTestClient, isE2EEnabled } from "./testUtils.js";
 
 describe("Operation API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
-	const client = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient(token);
+	const enabled = Boolean(token) && isE2EEnabled();
+	const e2eIt = enabled ? test : test.skip;
 
-	it("fetch() - Fetch event log by callbackId", async () => {
+	e2eIt("fetch() - Fetch event log by callbackId", async () => {
 		const res = await client.operation.fetch("non-existent-callback-id");
 		expect(res.success).toBe(true);
 		if (!res.success) return;

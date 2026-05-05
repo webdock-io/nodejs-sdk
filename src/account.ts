@@ -1,5 +1,6 @@
-import { Webdock } from "./index";
+import type { Webdock, WebdockApiRequestReturn } from "./index";
 import { CreateScriptResponseType, GetScriptByIdTResponseType, ListScriptsResponse } from "./servers";
+import type { Snapshot } from "./snapshots";
 import { req } from "./utils/req";
 
 export type AccountInformation = {
@@ -13,10 +14,17 @@ export type AccountInformation = {
 	accountBalance: string;
 	accountBalanceRaw: string;
 	accountBalanceCurrency: string;
+	referralURl: string;
+	referralCode: string;
 };
 
 export type AccountInformationReturnType = {
 	body: AccountInformation;
+};
+
+type AccountScriptReference = number | string;
+type RawAccountInformationReturnType = {
+	body: AccountInformation | AccountInformation[];
 };
 
 export type AddPublicKeyRequest = {
@@ -34,20 +42,8 @@ export type PublicKey = {
 export type PublicKeyReturnType = {
 	body: PublicKey;
 };
-type Backup = {
-	id: number;
-	name: string;
-	type: "daily" | "weekly" | "archived";
-	virtualization: "kvm";
-	completed: boolean;
-	date: string;
-	callbackId: string | null;
-	deletable: boolean;
-	serverSlug: string;
-};
-
 type ListArchivedServersRepose = {
-	body: Backup[]
+	body: Snapshot[]
 };
 
 export class AccountClass {
@@ -69,13 +65,25 @@ export class AccountClass {
 		})
 	}
 
-	async info() {
-		return await req<AccountInformationReturnType>({
+	async info(): WebdockApiRequestReturn<AccountInformationReturnType> {
+		const res = await req<RawAccountInformationReturnType>({
 			token: this.parent.string_token,
 			endpoint: "/account/accountInformation",
 			headers: [],
 			method: "GET",
 		});
+
+		if (res.success && Array.isArray(res.response.body)) {
+			return {
+				...res,
+				response: {
+					...res.response,
+					body: res.response.body[0],
+				},
+			};
+		}
+
+		return res as Awaited<WebdockApiRequestReturn<AccountInformationReturnType>>;
 	}
 
 }
@@ -98,7 +106,7 @@ class AccountScripts {
 		});
 	}
 
-	getById({ scriptId }: { scriptId: number }) {
+	getById({ scriptId }: { scriptId: AccountScriptReference }) {
 		return req<GetScriptByIdTResponseType>(
 			{
 				token: this.parent.string_token,
@@ -113,7 +121,7 @@ class AccountScripts {
 		filename,
 		content,
 	}: {
-		id: number;
+		id: AccountScriptReference;
 		name: string;
 		filename: string;
 		content: string;
@@ -151,7 +159,7 @@ class AccountScripts {
 			},
 		);
 	}
-	delete({ id }: { id: number }) {
+	delete({ id }: { id: AccountScriptReference }) {
 		return req<undefined>(
 			{
 				token: this.parent.string_token,

@@ -1,13 +1,9 @@
-import { Webdock } from "./index.js";
-import { isE2EEnabled, waitForCallback } from "./testUtils.js";
+import { createTestClient, isE2EEnabled, waitForCallback } from "./testUtils.js";
 
 describe("Server API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";
 	const enabled = Boolean(token) && isE2EEnabled();
-	const client = new Webdock({
-		token: token || "",
-		secret_dev_client: "super_secret_client",
-	});
+	const client = createTestClient(token);
 	const it = enabled ? test : test.skip;
 
 	let testServerSlug: string | undefined;
@@ -23,7 +19,7 @@ describe("Server API", () => {
 	async function deleteServerIfNeeded(serverSlug?: string) {
 		if (!serverSlug) return;
 
-		const server = await client.servers.getBySlug({ serverSlang: serverSlug });
+		const server = await client.servers.getBySlug({ serverSlug: serverSlug });
 		if (!server.success) return;
 
 		const del = await client.servers.delete({ serverSlug });
@@ -124,7 +120,7 @@ describe("Server API", () => {
 
 	it("getBySlug() - Fetch server by slug", async () => {
 		if (!testServerSlug) return;
-		const res = await client.servers.getBySlug({ serverSlang: testServerSlug });
+		const res = await client.servers.getBySlug({ serverSlug: testServerSlug });
 		expect(res.success).toBe(true);
 		if (!res.success) return;
 		expect(res.response.body).toMatchObject({
@@ -137,7 +133,7 @@ describe("Server API", () => {
 	it("identity.update() - Update server identity", async () => {
 		if (!testServerSlug) return;
 
-		const current = await client.servers.getBySlug({ serverSlang: testServerSlug });
+		const current = await client.servers.getBySlug({ serverSlug: testServerSlug });
 		expect(current.success).toBe(true);
 		if (!current.success) return;
 
@@ -156,7 +152,7 @@ describe("Server API", () => {
 		callbackId = res.response.headers["x-callback-id"];
 		await waitForCallback(client, callbackId);
 
-		const refreshed = await client.servers.getBySlug({ serverSlang: testServerSlug });
+		const refreshed = await client.servers.getBySlug({ serverSlug: testServerSlug });
 		expect(refreshed.success).toBe(true);
 		if (!refreshed.success) return;
 		expect(refreshed.response.body.slug).toBe(testServerSlug);
@@ -177,7 +173,7 @@ describe("Server API", () => {
 	// 	callbackId = res.response.headers["x-callback-id"];
 	// 	await waitForCallback(client, callbackId);
 
-	// 	const refreshed = await client.servers.getBySlug({ serverSlang: testServerSlug });
+	// 	const refreshed = await client.servers.getBySlug({ serverSlug: testServerSlug });
 	// 	expect(refreshed.success).toBe(true);
 	// 	if (!refreshed.success) return;
 	// 	expect(refreshed.response.body.slug).toBe(testServerSlug);
@@ -260,7 +256,7 @@ describe("Server API", () => {
 	// 	callbackId = res.response.headers["x-callback-id"];
 	// 	await waitForCallback(client, callbackId);
 
-	// 	const server = await client.servers.getBySlug({ serverSlang: cancelDeleteServerSlug });
+	// 	const server = await client.servers.getBySlug({ serverSlug: cancelDeleteServerSlug });
 	// 	expect(server.success).toBe(true);
 	// 	if (!server.success) return;
 	// 	expect(server.response.body.slug).toBe(cancelDeleteServerSlug);

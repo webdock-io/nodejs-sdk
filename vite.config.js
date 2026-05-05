@@ -22,7 +22,7 @@ export default defineConfig({
       },
     },
     rollupOptions: {
-      external: ["fs", "path", "os", "crypto", "util", "events", "stream", "http", "https", "url"],
+      external: ["axios", "dotenv", "tslib", "webdock", "fs", "path", "os", "crypto", "util", "events", "stream", "http", "https", "url"],
       output: [
         {
           format: "es",
