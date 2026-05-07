@@ -77,7 +77,7 @@ export async function req<T = unknown>(
             response: {
                 body: response.data,
                 headers: returnHeaders,
-            } as unknown as T,
+            } as T,
         };
     } catch (error) {
         const err = error as AxiosError<{ message: string }>;
