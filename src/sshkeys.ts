@@ -24,6 +24,12 @@ export type SSHSettings = {
 	token?: string;
 };
 
+export type SSHSettingsResponseType = {
+	headers: {
+		"x-callback-id": string;
+	};
+};
+
 
 export class SshKeysClass {
 	private parent: Webdock;
@@ -65,14 +71,14 @@ export class SshKeysClass {
 	}
 
 	toggleSSHSettings(data: SSHSettings) {
-		return req<void>({
+		return req<SSHSettingsResponseType>({
 			token: data.token || this.parent.string_token,
 			endpoint: `/servers/${data.serverSlug}/sshSettings`,
 			headers: ["x-callback-id"],
 			method: "POST",
 			body: {
 				passwordSshAuthEnabled: data.passwordSshAuthEnabled,
-				passwordlessSudoEnabled: data.passwordSshAuthEnabled,
+				passwordlessSudoEnabled: data.passwordlessSudoEnabled,
 				sshPort: data.sshPort,
 			},
 		});

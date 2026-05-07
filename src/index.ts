@@ -39,7 +39,9 @@ export interface WebdockApiRequestOptions<T> {
   log?: boolean | undefined;
 }
 
-
+export type WebdockOptions = {
+  token?: string;
+};
 
 
 export class Webdock {
@@ -56,9 +58,13 @@ export class Webdock {
   operation: OperationClass;
   webdock: WebdockClass
   platforms: PlatformsClass
-
   string_token: string;
-  constructor(token: string) {
+  constructor();
+  constructor(token: string);
+  constructor(options: WebdockOptions);
+  constructor(options: string | WebdockOptions = "") {
+    const token = typeof options === "string" ? options : options.token ?? "";
+
     this.string_token = token
     this.account = new AccountClass(this);
     this.images = new ImagesClass(this);

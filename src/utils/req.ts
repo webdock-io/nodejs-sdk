@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
+import type { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
 
 
 export async function req<T = unknown>(
@@ -11,6 +11,18 @@ export async function req<T = unknown>(
             formattedEndpoint = "/" + formattedEndpoint;
         }
 
+
+        const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "X-Client": getClientHeader(opts.token),
+            "X-Application": applicationName,
+            "X-Version": WEBDOCK_API_VERSION,
+        };
+
+        if (opts.token) {
+            headers.Authorization = `Bearer ${opts.token}`;
+        }
 
         const response = await axios({
             url: `https://api.webdock.io/v1${formattedEndpoint}`,
@@ -39,7 +51,7 @@ export async function req<T = unknown>(
             response: {
                 body: response.data,
                 headers: returnHeaders,
-            } as unknown as T,
+            } as T,
         };
     } catch (error) {
         const err = error as AxiosError<{ message: string }>;
