@@ -158,26 +158,26 @@ describe("Server API", () => {
 		expect(refreshed.response.body.slug).toBe(testServerSlug);
 	});
 
-	// it("settings.update() - Update server settings", async () => {
-	// 	if (!testServerSlug) return;
+	it("settings.update() - Update server settings", async () => {
+		if (!testServerSlug) return;
 
-	// 	const res = await client.servers.settings.update({
-	// 		serverSlug: testServerSlug,
-	// 		webroot: "/var/www/html",
-	// 		updateWebserver: false,
-	// 		updateLetsencrypt: false,
-	// 	});
-	// 	expect(res.success).toBe(true);
-	// 	if (!res.success) return;
+		const res = await client.servers.settings.update({
+			serverSlug: testServerSlug,
+			webroot: "/var/www/html",
+			updateWebserver: false,
+			updateLetsencrypt: false,
+		});
+		expect(res.success).toBe(true);
+		if (!res.success) return;
 
-	// 	callbackId = res.response.headers["x-callback-id"];
-	// 	await waitForCallback(client, callbackId);
+		callbackId = res.response.headers["x-callback-id"];
+		await waitForCallback(client, callbackId);
 
-	// 	const refreshed = await client.servers.getBySlug({ serverSlug: testServerSlug });
-	// 	expect(refreshed.success).toBe(true);
-	// 	if (!refreshed.success) return;
-	// 	expect(refreshed.response.body.slug).toBe(testServerSlug);
-	// });
+		const refreshed = await client.servers.getBySlug({ serverSlang: testServerSlug });
+		expect(refreshed.success).toBe(true);
+		if (!refreshed.success) return;
+		expect(refreshed.response.body.slug).toBe(testServerSlug);
+	});
 
 	it("fetchFile() - Fetch /etc/os-release from server", async () => {
 		if (!testServerSlug) return;
@@ -242,19 +242,19 @@ describe("Server API", () => {
 		}
 	});
 
-	// it("cancelDelete() - Restore a delete-pending server", async () => {
-	// 	if (!cancelDeleteServerSlug) return;
+	it("cancelDelete() - Restore a delete-pending server", async () => {
+		if (!cancelDeleteServerSlug) return;
 
-	// 	const deleteRequest = await client.servers.delete({ serverSlug: cancelDeleteServerSlug });
-	// 	expect(deleteRequest.success).toBe(true);
-	// 	if (!deleteRequest.success) return;
+		const deleteRequest = await client.servers.delete({ serverSlug: cancelDeleteServerSlug });
+		expect(deleteRequest.success).toBe(true);
+		if (!deleteRequest.success) return;
 
-	// 	const res = await client.servers.cancelDelete({ serverSlug: cancelDeleteServerSlug });
-	// 	expect(res.success).toBe(true);
-	// 	if (!res.success) return;
+		const res = await client.servers.cancelDelete({ serverSlug: cancelDeleteServerSlug });
+		expect(res.success).toBe(true);
+		if (!res.success) return;
 
-	// 	callbackId = res.response.headers["x-callback-id"];
-	// 	await waitForCallback(client, callbackId);
+		callbackId = res.response.headers["x-callback-id"];
+		await waitForCallback(client, callbackId);
 
 	// 	const server = await client.servers.getBySlug({ serverSlug: cancelDeleteServerSlug });
 	// 	expect(server.success).toBe(true);

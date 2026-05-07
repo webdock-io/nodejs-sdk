@@ -124,7 +124,11 @@ export type ReinstallServerResponseType = {
 		"x-callback-id": string;
 	};
 };
-
+export type RenewServerCertResponseType = {
+	headers: {
+		"x-callback-id": string;
+	};
+};
 interface WarningDTO {
 	type: string;
 	message: string;
@@ -649,7 +653,7 @@ export class ServerScriptsClass {
 	delete(
 		{ serverSlug, scriptId }: {
 			serverSlug: string;
-			scriptId: number;
+			scriptId: string;
 		},
 	) {
 		return req<DeleteScriptServerReturnType>(
@@ -664,7 +668,7 @@ export class ServerScriptsClass {
 	execute(
 		{ serverSlug, scriptID }: {
 			serverSlug: string;
-			scriptID: number;
+			scriptID: string;
 		},
 	) {
 		return req<ExecuteScriptOnServerReturnType>(
@@ -734,7 +738,7 @@ class ServerIdentityClass {
 		email?: string;
 		forceSSL?: boolean
 	}) {
-		return req<AsyncActionResponseType>({
+		return req<RenewServerCertResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/actions/run-certbot`,
 			method: "POST",
