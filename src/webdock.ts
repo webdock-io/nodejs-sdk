@@ -98,7 +98,7 @@ class IpBlocksClass {
 			endpoint: `/servers/ipBlocks/${ipId}/banned`,
 			method: "PATCH",
 			body: {
-				banned: true
+				banned: false
 			}
 		})
 	}
