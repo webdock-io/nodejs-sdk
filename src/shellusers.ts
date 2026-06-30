@@ -67,6 +67,12 @@ export type CreateWebSSHTokenResponseType = {
 	};
 };
 
+export type ResetShellUserPasswordResponseType = {
+	headers: {
+		"x-callback-id": string;
+	};
+};
+
 export class ShellUsersClass {
 	private parent: Webdock;
 	constructor(parent: Webdock) {
@@ -104,6 +110,22 @@ export class ShellUsersClass {
 			token: this.parent.string_token,
 			endpoint: `servers/${serverSlug}/shellUsers/${userId}`,
 			method: "DELETE",
+			headers: ["x-callback-id"],
+		});
+	}
+
+	resetPassword({ serverSlug, userId, newPassword, }: {
+		serverSlug: string;
+		userId: number;
+		newPassword: string;
+	}) {
+		return req<ResetShellUserPasswordResponseType>({
+			token: this.parent.string_token,
+			endpoint: `servers/${serverSlug}/shellUsers/${userId}/resetPassword`,
+			method: "POST",
+			body: {
+				newPassword,
+			},
 			headers: ["x-callback-id"],
 		});
 	}

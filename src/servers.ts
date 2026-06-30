@@ -206,6 +206,20 @@ export type AsyncActionResponseType = {
 	headers: ResponseHeaders;
 };
 
+export type CreateServerSnapshotActionResponseType = {
+	body: {
+		id: number;
+		name: string;
+		date: string;
+		type: "daily" | "weekly" | "monthly" | "user" | "archived";
+		virtualization: "container" | "kvm";
+		completed: boolean;
+		deletable: boolean;
+		serverSlug: string | null;
+	};
+	headers: ResponseHeaders;
+};
+
 /** */
 interface MetricsSamplingDTO {
 	amount: number;
@@ -246,17 +260,39 @@ export type MetricsNowResponseType = {
 	};
 };
 
+export type IpBlockStatsv = {
+	/** CIDR prefix for this block */
+	cidr: string;
+
+	/** Total number of IP rows in the database for this block */
+	total: number;
+
+	/** Number of assignable free IPs: free IPs minus user-banned IPs */
+	free: number;
+
+	/** Number of used IPs */
+	used: number;
+
+	/** Number of user-banned free IPs for this server owner */
+	banned: number;
+
+	/** Number of reserved IPs in this block, administratively reserved by Webdock */
+	reserved: number;
+}
+
 export class ServersClass {
 	private parent: Webdock;
 	scripts: ServerScriptsClass
 	identity: ServerIdentityClass
 	settings: ServerSettingsClass
+	IpBlock: ServerIpBlock
 
 	constructor(parent: Webdock) {
 		this.parent = parent;
 		this.scripts = new ServerScriptsClass(parent)
 		this.identity = new ServerIdentityClass(parent)
 		this.settings = new ServerSettingsClass(parent)
+		this.IpBlock = new ServerIpBlock(parent)
 	}
 
 
@@ -435,6 +471,51 @@ export class ServersClass {
 			},
 		);
 	}
+
+	snapshot({
+		serverSlug,
+		name,
+	}: {
+		serverSlug: string;
+		name: string;
+	}) {
+		return req<CreateServerSnapshotActionResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${serverSlug}/actions/snapshot`,
+			method: "POST",
+			body: {
+				name,
+			},
+			headers: ["x-callback-id"],
+		});
+	}
+
+	disableIpv6({
+		serverSlug,
+	}: {
+		serverSlug: string;
+	}) {
+		return req<AsyncActionResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${serverSlug}/actions/disable-ipv6`,
+			method: "POST",
+			headers: ["x-callback-id"],
+		});
+	}
+
+	enableIpv6({
+		serverSlug,
+	}: {
+		serverSlug: string;
+	}) {
+		return req<AsyncActionResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${serverSlug}/actions/enable-ipv6`,
+			method: "POST",
+			headers: ["x-callback-id"],
+		});
+	}
+
 	reinstall({ imageSlug, serverSlug, userScriptId, deleteSnapshots }: {
 		deleteSnapshots?: boolean;
 		serverSlug: string;
@@ -555,6 +636,10 @@ export type ExecuteScriptOnServerReturnType = {
 	};
 };
 
+export type GetScriptOnServerReturnType = {
+	body: Script;
+};
+
 export type GetScriptByIdTResponseType = {
 	body: {
 		id: number;
@@ -665,6 +750,22 @@ export class ServerScriptsClass {
 			},
 		);
 	}
+
+	getById(
+		{ serverSlug, scriptId }: {
+			serverSlug: string;
+			scriptId: string | number;
+		},
+	) {
+		return req<GetScriptOnServerReturnType>(
+			{
+				token: this.parent.string_token,
+				endpoint: `/servers/${serverSlug}/scripts/${scriptId}`,
+				method: "GET",
+			},
+		);
+	}
+
 	execute(
 		{ serverSlug, scriptID }: {
 			serverSlug: string;
@@ -697,6 +798,48 @@ export class ServerScriptsClass {
 
 
 }
+
+// https://api.webdock.io/v1/servers/{serverSlug}/actions/changeIp
+
+class ServerIpBlock {
+	private parent: Webdock
+	constructor(parent: Webdock) {
+		this.parent = parent
+	}
+
+	ListIpBlocks({ serverSlug }: { serverSlug: string }) {
+		return req<IpBlockStatsv>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${serverSlug}/ipBlocks`,
+			method: "GET",
+
+		})
+	}
+
+
+
+
+	ChangeIPAddress({ serverSlug, markReleasedIpBanned, overrideBlockId, sameBlock }: {
+		serverSlug: string
+		sameBlock: boolean,
+		overrideBlockId: number,
+		markReleasedIpBanned: boolean,
+	}) {
+		req({
+			token: this.parent.string_token,
+			endpoint: `/servers/${serverSlug}/actions/changeIp`,
+			method: "post",
+			headers: ["x-callback-id"],
+			body: {
+				markReleasedIpBanned, overrideBlockId, sameBlock
+			}
+		})
+	}
+
+
+
+}
+// https://api.webdock.io/v1/servers/{serverSlug}/actions/changeIp
 class ServerIdentityClass {
 	private parent: Webdock
 	constructor(parent: Webdock) {
@@ -750,6 +893,7 @@ class ServerIdentityClass {
 			}
 		})
 	}
+
 }
 
 class ServerSettingsClass {
