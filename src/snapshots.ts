@@ -30,6 +30,10 @@ export type ListSnapshotResponseType = {
 	body: Snapshot[];
 };
 
+export type GetSnapshotResponseType = {
+	body: Snapshot;
+};
+
 export type RestoreSnapShotType = {
 	body: Snapshot;
 	headers: {
@@ -78,6 +82,20 @@ export class SnapshotsClass {
 		return req<ListSnapshotResponseType>({
 			token: this.parent.string_token,
 			endpoint: "/servers/snapshots",
+			method: "GET",
+		});
+	}
+
+	getById({
+		serverSlug,
+		snapshotId,
+	}: {
+		serverSlug: string;
+		snapshotId: number;
+	}) {
+		return req<GetSnapshotResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${serverSlug}/snapshots/${snapshotId}`,
 			method: "GET",
 		});
 	}
