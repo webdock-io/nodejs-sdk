@@ -1,6 +1,36 @@
 import axios, { AxiosError } from "axios";
 import type { WebdockApiRequestOptions, WebdockApiRequestReturn } from "..";
 
+const WEBDOCK_API_VERSION = "1.1.1";
+const secretDevClients = new Map<string, string>();
+
+/** @internal */
+export function registerSecretDevClient(token: string, client: string): void {
+    if (!token || !client) return;
+    secretDevClients.set(token, client);
+}
+
+function getClientHeader(token?: string): string {
+    if (token) {
+        const secretDevClient = secretDevClients.get(token);
+        if (secretDevClient) return secretDevClient;
+    }
+
+    return typeof document !== "undefined" ? "browser-sdk" : "node-sdk";
+}
+
+async function getApplicationName(): Promise<string> {
+    if (typeof document !== "undefined") {
+        return "browser";
+    }
+
+    try {
+        const os = await import("os");
+        return os.hostname();
+    } catch {
+        return "unknown";
+    }
+}
 
 export async function req<T = unknown>(
     opts: WebdockApiRequestOptions<T>
@@ -11,6 +41,7 @@ export async function req<T = unknown>(
             formattedEndpoint = "/" + formattedEndpoint;
         }
 
+        const applicationName = await getApplicationName();
 
         const headers: Record<string, string> = {
             "Content-Type": "application/json",
@@ -27,14 +58,7 @@ export async function req<T = unknown>(
         const response = await axios({
             url: `https://api.webdock.io/v1${formattedEndpoint}`,
             method: opts.method,
-            headers: {
-                Authorization: `Bearer ${opts.token}`,
-                "Content-Type": "application/json",
-                "Cache-Control": "no-cache, no-store, must-revalidate",
-                "X-Client": typeof document !== "undefined" ? "browser-sdk" : "node-sdk",
-
-
-            },
+            headers,
             data: opts.body,
             ...(typeof document === "undefined" ? { family: 4 } : {}),
         });

@@ -1,4 +1,5 @@
 import { Webdock } from "./index";
+import { ServerWebserverClass } from "./server-webserver.js";
 import { req } from "./utils/req";
 
 export type ServerStatus =
@@ -286,6 +287,7 @@ export class ServersClass {
 	identity: ServerIdentityClass
 	settings: ServerSettingsClass
 	IpBlock: ServerIpBlock
+	webserver: ServerWebserverClass
 
 	constructor(parent: Webdock) {
 		this.parent = parent;
@@ -293,6 +295,7 @@ export class ServersClass {
 		this.identity = new ServerIdentityClass(parent)
 		this.settings = new ServerSettingsClass(parent)
 		this.IpBlock = new ServerIpBlock(parent)
+		this.webserver = new ServerWebserverClass(parent)
 	}
 
 
