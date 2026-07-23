@@ -173,7 +173,7 @@ describe("Server API", () => {
 		callbackId = res.response.headers["x-callback-id"];
 		await waitForCallback(client, callbackId);
 
-		const refreshed = await client.servers.getBySlug({ serverSlang: testServerSlug });
+		const refreshed = await client.servers.getBySlug({ serverSlug: testServerSlug });
 		expect(refreshed.success).toBe(true);
 		if (!refreshed.success) return;
 		expect(refreshed.response.body.slug).toBe(testServerSlug);
@@ -260,7 +260,7 @@ describe("Server API", () => {
 	// 	expect(server.success).toBe(true);
 	// 	if (!server.success) return;
 	// 	expect(server.response.body.slug).toBe(cancelDeleteServerSlug);
-	// });
+	});
 
 	afterAll(async () => {
 		if (!enabled) return;
