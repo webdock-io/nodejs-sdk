@@ -41,12 +41,14 @@ describe("Server webserver API", () => {
 		});
 	}
 
-	it("exposes the database and WordPress subclasses", () => {
-		expect(client.servers.webserver.db).toBeDefined();
-		expect(client.servers.webserver.wordpress).toBeDefined();
+	it("exposes feature-specific webserver subclasses", () => {
+		expect(client.servers.webserver.databaseBackup).toBeDefined();
+		expect(client.servers.webserver.searchEngines).toBeDefined();
+		expect(client.servers.webserver.basicAuth).toBeDefined();
+		expect(client.servers.webserver.certbot).toBeDefined();
 	});
 
-	it("db.status() gets the backup-on-disk status synchronously", async () => {
+	it("databaseBackup.status() gets the backup-on-disk status synchronously", async () => {
 		mockedAxios.mockResolvedValueOnce({
 			data: {
 				enabled: true,
@@ -60,7 +62,7 @@ describe("Server webserver API", () => {
 			headers: {},
 		});
 
-		const result = await client.servers.webserver.db.status({ serverSlug });
+		const result = await client.servers.webserver.databaseBackup.status({ serverSlug });
 
 		expectRequest("GET", `/servers/${serverSlug}/actions/db-backup-on-disk`);
 		expect(result).toMatchObject({
@@ -74,8 +76,8 @@ describe("Server webserver API", () => {
 		});
 	});
 
-	it("db.enable() starts database backups and exposes the callback ID", async () => {
-		const result = await client.servers.webserver.db.enable({
+	it("databaseBackup.enable() starts database backups and exposes the callback ID", async () => {
+		const result = await client.servers.webserver.databaseBackup.enable({
 			serverSlug,
 			backupDir: "/root/custom-backups",
 			keep: 14,
@@ -90,8 +92,8 @@ describe("Server webserver API", () => {
 		expectCallback(result);
 	});
 
-	it("db.update() updates database backup settings", async () => {
-		const result = await client.servers.webserver.db.update({
+	it("databaseBackup.update() updates database backup settings", async () => {
+		const result = await client.servers.webserver.databaseBackup.update({
 			serverSlug,
 			keep: 30,
 		});
@@ -104,8 +106,8 @@ describe("Server webserver API", () => {
 		expectCallback(result);
 	});
 
-	it("db.disable() disables database backups", async () => {
-		const result = await client.servers.webserver.db.disable({ serverSlug });
+	it("databaseBackup.disable() disables database backups", async () => {
+		const result = await client.servers.webserver.databaseBackup.disable({ serverSlug });
 
 		expectRequest(
 			"POST",
@@ -114,8 +116,8 @@ describe("Server webserver API", () => {
 		expectCallback(result);
 	});
 
-	it("db.run() starts an immediate database backup", async () => {
-		const result = await client.servers.webserver.db.run({ serverSlug });
+	it("databaseBackup.run() starts an immediate database backup", async () => {
+		const result = await client.servers.webserver.databaseBackup.run({ serverSlug });
 
 		expectRequest(
 			"POST",
@@ -124,10 +126,10 @@ describe("Server webserver API", () => {
 		expectCallback(result);
 	});
 
-	it("wordpress.blockSearchEngines() supports custom robots.txt content", async () => {
+	it("searchEngines.block() supports custom robots.txt content", async () => {
 		const robotsTxt = "User-agent: *\nDisallow: /staging";
 
-		const result = await client.servers.webserver.wordpress.blockSearchEngines({
+		const result = await client.servers.webserver.searchEngines.block({
 			serverSlug,
 			robotsTxt,
 		});
@@ -140,8 +142,8 @@ describe("Server webserver API", () => {
 		expectCallback(result);
 	});
 
-	it("wordpress.unblockSearchEngines() restores search-engine access", async () => {
-		const result = await client.servers.webserver.wordpress.unblockSearchEngines({ serverSlug });
+	it("searchEngines.unblock() restores search-engine access", async () => {
+		const result = await client.servers.webserver.searchEngines.unblock({ serverSlug });
 
 		expectRequest(
 			"POST",
@@ -150,8 +152,8 @@ describe("Server webserver API", () => {
 		expectCallback(result);
 	});
 
-	it("wordpress.enableBasicAuth() protects a path", async () => {
-		const result = await client.servers.webserver.wordpress.enableBasicAuth({
+	it("basicAuth.enable() protects a path", async () => {
+		const result = await client.servers.webserver.basicAuth.enable({
 			serverSlug,
 			path: "/admin",
 			username: "staging",
@@ -170,8 +172,8 @@ describe("Server webserver API", () => {
 		expectCallback(result);
 	});
 
-	it("wordpress.disableBasicAuth() unprotects a path", async () => {
-		const result = await client.servers.webserver.wordpress.disableBasicAuth({
+	it("basicAuth.disable() unprotects a path", async () => {
+		const result = await client.servers.webserver.basicAuth.disable({
 			serverSlug,
 			path: "/admin",
 		});
@@ -186,8 +188,8 @@ describe("Server webserver API", () => {
 		expectCallback(result);
 	});
 
-	it("wordpress.testCertbot() starts a Certbot dry run", async () => {
-		const result = await client.servers.webserver.wordpress.testCertbot({
+	it("certbot.test() starts a Certbot dry run", async () => {
+		const result = await client.servers.webserver.certbot.test({
 			serverSlug,
 		});
 

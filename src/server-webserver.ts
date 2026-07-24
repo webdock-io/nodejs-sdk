@@ -39,16 +39,20 @@ type DatabaseBackupUpdate =
 	| (DatabaseBackupConfiguration & { schedule: DatabaseBackupSchedule });
 
 export class ServerWebserverClass {
-	db: ServerWebserverDatabaseClass;
-	wordpress: ServerWebserverWordpressClass;
+	databaseBackup: ServerWebserverDatabaseBackupClass;
+	searchEngines: ServerWebserverSearchEnginesClass;
+	basicAuth: ServerWebserverBasicAuthClass;
+	certbot: ServerWebserverCertbotClass;
 
 	constructor(parent: Webdock) {
-		this.db = new ServerWebserverDatabaseClass(parent);
-		this.wordpress = new ServerWebserverWordpressClass(parent);
+		this.databaseBackup = new ServerWebserverDatabaseBackupClass(parent);
+		this.searchEngines = new ServerWebserverSearchEnginesClass(parent);
+		this.basicAuth = new ServerWebserverBasicAuthClass(parent);
+		this.certbot = new ServerWebserverCertbotClass(parent);
 	}
 }
 
-export class ServerWebserverDatabaseClass {
+export class ServerWebserverDatabaseBackupClass {
 	private parent: Webdock;
 
 	constructor(parent: Webdock) {
@@ -124,14 +128,14 @@ export class ServerWebserverDatabaseClass {
 	}
 }
 
-export class ServerWebserverWordpressClass {
+export class ServerWebserverSearchEnginesClass {
 	private parent: Webdock;
 
 	constructor(parent: Webdock) {
 		this.parent = parent;
 	}
 
-	blockSearchEngines({
+	block({
 		serverSlug,
 		robotsTxt,
 	}: {
@@ -149,7 +153,7 @@ export class ServerWebserverWordpressClass {
 		});
 	}
 
-	unblockSearchEngines({ serverSlug }: { serverSlug: string }) {
+	unblock({ serverSlug }: { serverSlug: string }) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/actions/unblock-search-engines`,
@@ -157,8 +161,16 @@ export class ServerWebserverWordpressClass {
 			headers: ["x-callback-id"],
 		});
 	}
+}
 
-	enableBasicAuth({
+export class ServerWebserverBasicAuthClass {
+	private parent: Webdock;
+
+	constructor(parent: Webdock) {
+		this.parent = parent;
+	}
+
+	enable({
 		serverSlug,
 		path,
 		username,
@@ -182,7 +194,7 @@ export class ServerWebserverWordpressClass {
 		});
 	}
 
-	disableBasicAuth({
+	disable({
 		serverSlug,
 		path,
 	}: {
@@ -199,8 +211,16 @@ export class ServerWebserverWordpressClass {
 			headers: ["x-callback-id"],
 		});
 	}
+}
 
-	testCertbot({ serverSlug }: { serverSlug: string }) {
+export class ServerWebserverCertbotClass {
+	private parent: Webdock;
+
+	constructor(parent: Webdock) {
+		this.parent = parent;
+	}
+
+	test({ serverSlug }: { serverSlug: string }) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${serverSlug}/actions/test-certbot`,
