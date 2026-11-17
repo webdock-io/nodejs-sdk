@@ -280,7 +280,15 @@ export type IpBlockStatsv = {
 	/** Number of reserved IPs in this block, administratively reserved by Webdock */
 	reserved: number;
 }
-
+type FetchFileResult =
+	| {
+			success: true;
+			base64: string;
+	  }
+	| {
+			success: false;
+			message: string;
+	  };
 export class ServersClass {
 	private parent: Webdock;
 	scripts: ServerScriptsClass
@@ -361,7 +369,7 @@ export class ServersClass {
 		);
 	}
 
-	async fetchFileAsync({
+	async StartFileFetch({
 		path,
 		slug,
 	}: {
@@ -382,58 +390,40 @@ export class ServersClass {
 
 
 	}
+
 	async fetchFile({
-		path,
-		slug,
-	}: {
-		path: string;
-		slug: string;
-	}) {
-		const init = await req<FetchFileResponsePayload>(
-			{
-				endpoint: `servers/${slug}/fetchFile`,
-				method: "POST",
-				token: this.parent.string_token,
-				body: {
-					filePath: path,
-				},
-				headers: ["x-callback-id"],
-			},
-		);
-		if (!init.success) return {
+	path,
+	slug,
+}: {
+	path: string;
+	slug: string;
+}): Promise<FetchFileResult> {
+	const init = await this.StartFileFetch({ path, slug });
+
+	if (!init.success) {
+		return {
 			success: false,
 			message: `Failed to initiate file fetch for '${path}' on server '${slug}'`,
 		};
+	}
 
-		const callbackId = init.response.headers["x-callback-id"];
-		let event = await this.parent.operation.fetch(callbackId);
-		if (!event.success) return {
+	const callbackId = init.response.headers["x-callback-id"];
+
+	const event = await this.parent.operation.waitForEventToEnd(callbackId);
+
+	if (!event.success) {
+		return {
 			success: false,
 			message: `Failed to retrieve operation status (callback ID: ${callbackId})`,
 		};
-
-		while (true) {
-			let res = event.response.body[0];
-			if (res.status === "finished") {
-				return {
-					success: true,
-					content: res.message,
-				};
-			} else if (res.status === "error") {
-				return {
-					success: false,
-					message: `File fetch failed for '${path}': ${res.message}`,
-				};
-			}
-
-			await new Promise((resolve) => setTimeout(resolve, 3000));
-			event = await this.parent.operation.fetch(callbackId);
-			if (!event.success) return {
-				success: false,
-				message: `Lost connection to operation (callback ID: ${callbackId}) while fetching '${path}'`,
-			};
-		}
 	}
+
+	return {
+		success: true,
+		base64: event.data,
+	};
+}
+
 	getBySlug({ serverSlug }: { serverSlug?: string; }) {
 		const slug = serverSlug;
 
