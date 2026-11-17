@@ -221,44 +221,209 @@ export type CreateServerSnapshotActionResponseType = {
 	headers: ResponseHeaders;
 };
 
-/** */
-interface MetricsSamplingDTO {
+export interface MetricsSamplingDTO {
 	amount: number;
 	timestamp: string;
 }
 
-interface DiskMetricsDTO {
-	allowed: number;
-	samplings: MetricsSamplingDTO[];
+export interface MetricsPercentSamplingDTO {
+	percent: number;
+	timestamp: string;
 }
 
-interface NetworkMetricsDTO {
+export interface MetricsValueSamplingDTO {
+	value: number;
+	timestamp: string;
+}
+
+export interface DiskDetailedMetricsDTO {
+	diskReadBytes: MetricsValueSamplingDTO[];
+	filesystemSizeBytes: MetricsValueSamplingDTO[];
+	filesystemAvailBytes: MetricsValueSamplingDTO[];
+	filesystemFreeBytes: MetricsValueSamplingDTO[];
+	diskWrittenBytes: MetricsValueSamplingDTO[];
+	diskReadsCompleted: MetricsValueSamplingDTO[];
+	diskWritesCompleted: MetricsValueSamplingDTO[];
+}
+
+export interface NetworkDetailedMetricsDTO {
+	networkReceiveBytes: MetricsValueSamplingDTO[];
+	networkTransmitBytes: MetricsValueSamplingDTO[];
+	networkReceiveDroppedPackets: MetricsValueSamplingDTO[];
+	networkTransmitDroppedPackets: MetricsValueSamplingDTO[];
+	networkReceiveErrors: MetricsValueSamplingDTO[];
+	networkTransmitErrors: MetricsValueSamplingDTO[];
+	networkReceivePackets: MetricsValueSamplingDTO[];
+	networkTransmitPackets: MetricsValueSamplingDTO[];
+}
+
+export interface CpuDetailedMetricsDTO {
+	bootTimeSeconds: MetricsValueSamplingDTO[];
+	cpuEffectiveTotal: MetricsValueSamplingDTO[];
+}
+
+export interface MemoryDetailedMetricsDTO {
+	memoryActiveBytes: MetricsValueSamplingDTO[];
+	memoryMemAvailableBytes: MetricsValueSamplingDTO[];
+	memoryMemFreeBytes: MetricsValueSamplingDTO[];
+	memoryMemTotalBytes: MetricsValueSamplingDTO[];
+	memoryActiveFileBytes: MetricsValueSamplingDTO[];
+	memoryActiveAnonBytes: MetricsValueSamplingDTO[];
+	memoryInactiveBytes: MetricsValueSamplingDTO[];
+	memoryInactiveFileBytes: MetricsValueSamplingDTO[];
+	memoryInactiveAnonBytes: MetricsValueSamplingDTO[];
+	memoryRssBytes: MetricsValueSamplingDTO[];
+	memoryShmemBytes: MetricsValueSamplingDTO[];
+	memorySwapBytes: MetricsValueSamplingDTO[];
+	memoryUnevictableBytes: MetricsValueSamplingDTO[];
+	memoryWritebackBytes: MetricsValueSamplingDTO[];
+	memoryCachedBytes: MetricsValueSamplingDTO[];
+	memoryDirtyBytes: MetricsValueSamplingDTO[];
+	memoryMappedBytes: MetricsValueSamplingDTO[];
+	memoryHugepagesTotalBytes: MetricsValueSamplingDTO[];
+	memoryHugepagesFreeBytes: MetricsValueSamplingDTO[];
+	memoryOomKills: MetricsValueSamplingDTO[];
+}
+
+export interface DiskMetricsDTO {
+	allowed: number;
+	samplings: MetricsSamplingDTO[];
+	detailedMetrics: DiskDetailedMetricsDTO;
+}
+
+export interface NetworkMetricsDTO {
 	total: number;
 	allowed: number;
 	ingressSamplings: MetricsSamplingDTO[];
 	egressSamplings: MetricsSamplingDTO[];
+	detailedMetrics: NetworkDetailedMetricsDTO;
 }
 
-interface CpuMetricsDTO {
+export interface CpuMetricsDTO {
 	usageSamplings: MetricsSamplingDTO[];
+	usagePercentSamplings: MetricsPercentSamplingDTO[];
+	detailedMetrics: CpuDetailedMetricsDTO;
 }
 
-interface ProcessesMetricsDTO {
+export interface ProcessesMetricsDTO {
 	processesSamplings: MetricsSamplingDTO[];
 }
 
-interface MemoryMetricsDTO {
+export interface MemoryMetricsDTO {
 	usageSamplings: MetricsSamplingDTO[];
+	detailedMetrics: MemoryDetailedMetricsDTO;
 }
 
-export type MetricsNowResponseType = {
-	body: {
-		disk: DiskMetricsDTO;
-		network: NetworkMetricsDTO;
-		cpu: CpuMetricsDTO;
-		processes: ProcessesMetricsDTO;
-		memory: MemoryMetricsDTO;
-	};
+export type ResourceUsageLevel = "ok" | "warn" | "crit";
+
+export interface ResourceUsageMetricStatusDTO {
+	used: number;
+	allowed: number;
+	percentUsed: number;
+	warnThresholdPercent: number;
+	criticalThresholdPercent: number;
+	thresholdHit: boolean;
+	level: ResourceUsageLevel;
+}
+
+export interface ResourceUsageProblemResourceDTO {
+	resource: "network" | "disk" | "memory" | "cpu" | "memoryOomKills" | "networkDroppedPackets" | "networkErrors";
+	level: ResourceUsageLevel;
+	evidence: Record<string, unknown> | null;
+}
+
+export interface ResourceUsageStatusDTO {
+	hasIssues: boolean;
+	level: ResourceUsageLevel;
+	network: ResourceUsageMetricStatusDTO;
+	disk: ResourceUsageMetricStatusDTO;
+	memory: ResourceUsageMetricStatusDTO;
+	cpu: ResourceUsageMetricStatusDTO;
+	problemResources: ResourceUsageProblemResourceDTO[];
+}
+
+export interface ServerMetricsDTO {
+	disk: DiskMetricsDTO;
+	network: NetworkMetricsDTO;
+	cpu: CpuMetricsDTO;
+	processes: ProcessesMetricsDTO;
+	memory: MemoryMetricsDTO;
+	resourceUsageStatus: ResourceUsageStatusDTO;
+	meta: Record<string, unknown>;
+}
+
+type LatestDetailedMetrics<T> = { [K in keyof T]: MetricsValueSamplingDTO };
+
+export type InstantDiskDetailedMetricsDTO = LatestDetailedMetrics<DiskDetailedMetricsDTO>;
+export type InstantNetworkDetailedMetricsDTO = LatestDetailedMetrics<NetworkDetailedMetricsDTO>;
+export type InstantCpuDetailedMetricsDTO = LatestDetailedMetrics<CpuDetailedMetricsDTO>;
+export type InstantMemoryDetailedMetricsDTO = LatestDetailedMetrics<MemoryDetailedMetricsDTO>;
+
+export interface InstantDiskMetricsDTO {
+	allowed: number;
+	lastSamplings: MetricsSamplingDTO;
+	detailedMetrics: InstantDiskDetailedMetricsDTO;
+}
+
+export interface InstantNetworkMetricsDTO {
+	total: number;
+	allowed: number;
+	latestIngressSampling: MetricsSamplingDTO;
+	latestEgressSampling: MetricsSamplingDTO;
+	detailedMetrics: InstantNetworkDetailedMetricsDTO;
+}
+
+export interface InstantCpuMetricsDTO {
+	latestUsageSampling: MetricsSamplingDTO;
+	latestUsagePercentSampling: MetricsPercentSamplingDTO;
+	detailedMetrics: InstantCpuDetailedMetricsDTO;
+}
+
+export interface InstantProcessesMetricsDTO {
+	latestProcessesSampling: MetricsSamplingDTO;
+}
+
+export interface InstantMemoryMetricsDTO {
+	latestUsageSampling: MetricsSamplingDTO;
+	detailedMetrics: InstantMemoryDetailedMetricsDTO;
+}
+
+export interface InstantServerMetricsDTO {
+	disk: InstantDiskMetricsDTO;
+	network: InstantNetworkMetricsDTO;
+	cpu: InstantCpuMetricsDTO;
+	processes: InstantProcessesMetricsDTO;
+	memory: InstantMemoryMetricsDTO;
+	resourceUsageStatus: ResourceUsageStatusDTO;
+}
+
+export interface ServerMetricsWarningServerDTO {
+	slug: string;
+	name: string;
+	locationName: string;
+	locationCity: string;
+}
+
+export interface ServerMetricsWarningRowDTO {
+	server: ServerMetricsWarningServerDTO;
+	resourceUsageStatus: ResourceUsageStatusDTO;
+}
+
+export interface ServerMetricsWarningsOverviewDTO {
+	count: number;
+	rows: ServerMetricsWarningRowDTO[];
+}
+
+export type ServerMetricsResponseType = {
+	body: ServerMetricsDTO;
+};
+
+export type InstantServerMetricsResponseType = {
+	body: InstantServerMetricsDTO;
+};
+
+export type ServerMetricsWarningsOverviewResponseType = {
+	body: ServerMetricsWarningsOverviewDTO;
 };
 
 export type IpBlockStatsv = {
@@ -440,17 +605,45 @@ export class ServersClass {
 			method: "GET",
 		});
 	}
-	metrics({ now, serverSlug }: {
+	getServerMetrics({ serverSlug, resolutionSeconds, maxSamples, from, to }: {
 		serverSlug: string;
-		now: boolean;
+		resolutionSeconds?: number;
+		maxSamples?: number;
+		from?: string | number;
+		to?: string | number;
 	}) {
-		return req<MetricsNowResponseType>(
-			{
-				endpoint: `servers/${serverSlug}/metrics${now ? "/now" : ""}`,
-				method: "GET",
-				token: this.parent.string_token,
-			},
-		);
+		const params = new URLSearchParams();
+		if (resolutionSeconds !== undefined) params.set("resolutionSeconds", String(resolutionSeconds));
+		if (maxSamples !== undefined) params.set("maxSamples", String(maxSamples));
+		if (from !== undefined) params.set("from", String(from));
+		if (to !== undefined) params.set("to", String(to));
+		const query = params.toString();
+		return req<ServerMetricsResponseType>({
+			endpoint: `/servers/${serverSlug}/metrics${query ? `?${query}` : ""}`,
+			method: "GET",
+			token: this.parent.string_token,
+		});
+	}
+	getInstantMetrics({ serverSlug }: { serverSlug: string }) {
+		return req<InstantServerMetricsResponseType>({
+			endpoint: `/servers/${serverSlug}/metrics/now`,
+			method: "GET",
+			token: this.parent.string_token,
+		});
+	}
+	getServerMetricsWarningsOverview({ serverSlug, includeOk }: {
+		serverSlug?: string;
+		includeOk?: boolean;
+	} = {}) {
+		const params = new URLSearchParams();
+		if (serverSlug !== undefined) params.set("serverSlug", serverSlug);
+		if (includeOk !== undefined) params.set("includeOk", String(includeOk));
+		const query = params.toString();
+		return req<ServerMetricsWarningsOverviewResponseType>({
+			endpoint: `/servers/metrics/warnings${query ? `?${query}` : ""}`,
+			method: "GET",
+			token: this.parent.string_token,
+		});
 	}
 	reboot({
 		serverSlug,
@@ -521,7 +714,7 @@ export class ServersClass {
 				endpoint: `/servers/${serverSlug}/actions/reinstall`,
 				method: "POST",
 				body: {
-					imageSlug, serverSlug, userScriptId, deleteSnapshots
+					imageSlug, userScriptId, deleteSnapshots
 				},
 				headers: ["x-callback-id"],
 			},
@@ -579,13 +772,13 @@ export class ServersClass {
 	}) {
 		return req<ArchiveResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/suspend`,
+			endpoint: `/servers/${serverSlug}/actions/archive`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	update({ serverSlug, nextActionDate, name, description, notes, }: {
+	UpdateServerMetadata({ serverSlug, nextActionDate, name, description, notes, }: {
 		serverSlug: string;
 		nextActionDate?: string;
 		name?: string;

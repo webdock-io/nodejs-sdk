@@ -8,6 +8,41 @@ import { LocationClass } from "./locations.js";
 import { ProfilesClass } from "./profiles.js";
 
 import { ServersClass } from "./servers.js";
+export type {
+  MetricsSamplingDTO,
+  MetricsPercentSamplingDTO,
+  MetricsValueSamplingDTO,
+  DiskDetailedMetricsDTO,
+  NetworkDetailedMetricsDTO,
+  CpuDetailedMetricsDTO,
+  MemoryDetailedMetricsDTO,
+  InstantDiskDetailedMetricsDTO,
+  InstantNetworkDetailedMetricsDTO,
+  InstantCpuDetailedMetricsDTO,
+  InstantMemoryDetailedMetricsDTO,
+  DiskMetricsDTO,
+  NetworkMetricsDTO,
+  CpuMetricsDTO,
+  ProcessesMetricsDTO,
+  MemoryMetricsDTO,
+  ResourceUsageLevel,
+  ResourceUsageMetricStatusDTO,
+  ResourceUsageProblemResourceDTO,
+  ResourceUsageStatusDTO,
+  ServerMetricsDTO,
+  InstantDiskMetricsDTO,
+  InstantNetworkMetricsDTO,
+  InstantCpuMetricsDTO,
+  InstantProcessesMetricsDTO,
+  InstantMemoryMetricsDTO,
+  InstantServerMetricsDTO,
+  ServerMetricsWarningServerDTO,
+  ServerMetricsWarningRowDTO,
+  ServerMetricsWarningsOverviewDTO,
+  ServerMetricsResponseType,
+  InstantServerMetricsResponseType,
+  ServerMetricsWarningsOverviewResponseType,
+} from "./servers.js";
 import { ShellUsersClass } from "./shellusers.js";
 import { SshKeysClass } from "./sshkeys.js";
 import { SnapshotsClass } from "./snapshots.js";

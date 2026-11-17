@@ -42,10 +42,21 @@ export type PublicKey = {
 export type PublicKeyReturnType = {
 	body: PublicKey;
 };
-type ListArchivedServersRepose = {
-	body: Snapshot[]
+type ListArchivedServersReponse = {
+	body: ArchivedServer[]
 };
-
+export type ArchivedServer = {
+	id: number;
+	slug: string;
+	name: string;
+	location: string;
+	imageSlug: string;
+	virtualization: "container" | "kvm";
+	archivedAt: string;
+	usedDiskMiB: number | null;
+	requiredDiskMiB: number | null;
+	callbackId: string | null;
+};
 export class AccountClass {
 	private parent: Webdock;
 	scripts: AccountScripts;
@@ -58,9 +69,9 @@ export class AccountClass {
 
 
 	async listArchivedServers() {
-		return req<ListArchivedServersRepose>({
+		return req<ListArchivedServersReponse>({
 			token: this.parent.string_token,
-			endpoint: "/servers/snapshots",
+			endpoint: "/servers/archived",
 			method: "GET",
 		})
 	}

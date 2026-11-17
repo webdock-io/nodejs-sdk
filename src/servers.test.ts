@@ -211,17 +211,17 @@ describe("Server API", () => {
 		expect(res.response.body).toHaveProperty("chargeSummary");
 	});
 
-	it("metrics() - Retrieve real-time server metrics", async () => {
+	it("getServerMetrics() - Retrieve historical server metrics", async () => {
 		if (!testServerSlug) return;
-		const res = await client.servers.metrics({ serverSlug: testServerSlug, now: true });
+		const res = await client.servers.getServerMetrics({ serverSlug: testServerSlug });
 		expect(res.success).toBe(true);
 		if (res.success) {
 			expect(res.response.body).toMatchObject({
-				disk: { allowed: expect.any(Number) },
-				network: { total: expect.any(Number), allowed: expect.any(Number) },
-				cpu: expect.any(Object),
-				processes: expect.any(Object),
-				memory: expect.any(Object),
+				disk: { allowed: expect.any(Number), samplings: expect.any(Array) },
+				network: { ingressSamplings: expect.any(Array), egressSamplings: expect.any(Array) },
+				cpu: { usageSamplings: expect.any(Array) },
+				processes: { processesSamplings: expect.any(Array) },
+				memory: { usageSamplings: expect.any(Array) },
 			});
 		}
 	});
