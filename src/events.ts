@@ -31,22 +31,23 @@ export class EventsClass {
 		this.parent = parent;
 	}
 
-	async list({ page = 1, limit = 10, type = "" }) {
+	async list( args: { page?:number , limit?:number, type?:string }) {
 		let endpoint = "/events";
 
 		const queryParams: string[] = [];
 
-		if (page) {
-			queryParams.push(`page=${page}`);
+		if (args.page) {
+			queryParams.push(`page=${args.page}`);
+		}
+	if (args.limit) {
+			queryParams.push(`limit=${args.limit}`);
+		}
+	if (args.type) {
+			queryParams.push(`type=${args.type}`);
 		}
 
-		if (limit) {
-			queryParams.push(`per_page=${limit}`);
-		}
-
-		if (type) {
-			queryParams.push(`eventType=${type}`);
-		}
+ 
+ 
 
 		if (queryParams.length > 0) {
 			endpoint += `?${queryParams.join("&")}`;

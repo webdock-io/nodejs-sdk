@@ -575,7 +575,7 @@ export class ServersClass {
 		};
 	}
 
-	getBySlug({ serverSlug }: { serverSlug?: string }) {
+	getBySlug({ serverSlug }: { serverSlug : string }) {
 		const slug = serverSlug;
 
 		return req<CreateServerResponseType>({
@@ -584,7 +584,7 @@ export class ServersClass {
 			method: "GET",
 		});
 	}
-	list({ status = "all" }: { status?: "all" | "suspended" | "active" } = {}) {
+	list({ status = "all" }: { status?: "all" | "suspended" | "active" | "archived" } = {}) {
 		return req<ListServersResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers?status=${status}`,
