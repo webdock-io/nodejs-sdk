@@ -35,7 +35,6 @@ export type GetSnapshotResponseType = {
 };
 
 export type RestoreSnapShotType = {
-	body: Snapshot;
 	headers: {
 		"x-callback-id": string;
 	};
@@ -124,12 +123,10 @@ export class SnapshotsClass {
 	}) {
 		return req<RestoreSnapShotType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/restore`,
+			endpoint: `/servers/${serverSlug}/snapshots/restore`,
 			method: "POST",
 			headers: ["x-callback-id"],
-			body: {
-				snapshotId: snapshotId,
-			},
+			body: { snapshotId },
 		});
 	}
 }

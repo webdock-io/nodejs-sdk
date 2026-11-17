@@ -804,6 +804,26 @@ export class ServerScriptsClass {
 
 // https://api.webdock.io/v1/servers/{serverSlug}/actions/changeIp
 
+export interface ServerIp {
+  /** IP row ID, as used by updateServerIps and inspectIpBlock. */
+  id: number;
+  /** ID of the IP block this address belongs to (see getServerIpBlocks). */
+  blockId: number;
+  /** IPv4 address, or null for IPv6-only assignments. */
+  ipv4: string | null;
+  /** IPv6 address, or null when the block has no IPv6. */
+  ipv6: string | null;
+  /** True for the server's primary IP (its outbound address). Exactly one IP per server is primary. */
+  primary: boolean;
+  /** True when this IP is billed in addition to the server price (every additional IP). */
+  billable: boolean;
+  /** Custom reverse DNS (PTR) hostname, or null for the default (the server's main domain for the primary IP, none otherwise). */
+  reverseDns: string | null;
+}
+
+type ChangeIPAddressReponseType = {
+	body: ServerIp[]
+}
 class ServerIpBlock {
 	private parent: Webdock
 	constructor(parent: Webdock) {
@@ -827,11 +847,12 @@ class ServerIpBlock {
 		sameBlock: boolean,
 		overrideBlockId: number,
 		markReleasedIpBanned: boolean,
+
 	}) {
-		req({
+		return req<ChangeIPAddressReponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/changeIp`,
-			method: "post",
+			endpoint: `/servers/${serverSlug}/ips`,
+			method: "patch",
 			headers: ["x-callback-id"],
 			body: {
 				markReleasedIpBanned, overrideBlockId, sameBlock
