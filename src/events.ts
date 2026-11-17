@@ -64,6 +64,7 @@ export class EventsClass {
 
 		while (true) {
 
+			await new Promise((resolve) => setTimeout(resolve, 200));
 
 			const result = await req<EventLogResponse>({
 				token: this.parent.string_token,
@@ -77,12 +78,12 @@ export class EventsClass {
 				return;
 			}
 
-			if (result.success && result.response.body[0].status == "error") {
+			if ( result.response.body[0].status == "error") {
 				console.error(result.response.body[0].message);
 				return;
 			}
 
-			if (result.success && result.response.body[0].status == "finished") {
+			if ( result.response.body[0].status == "finished") {
 				return result;
 			}
 		}
