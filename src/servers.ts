@@ -897,7 +897,7 @@ export class ServerScriptsClass {
 		});
 	}
 
-	listOnServer(args: { token?: string; serverSlug: string }) {
+	listOnServer(args: {  serverSlug: string }) {
 		return req<ListScriptsOnServerResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${args.serverSlug}/scripts`,
