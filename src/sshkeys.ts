@@ -16,20 +16,6 @@ export type CreateSSHKeysResponseType = {
 export type ListSSHKeysResponseType = {
 	body: SSHKeys[];
 };
-export type SSHSettings = {
-	passwordSshAuthEnabled?: boolean;
-	passwordlessSudoEnabled?: boolean;
-	sshPort?: number;
-	serverSlug: string
-	token?: string;
-};
-
-export type SSHSettingsResponseType = {
-	headers: {
-		"x-callback-id": string;
-	};
-};
-
 
 export class SshKeysClass {
 	private parent: Webdock;
@@ -67,20 +53,6 @@ export class SshKeysClass {
 			token: this.parent.string_token,
 			endpoint: "/account/publicKeys",
 			method: "GET",
-		});
-	}
-
-	toggleSSHSettings(args: SSHSettings) {
-		return req<SSHSettingsResponseType>({
-			token: args.token || this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/sshSettings`,
-			headers: ["x-callback-id"],
-			method: "POST",
-			body: {
-				passwordSshAuthEnabled: args.passwordSshAuthEnabled,
-				passwordlessSudoEnabled: args.passwordlessSudoEnabled,
-				sshPort: args.sshPort,
-			},
 		});
 	}
 }

@@ -130,6 +130,20 @@ export type RenewServerCertResponseType = {
 		"x-callback-id": string;
 	};
 };
+
+export type SSHSettings = {
+	serverSlug: string;
+	passwordSshAuthEnabled?: boolean;
+	passwordlessSudoEnabled?: boolean;
+	sshPort?: number;
+};
+
+export type SSHSettingsResponseType = {
+	headers: {
+		"x-callback-id": string;
+	};
+};
+
 interface WarningDTO {
 	type: string;
 	message: string;
@@ -655,6 +669,20 @@ export class ServersClass {
 			token: this.parent.string_token,
 			endpoint: `/servers/${args.serverSlug}/actions/enable-ipv6`,
 			method: "POST",
+			headers: ["x-callback-id"],
+		});
+	}
+
+	toggleSSHSettings(args: SSHSettings) {
+		return req<SSHSettingsResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/sshSettings`,
+			method: "POST",
+			body: {
+				passwordSshAuthEnabled: args.passwordSshAuthEnabled,
+				passwordlessSudoEnabled: args.passwordlessSudoEnabled,
+				sshPort: args.sshPort,
+			},
 			headers: ["x-callback-id"],
 		});
 	}
