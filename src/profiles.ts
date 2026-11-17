@@ -78,16 +78,14 @@ export class ProfilesClass {
 		})
 	}
 
-	async list({
-		locationId = "dk",
-		profileSlug = ""
-	}: {
+	async list(args: {
 		locationId?: string;
 		profileSlug?: string;
 	} = {}) {
+		const locationId = args.locationId ?? "dk";
 		const searchParams = new URLSearchParams();
 		if (locationId) searchParams.set("locationId", locationId);
-		if (profileSlug) searchParams.set("profileSlug", profileSlug);
+		if (args.profileSlug) searchParams.set("profileSlug", args.profileSlug);
 		const query = searchParams.toString();
 
 		const res = await req<ListProfilesResponseType>({

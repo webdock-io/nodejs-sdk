@@ -37,7 +37,7 @@ export class SshKeysClass {
 		this.parent = parent;
 	}
 
-	create({ name, publicKey, }: {
+	create(args: {
 		name: string;
 		publicKey: string;
 	}) {
@@ -46,18 +46,18 @@ export class SshKeysClass {
 			endpoint: "/account/publicKeys",
 			method: "POST",
 			body: {
-				name,
-				publicKey,
+				name: args.name,
+				publicKey: args.publicKey,
 			},
 		});
 	}
 
-	delete({ id }: {
+	delete(args: {
 		id: number;
 	}) {
 		return req<CreateSSHKeysResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/account/publicKeys/${id}`,
+			endpoint: `/account/publicKeys/${args.id}`,
 			method: "DELETE",
 		});
 	}
@@ -70,16 +70,16 @@ export class SshKeysClass {
 		});
 	}
 
-	toggleSSHSettings(data: SSHSettings) {
+	toggleSSHSettings(args: SSHSettings) {
 		return req<SSHSettingsResponseType>({
-			token: data.token || this.parent.string_token,
-			endpoint: `/servers/${data.serverSlug}/sshSettings`,
+			token: args.token || this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/sshSettings`,
 			headers: ["x-callback-id"],
 			method: "POST",
 			body: {
-				passwordSshAuthEnabled: data.passwordSshAuthEnabled,
-				passwordlessSudoEnabled: data.passwordlessSudoEnabled,
-				sshPort: data.sshPort,
+				passwordSshAuthEnabled: args.passwordSshAuthEnabled,
+				passwordlessSudoEnabled: args.passwordlessSudoEnabled,
+				sshPort: args.sshPort,
 			},
 		});
 	}

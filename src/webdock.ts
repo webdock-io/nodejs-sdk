@@ -81,10 +81,10 @@ class IpBlocksClass {
 	}
 
 
-	BanIp({ ipId }: { ipId: number }) {
+	BanIp(args: { ipId: number }) {
 		return req({
 			token: this.parent.string_token,
-			endpoint: `/servers/ipBlocks/${ipId}/banned`,
+			endpoint: `/servers/ipBlocks/${args.ipId}/banned`,
 			method: "PATCH",
 			body: {
 				banned: true
@@ -92,26 +92,23 @@ class IpBlocksClass {
 		})
 	}
 
-	UnBanIp({ ipId }: { ipId: number }) {
+	UnBanIp(args: { ipId: number }) {
 		return req({
 			token: this.parent.string_token,
-			endpoint: `/servers/ipBlocks/${ipId}/banned`,
+			endpoint: `/servers/ipBlocks/${args.ipId}/banned`,
 			method: "PATCH",
 			body: {
 				banned: false
 			}
 		})
 	}
-	inspectIpBlock({
-		blockId,
-		status = "all",
-	}: {
+	inspectIpBlock(args: {
 		blockId: number;
 		status?: "all" | "free" | "used" | "banned" | "reserved";
 	}) {
 		const params = new URLSearchParams({
-			blockId: String(blockId),
-			status,
+			blockId: String(args.blockId),
+			status: args.status ?? "all",
 		});
 
 		return req<WebdockIPBlocks>({

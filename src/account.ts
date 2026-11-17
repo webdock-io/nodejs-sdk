@@ -117,21 +117,16 @@ class AccountScripts {
 		});
 	}
 
-	getById({ scriptId }: { scriptId: AccountScriptReference }) {
+	getById(args: { scriptId: AccountScriptReference }) {
 		return req<GetScriptByIdTResponseType>(
 			{
 				token: this.parent.string_token,
-				endpoint: `/account/scripts/${scriptId}`,
+				endpoint: `/account/scripts/${args.scriptId}`,
 				method: "GET",
 			},
 		);
 	}
-	update({
-		id,
-		name,
-		filename,
-		content,
-	}: {
+	update(args: {
 		id: AccountScriptReference;
 		name: string;
 		filename: string;
@@ -140,41 +135,39 @@ class AccountScripts {
 		return req<CreateScriptResponseType>(
 			{
 				token: this.parent.string_token,
-				endpoint: `/account/scripts/${id}`,
+				endpoint: `/account/scripts/${args.id}`,
 				method: "PATCH",
 				body: {
-					name,
-					filename,
-					content,
+					name: args.name,
+					filename: args.filename,
+					content: args.content,
 				},
 			},
 		);
 	}
-	create(
-		{ content, filename, name }: {
-			name: string;
-			filename: string;
-			content: string;
-		},
-	) {
+	create(args: {
+		name: string;
+		filename: string;
+		content: string;
+	}) {
 		return req<CreateScriptResponseType>(
 			{
 				token: this.parent.string_token,
 				endpoint: "/account/scripts",
 				method: "POST",
 				body: {
-					content,
-					filename,
-					name,
+					content: args.content,
+					filename: args.filename,
+					name: args.name,
 				},
 			},
 		);
 	}
-	delete({ id }: { id: AccountScriptReference }) {
+	delete(args: { id: AccountScriptReference }) {
 		return req<undefined>(
 			{
 				token: this.parent.string_token,
-				endpoint: `/account/scripts/${id}`,
+				endpoint: `/account/scripts/${args.id}`,
 				method: "DELETE",
 			},
 		);

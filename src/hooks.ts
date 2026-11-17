@@ -25,25 +25,18 @@ export class HooksClass {
 	constructor(parent: Webdock) {
 		this.parent = parent;
 	}
-	async getById({
-
-		id,
-	}: {
+	async getById(args: {
 		id: number;
 	}) {
 		return await req<GetHookByIdResponseType>(
 			{
-				endpoint: `hooks/${id}`,
+				endpoint: `hooks/${args.id}`,
 				method: "GET",
 				token: this.parent.string_token,
 			},
 		);
 	}
-	async create({
-		callbackUrl,
-		eventType,
-		callbackId,
-	}: {
+	async create(args: {
 		eventType?: string;
 		callbackUrl: string;
 		callbackId?: string;
@@ -54,17 +47,17 @@ export class HooksClass {
 				method: "POST",
 				token: this.parent.string_token,
 				body: {
-					callbackUrl: callbackUrl,
-					callbackId: callbackId,
-					eventType: eventType,
+					callbackUrl: args.callbackUrl,
+					callbackId: args.callbackId,
+					eventType: args.eventType,
 				},
 			},
 		);
 	}
-	async deleteById({ id }: { id: number }) {
+	async deleteById(args: { id: number }) {
 		return await req(
 			{
-				endpoint: `hooks/${id}`,
+				endpoint: `hooks/${args.id}`,
 				method: "DELETE",
 				token: this.parent.string_token,
 			},

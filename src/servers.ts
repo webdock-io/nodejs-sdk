@@ -482,22 +482,15 @@ export class ServersClass {
 		this.webserver = new ServerWebserverClass(parent);
 	}
 
-	cancelDelete({ serverSlug }: { serverSlug: string }) {
+	cancelDelete(args: { serverSlug: string }) {
 		return req<CancelDeleteServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/uncancel`,
+			endpoint: `/servers/${args.serverSlug}/uncancel`,
 			method: "POST",
 		});
 	}
 
-	create({
-		name,
-		locationId,
-		profileSlug,
-		imageSlug,
-		snapshotId,
-		userScriptId,
-	}: {
+	create(args: {
 		name: string;
 		locationId: string;
 		profileSlug?: string;
@@ -511,50 +504,47 @@ export class ServersClass {
 			endpoint: "/servers",
 			method: "POST",
 			body: {
-				name,
-				locationId,
-				profileSlug,
-				imageSlug,
-				snapshotId,
-				userScriptId,
+				name: args.name,
+				locationId: args.locationId,
+				profileSlug: args.profileSlug,
+				imageSlug: args.imageSlug,
+				snapshotId: args.snapshotId,
+				userScriptId: args.userScriptId,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
-	delete({ serverSlug }: { serverSlug: string }) {
+	delete(args: { serverSlug: string }) {
 		return req<DeleteServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}`,
+			endpoint: `/servers/${args.serverSlug}`,
 			method: "DELETE",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	async StartFileFetch({ path, slug }: { path: string; slug: string }) {
+	async StartFileFetch(args: { path: string; slug: string }) {
 		return req<FetchFileResponsePayload>({
-			endpoint: `servers/${slug}/fetchFile`,
+			endpoint: `servers/${args.slug}/fetchFile`,
 			method: "POST",
 			token: this.parent.string_token,
 			body: {
-				filePath: path,
+				filePath: args.path,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	async fetchFile({
-		path,
-		slug,
-	}: {
+	async fetchFile(args: {
 		path: string;
 		slug: string;
 	}): Promise<FetchFileResult> {
-		const init = await this.StartFileFetch({ path, slug });
+		const init = await this.StartFileFetch({ path: args.path, slug: args.slug });
 
 		if (!init.success) {
 			return {
 				success: false,
-				message: `Failed to initiate file fetch for '${path}' on server '${slug}'`,
+				message: `Failed to initiate file fetch for '${args.path}' on server '${args.slug}'`,
 			};
 		}
 
@@ -575,29 +565,21 @@ export class ServersClass {
 		};
 	}
 
-	getBySlug({ serverSlug }: { serverSlug : string }) {
-		const slug = serverSlug;
-
+	getBySlug(args: { serverSlug: string }) {
 		return req<CreateServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${slug}`,
+			endpoint: `/servers/${args.serverSlug}`,
 			method: "GET",
 		});
 	}
-	list({ status = "all" }: { status?: "all" | "suspended" | "active" | "archived" } = {}) {
+	list(args: { status?: "all" | "suspended" | "active" | "archived" } = {}) {
 		return req<ListServersResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers?status=${status}`,
+			endpoint: `/servers?status=${args.status ?? "all"}`,
 			method: "GET",
 		});
 	}
-	getServerMetrics({
-		serverSlug,
-		resolutionSeconds,
-		maxSamples,
-		from,
-		to,
-	}: {
+	getServerMetrics(args: {
 		serverSlug: string;
 		resolutionSeconds?: number;
 		maxSamples?: number;
@@ -605,35 +587,32 @@ export class ServersClass {
 		to?: string | number;
 	}) {
 		const params = new URLSearchParams();
-		if (resolutionSeconds !== undefined)
-			params.set("resolutionSeconds", String(resolutionSeconds));
-		if (maxSamples !== undefined) params.set("maxSamples", String(maxSamples));
-		if (from !== undefined) params.set("from", String(from));
-		if (to !== undefined) params.set("to", String(to));
+		if (args.resolutionSeconds !== undefined)
+			params.set("resolutionSeconds", String(args.resolutionSeconds));
+		if (args.maxSamples !== undefined) params.set("maxSamples", String(args.maxSamples));
+		if (args.from !== undefined) params.set("from", String(args.from));
+		if (args.to !== undefined) params.set("to", String(args.to));
 		const query = params.toString();
 		return req<ServerMetricsResponseType>({
-			endpoint: `/servers/${serverSlug}/metrics${query ? `?${query}` : ""}`,
+			endpoint: `/servers/${args.serverSlug}/metrics${query ? `?${query}` : ""}`,
 			method: "GET",
 			token: this.parent.string_token,
 		});
 	}
-	getInstantMetrics({ serverSlug }: { serverSlug: string }) {
+	getInstantMetrics(args: { serverSlug: string }) {
 		return req<InstantServerMetricsResponseType>({
-			endpoint: `/servers/${serverSlug}/metrics/now`,
+			endpoint: `/servers/${args.serverSlug}/metrics/now`,
 			method: "GET",
 			token: this.parent.string_token,
 		});
 	}
-	getServerMetricsWarningsOverview({
-		serverSlug,
-		includeOk,
-	}: {
+	getServerMetricsWarningsOverview(args: {
 		serverSlug?: string;
 		includeOk?: boolean;
 	} = {}) {
 		const params = new URLSearchParams();
-		if (serverSlug !== undefined) params.set("serverSlug", serverSlug);
-		if (includeOk !== undefined) params.set("includeOk", String(includeOk));
+		if (args.serverSlug !== undefined) params.set("serverSlug", args.serverSlug);
+		if (args.includeOk !== undefined) params.set("includeOk", String(args.includeOk));
 		const query = params.toString();
 		return req<ServerMetricsWarningsOverviewResponseType>({
 			endpoint: `/servers/metrics/warnings${query ? `?${query}` : ""}`,
@@ -641,51 +620,46 @@ export class ServersClass {
 			token: this.parent.string_token,
 		});
 	}
-	reboot({ serverSlug }: { serverSlug: string }) {
+	reboot(args: { serverSlug: string }) {
 		return req<StartResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/reboot`,
+			endpoint: `/servers/${args.serverSlug}/actions/reboot`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	snapshot({ serverSlug, name }: { serverSlug: string; name: string }) {
+	snapshot(args: { serverSlug: string; name: string }) {
 		return req<CreateServerSnapshotActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/snapshot`,
+			endpoint: `/servers/${args.serverSlug}/actions/snapshot`,
 			method: "POST",
 			body: {
-				name,
+				name: args.name,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	disableIpv6({ serverSlug }: { serverSlug: string }) {
+	disableIpv6(args: { serverSlug: string }) {
 		return req<AsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/disable-ipv6`,
+			endpoint: `/servers/${args.serverSlug}/actions/disable-ipv6`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	enableIpv6({ serverSlug }: { serverSlug: string }) {
+	enableIpv6(args: { serverSlug: string }) {
 		return req<AsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/enable-ipv6`,
+			endpoint: `/servers/${args.serverSlug}/actions/enable-ipv6`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	reinstall({
-		imageSlug,
-		serverSlug,
-		userScriptId,
-		deleteSnapshots,
-	}: {
+	reinstall(args: {
 		deleteSnapshots?: boolean;
 		serverSlug: string;
 		userScriptId?: ServerScriptReference;
@@ -693,81 +667,69 @@ export class ServersClass {
 	}) {
 		return req<ReinstallServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/reinstall`,
+			endpoint: `/servers/${args.serverSlug}/actions/reinstall`,
 			method: "POST",
 			body: {
-				imageSlug,
-				userScriptId,
-				deleteSnapshots,
+				imageSlug: args.imageSlug,
+				userScriptId: args.userScriptId,
+				deleteSnapshots: args.deleteSnapshots,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
-	resize({
-		serverSlug,
-		profileSlug,
-	}: {
+	resize(args: {
 		serverSlug: string;
 		profileSlug: string;
 	}) {
 		return req<ResizeResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/resize`,
+			endpoint: `/servers/${args.serverSlug}/actions/resize`,
 			method: "POST",
-			body: { profileSlug },
+			body: { profileSlug: args.profileSlug },
 			headers: ["x-callback-id"],
 		});
 	}
 
-	resizeDryRun({
-		serverSlug,
-		profileSlug,
-	}: {
+	resizeDryRun(args: {
 		serverSlug: string;
 		profileSlug: string;
 	}) {
 		return req<ResizeDryRunResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/resize/dryrun`,
+			endpoint: `/servers/${args.serverSlug}/actions/resize/dryrun`,
 			method: "POST",
-			body: { profileSlug },
+			body: { profileSlug: args.profileSlug },
 		});
 	}
 
-	start({ serverSlug }: { serverSlug: string }) {
+	start(args: { serverSlug: string }) {
 		return req<StartResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/start`,
+			endpoint: `/servers/${args.serverSlug}/actions/start`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	stop({ serverSlug }: { serverSlug: string }) {
+	stop(args: { serverSlug: string }) {
 		return req<StartResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/stop`,
+			endpoint: `/servers/${args.serverSlug}/actions/stop`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	archive({ serverSlug }: { serverSlug: string }) {
+	archive(args: { serverSlug: string }) {
 		return req<ArchiveResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/archive`,
+			endpoint: `/servers/${args.serverSlug}/actions/archive`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	UpdateServerMetadata({
-		serverSlug,
-		nextActionDate,
-		name,
-		description,
-		notes,
-	}: {
+	UpdateServerMetadata(args: {
 		serverSlug: string;
 		nextActionDate?: string;
 		name?: string;
@@ -776,9 +738,14 @@ export class ServersClass {
 	}) {
 		return req<UpdateServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}`,
+			endpoint: `/servers/${args.serverSlug}`,
 			method: "PATCH",
-			body: { nextActionDate, name, description, notes },
+			body: {
+				nextActionDate: args.nextActionDate,
+				name: args.name,
+				description: args.description,
+				notes: args.notes,
+			},
 		});
 	}
 }
@@ -880,13 +847,7 @@ export class ServerScriptsClass {
 		this.parent = parent;
 	}
 
-	create({
-		scriptId,
-		path,
-		makeScriptExecutable,
-		executeImmediately,
-		serverSlug,
-	}: {
+	create(args: {
 		scriptId: ServerScriptReference;
 		path: string;
 		makeScriptExecutable: boolean;
@@ -895,54 +856,51 @@ export class ServerScriptsClass {
 	}) {
 		return req<CreateScriptOnServerResponse>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/scripts`,
+			endpoint: `/servers/${args.serverSlug}/scripts`,
 			method: "POST",
 			body: {
-				scriptId,
-				path,
-				makeScriptExecutable,
-				executeImmediately,
+				scriptId: args.scriptId,
+				path: args.path,
+				makeScriptExecutable: args.makeScriptExecutable,
+				executeImmediately: args.executeImmediately,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	delete({ serverSlug, scriptId }: { serverSlug: string; scriptId: string }) {
+	delete(args: { serverSlug: string; scriptId: string }) {
 		return req<DeleteScriptServerReturnType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/scripts/${scriptId}`,
+			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptId}`,
 			method: "DELETE",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	getById({
-		serverSlug,
-		scriptId,
-	}: {
+	getById(args: {
 		serverSlug: string;
 		scriptId: string | number;
 	}) {
 		return req<GetScriptOnServerReturnType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/scripts/${scriptId}`,
+			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptId}`,
 			method: "GET",
 		});
 	}
 
-	execute({ serverSlug, scriptID }: { serverSlug: string; scriptID: string }) {
+	execute(args: { serverSlug: string; scriptID: string }) {
 		return req<ExecuteScriptOnServerReturnType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/scripts/${scriptID}/execute`,
+			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptID}/execute`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	listOnServer({ serverSlug }: { token?: string; serverSlug: string }) {
+	listOnServer(args: { token?: string; serverSlug: string }) {
 		return req<ListScriptsOnServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/scripts`,
+			endpoint: `/servers/${args.serverSlug}/scripts`,
 			method: "GET",
 		});
 	}
@@ -976,20 +934,15 @@ class ServerIpBlock {
 		this.parent = parent;
 	}
 
-	ListIpBlocks({ serverSlug }: { serverSlug: string }) {
+	ListIpBlocks(args: { serverSlug: string }) {
 		return req<IpBlockStatsv>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/ipBlocks`,
+			endpoint: `/servers/${args.serverSlug}/ipBlocks`,
 			method: "GET",
 		});
 	}
 
-	ChangeIPAddress({
-		serverSlug,
-		markReleasedIpBanned,
-		overrideBlockId,
-		sameBlock,
-	}: {
+	ChangeIPAddress(args: {
 		serverSlug: string;
 		sameBlock: boolean;
 		overrideBlockId: number;
@@ -997,13 +950,13 @@ class ServerIpBlock {
 	}) {
 		return req<ChangeIPAddressReponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/ips`,
+			endpoint: `/servers/${args.serverSlug}/ips`,
 			method: "patch",
 			headers: ["x-callback-id"],
 			body: {
-				markReleasedIpBanned,
-				overrideBlockId,
-				sameBlock,
+				markReleasedIpBanned: args.markReleasedIpBanned,
+				overrideBlockId: args.overrideBlockId,
+				sameBlock: args.sameBlock,
 			},
 		});
 	}
@@ -1015,12 +968,7 @@ class ServerIdentityClass {
 		this.parent = parent;
 	}
 
-	update({
-		serverSlug,
-		maindomain,
-		aliasdomains,
-		removeDefaultAlias,
-	}: {
+	update(args: {
 		serverSlug: string;
 		maindomain: string;
 		aliasdomains?: string;
@@ -1029,22 +977,17 @@ class ServerIdentityClass {
 		return req<UpdateServerIdentityResponseType>({
 			token: this.parent.string_token,
 			method: "PATCH",
-			endpoint: `/servers/${serverSlug}/identity`,
+			endpoint: `/servers/${args.serverSlug}/identity`,
 			headers: ["x-callback-id"],
 			body: {
-				maindomain,
-				aliasdomains,
-				removeDefaultAlias,
+				maindomain: args.maindomain,
+				aliasdomains: args.aliasdomains,
+				removeDefaultAlias: args.removeDefaultAlias,
 			},
 		});
 	}
 
-	renewCertificates({
-		serverSlug,
-		domains,
-		email,
-		forceSSL,
-	}: {
+	renewCertificates(args: {
 		serverSlug: string;
 		domains?: string[];
 		email?: string;
@@ -1052,13 +995,13 @@ class ServerIdentityClass {
 	}) {
 		return req<RenewServerCertResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/run-certbot`,
+			endpoint: `/servers/${args.serverSlug}/actions/run-certbot`,
 			method: "POST",
 			headers: ["x-callback-id"],
 			body: {
-				domains,
-				email,
-				forceSSL,
+				domains: args.domains,
+				email: args.email,
+				forceSSL: args.forceSSL,
 			},
 		});
 	}
@@ -1070,26 +1013,21 @@ class ServerSettingsClass {
 		this.parent = parent;
 	}
 
-	update({
-		webroot,
-		updateWebserver,
-		updateLetsencrypt,
-		serverSlug,
-	}: {
-		webroot: string;
-		updateWebserver: boolean;
-		updateLetsencrypt: boolean;
+	update(args: {
+		webroot?: string;
+		updateWebserver?: boolean;
+		updateLetsencrypt?: boolean;
 		serverSlug: string;
 	}) {
 		return req<AsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/settings`,
+			endpoint: `/servers/${args.serverSlug}/actions/settings`,
 			method: "POST",
 			headers: ["x-callback-id"],
 			body: {
-				webroot: webroot,
-				updateWebserver: updateWebserver,
-				updateLetsencrypt: updateLetsencrypt,
+				...(args.webroot !== undefined ? { webroot: args.webroot } : {}),
+				...(args.updateWebserver !== undefined ? { updateWebserver: args.updateWebserver } : {}),
+				...(args.updateLetsencrypt !== undefined ? { updateLetsencrypt: args.updateLetsencrypt } : {}) 
 			},
 		});
 	}
