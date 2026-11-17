@@ -27,9 +27,15 @@ type WebdockIPBlocks = {
 	blockId: number;
 	ipv4: string;
 	ipv6: string;
-	status: string;
-	serverSlug: string;
+	status: "free" | "used" | "banned" | "reserved";
+	/** Server using this IP, or null when it isn't assigned. */
+	serverSlug: string | null;
 }
+
+/** GET /servers/ipBlocks/inspect returns every IP in the block. */
+type InspectIpBlockResponseType = {
+	body: WebdockIPBlocks[];
+};
 
 export class WebdockClass {
 	private parent: Webdock;
@@ -111,7 +117,7 @@ class IpBlocksClass {
 			status: args.status ?? "all",
 		});
 
-		return req<WebdockIPBlocks>({
+		return req<InspectIpBlockResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/ipBlocks/inspect?${params.toString()}`,
 			method: "GET",

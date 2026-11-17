@@ -470,6 +470,12 @@ export type IpBlockStatsv = {
 	/** Number of reserved IPs in this block, administratively reserved by Webdock */
 	reserved: number;
 };
+
+/** GET /servers/{serverSlug}/ipBlocks returns a map of block ID to that block's stats. */
+export type ListIpBlocksResponseType = {
+	body: Record<string, IpBlockStatsv>;
+};
+
 type FetchFileResult =
 	| {
 		success: true;
@@ -963,7 +969,7 @@ class ServerIpBlock {
 	}
 
 	ListIpBlocks(args: { serverSlug: string }) {
-		return req<IpBlockStatsv>({
+		return req<ListIpBlocksResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${args.serverSlug}/ipBlocks`,
 			method: "GET",
