@@ -940,8 +940,6 @@ export class ServerScriptsClass {
 	}
 }
 
-// https://api.webdock.io/v1/servers/{serverSlug}/actions/changeIp
-
 export interface ServerIp {
 	/** IP row ID, as used by updateServerIps and inspectIpBlock. */
 	id: number;
@@ -959,9 +957,24 @@ export interface ServerIp {
 	reverseDns: string | null;
 }
 
-type ChangeIPAddressReponseType = {
+type ChangeIPAddressResponseType = {
+	headers: ResponseHeaders;
 	body: ServerIp[];
 };
+
+type ServerIpToAdd =
+	| { ipId: number; blockId?: never; primary?: boolean; reverseDns?: string | null }
+	| { blockId: number; ipId?: never; primary?: boolean; reverseDns?: string | null };
+
+export type ChangeIPAddressArgs = {
+	serverSlug: string;
+	add?: ServerIpToAdd[];
+	remove?: number[];
+	banRemovedIpIds?: number[];
+	primaryIpId?: number | null;
+	reverseDns?: { ipId: number; hostname: string | null }[];
+};
+
 class ServerIpBlock {
 	private parent: Webdock;
 	constructor(parent: Webdock) {
@@ -976,26 +989,22 @@ class ServerIpBlock {
 		});
 	}
 
-	ChangeIPAddress(args: {
-		serverSlug: string;
-		sameBlock: boolean;
-		overrideBlockId: number;
-		markReleasedIpBanned: boolean;
-	}) {
-		return req<ChangeIPAddressReponseType>({
+	ChangeIPAddress(args: ChangeIPAddressArgs) {
+		return req<ChangeIPAddressResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${args.serverSlug}/ips`,
-			method: "patch",
+			method: "PATCH",
 			headers: ["x-callback-id"],
 			body: {
-				markReleasedIpBanned: args.markReleasedIpBanned,
-				overrideBlockId: args.overrideBlockId,
-				sameBlock: args.sameBlock,
+				add: args.add,
+				remove: args.remove,
+				banRemovedIpIds: args.banRemovedIpIds,
+				primaryIpId: args.primaryIpId,
+				reverseDns: args.reverseDns,
 			},
 		});
 	}
 }
-// https://api.webdock.io/v1/servers/{serverSlug}/actions/changeIp
 class ServerIdentityClass {
 	private parent: Webdock;
 	constructor(parent: Webdock) {
