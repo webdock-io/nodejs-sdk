@@ -38,10 +38,8 @@ export default class PlatformsClass {
             query.append("currency", args.currency)
         }
 
-        let url =  `/platforms`
-        if (query.size != 0) {
-           url = url.concat("&"+query.toString())
-        }
+        const search = query.toString()
+        const url = `/platforms${search ? `?${search}` : ""}`
         
         return req<PlatformsResponse>({
             token: this.parent.string_token,
