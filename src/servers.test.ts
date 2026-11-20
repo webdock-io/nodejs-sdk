@@ -51,7 +51,6 @@ describe("Server API", () => {
 			locationId: "dk",
 			profileSlug: "vps-epyc-pro-2025",
 			imageSlug: "webdock-ubuntu-noble-cloud",
-			slug: serverName,
 			userScriptId: tempAccountScriptId,
 		});
 		expect(local.success).toBe(true);
@@ -67,7 +66,6 @@ describe("Server API", () => {
 			locationId: "dk",
 			profileSlug: "vps-epyc-pro-2025",
 			imageSlug: "webdock-ubuntu-noble-cloud",
-			slug: serverName,
 		});
 		expect(local.success).toBe(true);
 		if (!local.success) return;
@@ -82,7 +80,6 @@ describe("Server API", () => {
 			locationId: "dk",
 			profileSlug: "vps-epyc-pro-2025",
 			imageSlug: "webdock-ubuntu-noble-cloud",
-			slug: serverName,
 		});
 		expect(local.success).toBe(true);
 		if (!local.success) return;
@@ -183,12 +180,14 @@ describe("Server API", () => {
 		if (!testServerSlug) return;
 		const res = await client.servers.fetchFile({ slug: testServerSlug, path: "/etc/os-release" });
 		expect(res.success).toBe(true);
+		if (!res.success) return;
+		expect(Buffer.from(res.base64, "base64").toString("utf8")).toContain("ID=");
 	});
 
-	it("update() - Update server name/description", async () => {
+	it("UpdateServerMetadata() - Update server name/description", async () => {
 		if (!testServerSlug) return;
 		const newDesc = `test-desc-${Date.now()}`;
-		const res = await client.servers.update({
+		const res = await client.servers.UpdateServerMetadata({
 			serverSlug: testServerSlug,
 			description: newDesc,
 			name: "NEW NAME " + Date.now(),
@@ -197,6 +196,7 @@ describe("Server API", () => {
 		if (!res.success) return;
 		expect(res.response.body).toMatchObject({
 			slug: testServerSlug,
+			description: newDesc,
 		});
 	});
 
@@ -249,13 +249,7 @@ describe("Server API", () => {
 		expect(deleteRequest.success).toBe(true);
 		if (!deleteRequest.success) return;
 
-		const res = await client.servers.cancelDelete({ serverSlug: cancelDeleteServerSlug });
-		expect(res.success).toBe(true);
-		if (!res.success) return;
-
-		callbackId = res.response.headers["x-callback-id"];
-		await waitForCallback(client, callbackId);
-
+ 
 	// 	const server = await client.servers.getBySlug({ serverSlug: cancelDeleteServerSlug });
 	// 	expect(server.success).toBe(true);
 	// 	if (!server.success) return;

@@ -43,23 +43,26 @@ describe("Account API", () => {
 		}
 	});
 
-	e2eIt("listArchivedServers() - List archived server backups", async () => {
+	e2eIt("listArchivedServers() - List archived servers", async () => {
 		const res = await api.account.listArchivedServers();
 		expect(res.success).toBe(true);
 		if (!res.success) return;
 
 		expect(res.response.body).toBeInstanceOf(Array);
-		res.response.body.forEach((backup) => {
-			expect(backup).toMatchObject({
+		res.response.body.forEach((server) => {
+			expect(server).toMatchObject({
 				id: expect.any(Number),
+				slug: expect.any(String),
 				name: expect.any(String),
-				virtualization: "kvm",
-				completed: expect.any(Boolean),
-				date: expect.any(String),
-				deletable: expect.any(Boolean),
-				serverSlug: expect.any(String),
+				location: expect.any(String),
+				imageSlug: expect.any(String),
+				virtualization: expect.stringMatching(/^(container|kvm)$/),
+				archivedAt: expect.any(String),
 			});
-
+			for (const key of ["usedDiskMiB", "requiredDiskMiB"] as const) {
+				expect(server[key] === null || typeof server[key] === "number").toBe(true);
+			}
+			expect(server.callbackId === null || typeof server.callbackId === "string").toBe(true);
 		});
 	});
 });
