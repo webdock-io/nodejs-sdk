@@ -59,69 +59,59 @@ export class ServerWebserverDatabaseBackupClass {
 		this.parent = parent;
 	}
 
-	status({ serverSlug }: { serverSlug: string }) {
+	status(args: { serverSlug: string }) {
 		return req<DatabaseBackupStatusResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/db-backup-on-disk`,
+			endpoint: `/servers/${args.serverSlug}/actions/db-backup-on-disk`,
 			method: "GET",
 		});
 	}
 
-	enable({
-		serverSlug,
-		backupDir,
-		keep,
-		schedule,
-	}: {
+	enable(args: {
 		serverSlug: string;
 	} & DatabaseBackupConfiguration) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/db-backup-on-disk`,
+			endpoint: `/servers/${args.serverSlug}/actions/db-backup-on-disk`,
 			method: "POST",
 			body: {
-				backupDir,
-				keep,
-				schedule,
+				backupDir: args.backupDir,
+				keep: args.keep,
+				schedule: args.schedule,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	update({
-		serverSlug,
-		backupDir,
-		keep,
-		schedule,
-	}: {
+	update(args: {
 		serverSlug: string;
 	} & DatabaseBackupUpdate) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/db-backup-on-disk`,
+			endpoint: `/servers/${args.serverSlug}/actions/db-backup-on-disk`,
 			method: "PATCH",
 			body: {
-				backupDir,
-				keep,
-				schedule,
+				backupDir: args.backupDir,
+				keep: args.keep,
+				schedule: args.schedule,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	disable({ serverSlug }: { serverSlug: string }) {
+	disable(args: { serverSlug: string }) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/db-backup-on-disk/disable`,
+			endpoint: `/servers/${args.serverSlug}/actions/db-backup-on-disk/disable`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	run({ serverSlug }: { serverSlug: string }) {
+	run(args: { serverSlug: string }) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/db-backup-on-disk/run`,
+			endpoint: `/servers/${args.serverSlug}/actions/db-backup-on-disk/run`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
@@ -135,28 +125,25 @@ export class ServerWebserverSearchEnginesClass {
 		this.parent = parent;
 	}
 
-	block({
-		serverSlug,
-		robotsTxt,
-	}: {
+	block(args: {
 		serverSlug: string;
 		robotsTxt?: string;
 	}) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/block-search-engines`,
+			endpoint: `/servers/${args.serverSlug}/actions/block-search-engines`,
 			method: "POST",
 			body: {
-				robotsTxt,
+				robotsTxt: args.robotsTxt,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	unblock({ serverSlug }: { serverSlug: string }) {
+	unblock(args: { serverSlug: string }) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/unblock-search-engines`,
+			endpoint: `/servers/${args.serverSlug}/actions/unblock-search-engines`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
@@ -170,12 +157,7 @@ export class ServerWebserverBasicAuthClass {
 		this.parent = parent;
 	}
 
-	enable({
-		serverSlug,
-		path,
-		username,
-		password,
-	}: {
+	enable(args: {
 		serverSlug: string;
 		path: string;
 		username: string;
@@ -183,30 +165,27 @@ export class ServerWebserverBasicAuthClass {
 	}) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/enable-basic-auth`,
+			endpoint: `/servers/${args.serverSlug}/actions/enable-basic-auth`,
 			method: "POST",
 			body: {
-				path,
-				username,
-				password,
+				path: args.path,
+				username: args.username,
+				password: args.password,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	disable({
-		serverSlug,
-		path,
-	}: {
+	disable(args: {
 		serverSlug: string;
 		path: string;
 	}) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/disable-basic-auth`,
+			endpoint: `/servers/${args.serverSlug}/actions/disable-basic-auth`,
 			method: "POST",
 			body: {
-				path,
+				path: args.path,
 			},
 			headers: ["x-callback-id"],
 		});
@@ -220,10 +199,10 @@ export class ServerWebserverCertbotClass {
 		this.parent = parent;
 	}
 
-	test({ serverSlug }: { serverSlug: string }) {
+	test(args: { serverSlug: string }) {
 		return req<WebserverAsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/test-certbot`,
+			endpoint: `/servers/${args.serverSlug}/actions/test-certbot`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});

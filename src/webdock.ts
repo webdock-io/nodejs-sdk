@@ -27,9 +27,15 @@ type WebdockIPBlocks = {
 	blockId: number;
 	ipv4: string;
 	ipv6: string;
-	status: string;
-	serverSlug: string;
+	status: "free" | "used" | "banned" | "reserved";
+	/** Server using this IP, or null when it isn't assigned. */
+	serverSlug: string | null;
 }
+
+/** GET /servers/ipBlocks/inspect returns every IP in the block. */
+type InspectIpBlockResponseType = {
+	body: WebdockIPBlocks[];
+};
 
 export class WebdockClass {
 	private parent: Webdock;
@@ -81,10 +87,10 @@ class IpBlocksClass {
 	}
 
 
-	BanIp({ ipId }: { ipId: number }) {
+	BanIp(args: { ipId: number }) {
 		return req({
 			token: this.parent.string_token,
-			endpoint: `/servers/ipBlocks/${ipId}/banned`,
+			endpoint: `/servers/ipBlocks/${args.ipId}/banned`,
 			method: "PATCH",
 			body: {
 				banned: true
@@ -92,29 +98,26 @@ class IpBlocksClass {
 		})
 	}
 
-	UnBanIp({ ipId }: { ipId: number }) {
+	UnBanIp(args: { ipId: number }) {
 		return req({
 			token: this.parent.string_token,
-			endpoint: `/servers/ipBlocks/${ipId}/banned`,
+			endpoint: `/servers/ipBlocks/${args.ipId}/banned`,
 			method: "PATCH",
 			body: {
 				banned: false
 			}
 		})
 	}
-	inspectIpBlock({
-		blockId,
-		status = "all",
-	}: {
+	inspectIpBlock(args: {
 		blockId: number;
 		status?: "all" | "free" | "used" | "banned" | "reserved";
 	}) {
 		const params = new URLSearchParams({
-			blockId: String(blockId),
-			status,
+			blockId: String(args.blockId),
+			status: args.status ?? "all",
 		});
 
-		return req<WebdockIPBlocks>({
+		return req<InspectIpBlockResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/ipBlocks/inspect?${params.toString()}`,
 			method: "GET",

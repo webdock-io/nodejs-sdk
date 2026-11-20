@@ -79,7 +79,7 @@ export class ShellUsersClass {
 		this.parent = parent;
 	}
 
-	create({ serverSlug, username, password, group, shell, publicKeys, }: {
+	create(args: {
 		serverSlug: string;
 		username: string;
 		password: string;
@@ -89,87 +89,83 @@ export class ShellUsersClass {
 	}) {
 		return req<CreateShellUserResponseType>({
 			token: this.parent.string_token,
-			endpoint: `servers/${serverSlug}/shellUsers`,
+			endpoint: `servers/${args.serverSlug}/shellUsers`,
 			method: "POST",
 			body: {
-				username,
-				password,
-				group,
-				shell,
-				publicKeys: publicKeys ?? [],
+				username: args.username,
+				password: args.password,
+				group: args.group,
+				shell: args.shell,
+				publicKeys: args.publicKeys ?? [],
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	delete({ serverSlug, userId, }: {
+	delete(args: {
 		serverSlug: string;
 		userId: number;
 	}) {
 		return req<DeleteUserShellResponseType>({
 			token: this.parent.string_token,
-			endpoint: `servers/${serverSlug}/shellUsers/${userId}`,
+			endpoint: `servers/${args.serverSlug}/shellUsers/${args.userId}`,
 			method: "DELETE",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	resetPassword({ serverSlug, userId, newPassword, }: {
+	resetPassword(args: {
 		serverSlug: string;
 		userId: number;
 		newPassword: string;
 	}) {
 		return req<ResetShellUserPasswordResponseType>({
 			token: this.parent.string_token,
-			endpoint: `servers/${serverSlug}/shellUsers/${userId}/resetPassword`,
+			endpoint: `servers/${args.serverSlug}/shellUsers/${args.userId}/resetPassword`,
 			method: "POST",
 			body: {
-				newPassword,
+				newPassword: args.newPassword,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	list({ serverSlug, }: {
+	list(args: {
 		serverSlug: string;
 	}) {
 		return req<ListShellUsersResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/shellUsers`,
+			endpoint: `/servers/${args.serverSlug}/shellUsers`,
 			method: "GET",
 		});
 	}
-	edit(
-		{ slug, id, keys }: {
-			slug: string;
-			id: number;
-			keys: number[];
-		},
-	) {
+	edit(args: {
+		slug: string;
+		id: number;
+		keys: number[];
+	}) {
 		return req<ShellUserCreationResponse>({
-			endpoint: `servers/${slug}/shellUsers/${id}`,
+			endpoint: `servers/${args.slug}/shellUsers/${args.id}`,
 			method: "PATCH",
 			body: {
-				publicKeys: keys,
+				publicKeys: args.keys,
 			},
 			headers: ["x-callback-id"],
 			token: this.parent.string_token,
 		});
 	}
 
-	websshToken(
-		{ serverSlug, username, }: {
-			serverSlug: string;
-			username: string;
-		},
-	) {
+	websshToken(args: {
+		serverSlug: string;
+		username: string;
+	}) {
 		return req<CreateWebSSHTokenResponseType>(
 			{
-				endpoint: `servers/${serverSlug}/shellUsers/WebsshToken`,
+				endpoint: `servers/${args.serverSlug}/shellUsers/WebsshToken`,
 				method: "POST",
 				token: this.parent.string_token,
 				body: {
-					username,
+					username: args.username,
 				},
 			},
 		);

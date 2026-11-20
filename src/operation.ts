@@ -42,20 +42,26 @@ export class OperationClass {
                     error: res.error,
                 }
             }
+            if (res.response.body == null) {
+                return {
+                    success: false,
+                    error: `Event response body is missing for callback ID: ${callbackId}`,
+                }
+            }
             const event = res.response.body[0];
-            if (event.status === "finished") {
+            if (event?.status === "finished") {
                 return {
                     success: true,
                     data: event.message,
                 }
             }
-            if (event.status === "error") {
+            if (event?.status === "error") {
                 return {
                     success: false,
                     error: event.message,
                 }
             }
-            await new Promise((resolve) => setTimeout(resolve, 3000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
         }
     }
 }

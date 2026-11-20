@@ -35,7 +35,6 @@ export type GetSnapshotResponseType = {
 };
 
 export type RestoreSnapShotType = {
-	body: Snapshot;
 	headers: {
 		"x-callback-id": string;
 	};
@@ -48,32 +47,27 @@ export class SnapshotsClass {
 		this.parent = parent;
 	}
 
-	create({
-		serverSlug,
-		name,
-	}: {
+	create(args: {
 		serverSlug: string;
 		name: string;
 	}) {
 		return req<SnapshotsCreateResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/snapshots`,
+			endpoint: `/servers/${args.serverSlug}/snapshots`,
 			method: "POST",
 			body: {
-				name,
+				name: args.name,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	list({
-		serverSlug,
-	}: {
+	list(args: {
 		serverSlug: string;
 	}) {
 		return req<ListSnapshotResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/snapshots`,
+			endpoint: `/servers/${args.serverSlug}/snapshots`,
 			method: "GET",
 		});
 	}
@@ -86,50 +80,39 @@ export class SnapshotsClass {
 		});
 	}
 
-	getById({
-		serverSlug,
-		snapshotId,
-	}: {
+	getById(args: {
 		serverSlug: string;
 		snapshotId: number;
 	}) {
 		return req<GetSnapshotResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/snapshots/${snapshotId}`,
+			endpoint: `/servers/${args.serverSlug}/snapshots/${args.snapshotId}`,
 			method: "GET",
 		});
 	}
 
-	delete({
-		serverSlug,
-		snapshotId,
-	}: {
+	delete(args: {
 		serverSlug: string;
 		snapshotId: number;
 	}) {
 		return req<DeleteSnapShotResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/snapshots/${snapshotId}`,
+			endpoint: `/servers/${args.serverSlug}/snapshots/${args.snapshotId}`,
 			method: "DELETE",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	restore({
-		serverSlug,
-		snapshotId,
-	}: {
+	restore(args: {
 		serverSlug: string;
 		snapshotId: number;
 	}) {
 		return req<RestoreSnapShotType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/restore`,
+			endpoint: `/servers/${args.serverSlug}/snapshots/restore`,
 			method: "POST",
 			headers: ["x-callback-id"],
-			body: {
-				snapshotId: snapshotId,
-			},
+			body: { snapshotId: args.snapshotId },
 		});
 	}
 }

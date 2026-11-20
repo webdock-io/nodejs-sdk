@@ -31,27 +31,23 @@ export class EventsClass {
 		this.parent = parent;
 	}
 
-	async list({ page = 1, limit = 10, type = "" }) {
-		let endpoint = "/events";
-
-		const queryParams: string[] = [];
-
-		if (page) {
-			queryParams.push(`page=${page}`);
-		}
-
-		if (limit) {
-			queryParams.push(`per_page=${limit}`);
-		}
-
-		if (type) {
-			queryParams.push(`eventType=${type}`);
-		}
-
-		if (queryParams.length > 0) {
-			endpoint += `?${queryParams.join("&")}`;
-		}
-
+	async list(args: {
+		page?: number;
+		per_page?: number;
+		eventType?: string;
+		/** @deprecated Use per_page instead. */
+		limit?: number;
+		/** @deprecated Use eventType instead. */
+		type?: string;
+	}) {
+		const query = new URLSearchParams();
+		if (args.page !== undefined) query.set("page", String(args.page));
+		const perPage = args.per_page ?? args.limit;
+		if (perPage !== undefined) query.set("per_page", String(perPage));
+		const eventType = args.eventType ?? args.type;
+		if (eventType) query.set("eventType", eventType);
+		const search = query.toString();
+		const endpoint = `/events${search ? `?${search}` : ""}`;
 
 		return await req<EventTypeListResponse>({
 			token: this.parent.string_token,
@@ -60,31 +56,5 @@ export class EventsClass {
 			method: "GET",
 		});
 	}
-	async waitForEventToEnd(callbackId: string) {
-
-		while (true) {
-
-
-			const result = await req<EventLogResponse>({
-				token: this.parent.string_token,
-				endpoint: `/events?callbackId=${callbackId}`,
-				log: false,
-				method: "GET",
-			});
-
-			if (!result.success) {
-				console.error(result.error);
-				return;
-			}
-
-			if (result.success && result.response.body[0].status == "error") {
-				console.error(result.response.body[0].message);
-				return;
-			}
-
-			if (result.success && result.response.body[0].status == "finished") {
-				return result;
-			}
-		}
-	}
+ 
 }

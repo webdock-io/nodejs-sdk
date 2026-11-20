@@ -31,10 +31,19 @@ export default class PlatformsClass {
     constructor(parent: Webdock) {
         this.parent = parent
     }
-    async list({ currency = "EUR" }: { currency?: "EUR" | "USD" | "DKK" | (string & {}) }) {
+    async list(args:  { currency?: "EUR" | "USD" | "DKK" | (string & {}) }) {
+
+        const query= new URLSearchParams()
+        if (!!args.currency ) {
+            query.append("currency", args.currency)
+        }
+
+        const search = query.toString()
+        const url = `/platforms${search ? `?${search}` : ""}`
+        
         return req<PlatformsResponse>({
             token: this.parent.string_token,
-            endpoint: `/platforms?currency=${currency}`,
+            endpoint: url,
             method: "GET",
         })
     }

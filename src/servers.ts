@@ -130,6 +130,20 @@ export type RenewServerCertResponseType = {
 		"x-callback-id": string;
 	};
 };
+
+export type SSHSettings = {
+	serverSlug: string;
+	passwordSshAuthEnabled?: boolean;
+	passwordlessSudoEnabled?: boolean;
+	sshPort?: number;
+};
+
+export type SSHSettingsResponseType = {
+	headers: {
+		"x-callback-id": string;
+	};
+};
+
 interface WarningDTO {
 	type: string;
 	message: string;
@@ -221,44 +235,220 @@ export type CreateServerSnapshotActionResponseType = {
 	headers: ResponseHeaders;
 };
 
-/** */
-interface MetricsSamplingDTO {
+export interface MetricsSamplingDTO {
 	amount: number;
 	timestamp: string;
 }
 
-interface DiskMetricsDTO {
-	allowed: number;
-	samplings: MetricsSamplingDTO[];
+export interface MetricsPercentSamplingDTO {
+	percent: number;
+	timestamp: string;
 }
 
-interface NetworkMetricsDTO {
+export interface MetricsValueSamplingDTO {
+	value: number;
+	timestamp: string;
+}
+
+export interface DiskDetailedMetricsDTO {
+	diskReadBytes: MetricsValueSamplingDTO[];
+	filesystemSizeBytes: MetricsValueSamplingDTO[];
+	filesystemAvailBytes: MetricsValueSamplingDTO[];
+	filesystemFreeBytes: MetricsValueSamplingDTO[];
+	diskWrittenBytes: MetricsValueSamplingDTO[];
+	diskReadsCompleted: MetricsValueSamplingDTO[];
+	diskWritesCompleted: MetricsValueSamplingDTO[];
+}
+
+export interface NetworkDetailedMetricsDTO {
+	networkReceiveBytes: MetricsValueSamplingDTO[];
+	networkTransmitBytes: MetricsValueSamplingDTO[];
+	networkReceiveDroppedPackets: MetricsValueSamplingDTO[];
+	networkTransmitDroppedPackets: MetricsValueSamplingDTO[];
+	networkReceiveErrors: MetricsValueSamplingDTO[];
+	networkTransmitErrors: MetricsValueSamplingDTO[];
+	networkReceivePackets: MetricsValueSamplingDTO[];
+	networkTransmitPackets: MetricsValueSamplingDTO[];
+}
+
+export interface CpuDetailedMetricsDTO {
+	bootTimeSeconds: MetricsValueSamplingDTO[];
+	cpuEffectiveTotal: MetricsValueSamplingDTO[];
+}
+
+export interface MemoryDetailedMetricsDTO {
+	memoryActiveBytes: MetricsValueSamplingDTO[];
+	memoryMemAvailableBytes: MetricsValueSamplingDTO[];
+	memoryMemFreeBytes: MetricsValueSamplingDTO[];
+	memoryMemTotalBytes: MetricsValueSamplingDTO[];
+	memoryActiveFileBytes: MetricsValueSamplingDTO[];
+	memoryActiveAnonBytes: MetricsValueSamplingDTO[];
+	memoryInactiveBytes: MetricsValueSamplingDTO[];
+	memoryInactiveFileBytes: MetricsValueSamplingDTO[];
+	memoryInactiveAnonBytes: MetricsValueSamplingDTO[];
+	memoryRssBytes: MetricsValueSamplingDTO[];
+	memoryShmemBytes: MetricsValueSamplingDTO[];
+	memorySwapBytes: MetricsValueSamplingDTO[];
+	memoryUnevictableBytes: MetricsValueSamplingDTO[];
+	memoryWritebackBytes: MetricsValueSamplingDTO[];
+	memoryCachedBytes: MetricsValueSamplingDTO[];
+	memoryDirtyBytes: MetricsValueSamplingDTO[];
+	memoryMappedBytes: MetricsValueSamplingDTO[];
+	memoryHugepagesTotalBytes: MetricsValueSamplingDTO[];
+	memoryHugepagesFreeBytes: MetricsValueSamplingDTO[];
+	memoryOomKills: MetricsValueSamplingDTO[];
+}
+
+export interface DiskMetricsDTO {
+	allowed: number;
+	samplings: MetricsSamplingDTO[];
+	detailedMetrics: DiskDetailedMetricsDTO;
+}
+
+export interface NetworkMetricsDTO {
 	total: number;
 	allowed: number;
 	ingressSamplings: MetricsSamplingDTO[];
 	egressSamplings: MetricsSamplingDTO[];
+	detailedMetrics: NetworkDetailedMetricsDTO;
 }
 
-interface CpuMetricsDTO {
+export interface CpuMetricsDTO {
 	usageSamplings: MetricsSamplingDTO[];
+	usagePercentSamplings: MetricsPercentSamplingDTO[];
+	detailedMetrics: CpuDetailedMetricsDTO;
 }
 
-interface ProcessesMetricsDTO {
+export interface ProcessesMetricsDTO {
 	processesSamplings: MetricsSamplingDTO[];
 }
 
-interface MemoryMetricsDTO {
+export interface MemoryMetricsDTO {
 	usageSamplings: MetricsSamplingDTO[];
+	detailedMetrics: MemoryDetailedMetricsDTO;
 }
 
-export type MetricsNowResponseType = {
-	body: {
-		disk: DiskMetricsDTO;
-		network: NetworkMetricsDTO;
-		cpu: CpuMetricsDTO;
-		processes: ProcessesMetricsDTO;
-		memory: MemoryMetricsDTO;
-	};
+export type ResourceUsageLevel = "ok" | "warn" | "crit";
+
+export interface ResourceUsageMetricStatusDTO {
+	used: number;
+	allowed: number;
+	percentUsed: number;
+	warnThresholdPercent: number;
+	criticalThresholdPercent: number;
+	thresholdHit: boolean;
+	level: ResourceUsageLevel;
+}
+
+export interface ResourceUsageProblemResourceDTO {
+	resource:
+	| "network"
+	| "disk"
+	| "memory"
+	| "cpu"
+	| "memoryOomKills"
+	| "networkDroppedPackets"
+	| "networkErrors";
+	level: ResourceUsageLevel;
+	evidence: Record<string, unknown> | null;
+}
+
+export interface ResourceUsageStatusDTO {
+	hasIssues: boolean;
+	level: ResourceUsageLevel;
+	network: ResourceUsageMetricStatusDTO;
+	disk: ResourceUsageMetricStatusDTO;
+	memory: ResourceUsageMetricStatusDTO;
+	cpu: ResourceUsageMetricStatusDTO;
+	problemResources: ResourceUsageProblemResourceDTO[];
+}
+
+export interface ServerMetricsDTO {
+	disk: DiskMetricsDTO;
+	network: NetworkMetricsDTO;
+	cpu: CpuMetricsDTO;
+	processes: ProcessesMetricsDTO;
+	memory: MemoryMetricsDTO;
+	resourceUsageStatus: ResourceUsageStatusDTO;
+	meta: Record<string, unknown>;
+}
+
+type LatestDetailedMetrics<T> = { [K in keyof T]: MetricsValueSamplingDTO };
+
+export type InstantDiskDetailedMetricsDTO =
+	LatestDetailedMetrics<DiskDetailedMetricsDTO>;
+export type InstantNetworkDetailedMetricsDTO =
+	LatestDetailedMetrics<NetworkDetailedMetricsDTO>;
+export type InstantCpuDetailedMetricsDTO =
+	LatestDetailedMetrics<CpuDetailedMetricsDTO>;
+export type InstantMemoryDetailedMetricsDTO =
+	LatestDetailedMetrics<MemoryDetailedMetricsDTO>;
+
+export interface InstantDiskMetricsDTO {
+	allowed: number;
+	lastSamplings: MetricsSamplingDTO;
+	detailedMetrics: InstantDiskDetailedMetricsDTO;
+}
+
+export interface InstantNetworkMetricsDTO {
+	total: number;
+	allowed: number;
+	latestIngressSampling: MetricsSamplingDTO;
+	latestEgressSampling: MetricsSamplingDTO;
+	detailedMetrics: InstantNetworkDetailedMetricsDTO;
+}
+
+export interface InstantCpuMetricsDTO {
+	latestUsageSampling: MetricsSamplingDTO;
+	latestUsagePercentSampling: MetricsPercentSamplingDTO;
+	detailedMetrics: InstantCpuDetailedMetricsDTO;
+}
+
+export interface InstantProcessesMetricsDTO {
+	latestProcessesSampling: MetricsSamplingDTO;
+}
+
+export interface InstantMemoryMetricsDTO {
+	latestUsageSampling: MetricsSamplingDTO;
+	detailedMetrics: InstantMemoryDetailedMetricsDTO;
+}
+
+export interface InstantServerMetricsDTO {
+	disk: InstantDiskMetricsDTO;
+	network: InstantNetworkMetricsDTO;
+	cpu: InstantCpuMetricsDTO;
+	processes: InstantProcessesMetricsDTO;
+	memory: InstantMemoryMetricsDTO;
+	resourceUsageStatus: ResourceUsageStatusDTO;
+}
+
+export interface ServerMetricsWarningServerDTO {
+	slug: string;
+	name: string;
+	locationName: string;
+	locationCity: string;
+}
+
+export interface ServerMetricsWarningRowDTO {
+	server: ServerMetricsWarningServerDTO;
+	resourceUsageStatus: ResourceUsageStatusDTO;
+}
+
+export interface ServerMetricsWarningsOverviewDTO {
+	count: number;
+	rows: ServerMetricsWarningRowDTO[];
+}
+
+export type ServerMetricsResponseType = {
+	body: ServerMetricsDTO;
+};
+
+export type InstantServerMetricsResponseType = {
+	body: InstantServerMetricsDTO;
+};
+
+export type ServerMetricsWarningsOverviewResponseType = {
+	body: ServerMetricsWarningsOverviewDTO;
 };
 
 export type IpBlockStatsv = {
@@ -279,323 +469,301 @@ export type IpBlockStatsv = {
 
 	/** Number of reserved IPs in this block, administratively reserved by Webdock */
 	reserved: number;
-}
+};
 
+/** GET /servers/{serverSlug}/ipBlocks returns a map of block ID to that block's stats. */
+export type ListIpBlocksResponseType = {
+	body: Record<string, IpBlockStatsv>;
+};
+
+type FetchFileResult =
+	| {
+		success: true;
+		base64: string;
+	}
+	| {
+		success: false;
+		message: string;
+	};
 export class ServersClass {
 	private parent: Webdock;
-	scripts: ServerScriptsClass
-	identity: ServerIdentityClass
-	settings: ServerSettingsClass
-	IpBlock: ServerIpBlock
-	webserver: ServerWebserverClass
+	scripts: ServerScriptsClass;
+	identity: ServerIdentityClass;
+	settings: ServerSettingsClass;
+	IpBlock: ServerIpBlock;
+	webserver: ServerWebserverClass;
 
 	constructor(parent: Webdock) {
 		this.parent = parent;
-		this.scripts = new ServerScriptsClass(parent)
-		this.identity = new ServerIdentityClass(parent)
-		this.settings = new ServerSettingsClass(parent)
-		this.IpBlock = new ServerIpBlock(parent)
-		this.webserver = new ServerWebserverClass(parent)
+		this.scripts = new ServerScriptsClass(parent);
+		this.identity = new ServerIdentityClass(parent);
+		this.settings = new ServerSettingsClass(parent);
+		this.IpBlock = new ServerIpBlock(parent);
+		this.webserver = new ServerWebserverClass(parent);
 	}
 
-
-
-
-	cancelDelete({ serverSlug }: { serverSlug: string }) {
+	cancelDelete(args: { serverSlug: string }) {
 		return req<CancelDeleteServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/uncancel`,
+			endpoint: `/servers/${args.serverSlug}/uncancel`,
 			method: "POST",
-		})
+		});
 	}
 
-
-
-	create({
-		name,
-		locationId,
-		profileSlug,
-		imageSlug,
-		virtualization,
-		snapshotId,
-		userScriptId,
-		slug
-	}: {
+	create(args: {
 		name: string;
 		locationId: string;
 		profileSlug?: string;
-		virtualization?: string;
-		slug?: string;
 		userScriptId?: ServerScriptReference;
 	} & (
 			| { snapshotId?: number; imageSlug?: never }
 			| { imageSlug?: string; snapshotId?: never }
 		)) {
-		return req<CreateServerResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: "/servers",
-				method: "POST",
-				body: {
-					name,
-					locationId,
-					profileSlug,
-					imageSlug,
-					virtualization,
-					snapshotId,
-					userScriptId,
-					slug
-				},
-				headers: ["x-callback-id"],
-			},
-		);
-	}
-	delete({ serverSlug, }: { serverSlug: string }) {
-		return req<DeleteServerResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}`,
-				method: "DELETE",
-				headers: ["x-callback-id"],
-			},
-		);
-	}
-
-	async fetchFileAsync({
-		path,
-		slug,
-	}: {
-		path: string;
-		slug: string;
-	}) {
-		return req<FetchFileResponsePayload>(
-			{
-				endpoint: `servers/${slug}/fetchFile`,
-				method: "POST",
-				token: this.parent.string_token,
-				body: {
-					filePath: path,
-				},
-				headers: ["x-callback-id"],
-			},
-		);
-
-
-	}
-	async fetchFile({
-		path,
-		slug,
-	}: {
-		path: string;
-		slug: string;
-	}) {
-		const init = await req<FetchFileResponsePayload>(
-			{
-				endpoint: `servers/${slug}/fetchFile`,
-				method: "POST",
-				token: this.parent.string_token,
-				body: {
-					filePath: path,
-				},
-				headers: ["x-callback-id"],
-			},
-		);
-		if (!init.success) return {
-			success: false,
-			message: `Failed to initiate file fetch for '${path}' on server '${slug}'`,
-		};
-
-		const callbackId = init.response.headers["x-callback-id"];
-		let event = await this.parent.operation.fetch(callbackId);
-		if (!event.success) return {
-			success: false,
-			message: `Failed to retrieve operation status (callback ID: ${callbackId})`,
-		};
-
-		while (true) {
-			let res = event.response.body[0];
-			if (res.status === "finished") {
-				return {
-					success: true,
-					content: res.message,
-				};
-			} else if (res.status === "error") {
-				return {
-					success: false,
-					message: `File fetch failed for '${path}': ${res.message}`,
-				};
-			}
-
-			await new Promise((resolve) => setTimeout(resolve, 3000));
-			event = await this.parent.operation.fetch(callbackId);
-			if (!event.success) return {
-				success: false,
-				message: `Lost connection to operation (callback ID: ${callbackId}) while fetching '${path}'`,
-			};
-		}
-	}
-	getBySlug({ serverSlug }: { serverSlug?: string; }) {
-		const slug = serverSlug;
-
 		return req<CreateServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${slug}`,
-			method: "GET",
-		});
-	}
-	list({ status = "all" }: { status?: "all" | "suspended" | "active" } = {}) {
-		return req<ListServersResponseType>({
-			token: this.parent.string_token,
-			endpoint: `/servers?status=${status}`,
-			method: "GET",
-		});
-	}
-	metrics({ now, serverSlug }: {
-		serverSlug: string;
-		now: boolean;
-	}) {
-		return req<MetricsNowResponseType>(
-			{
-				endpoint: `servers/${serverSlug}/metrics${now ? "/now" : ""}`,
-				method: "GET",
-				token: this.parent.string_token,
-			},
-		);
-	}
-	reboot({
-		serverSlug,
-	}: { serverSlug: string }) {
-		return req<StartResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/actions/reboot`,
-				method: "POST",
-				headers: ["x-callback-id"],
-			},
-		);
-	}
-
-	snapshot({
-		serverSlug,
-		name,
-	}: {
-		serverSlug: string;
-		name: string;
-	}) {
-		return req<CreateServerSnapshotActionResponseType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/snapshot`,
+			endpoint: "/servers",
 			method: "POST",
 			body: {
-				name,
+				name: args.name,
+				locationId: args.locationId,
+				profileSlug: args.profileSlug,
+				imageSlug: args.imageSlug,
+				snapshotId: args.snapshotId,
+				userScriptId: args.userScriptId,
+			},
+			headers: ["x-callback-id"],
+		});
+	}
+	delete(args: { serverSlug: string }) {
+		return req<DeleteServerResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}`,
+			method: "DELETE",
+			headers: ["x-callback-id"],
+		});
+	}
+
+	async StartFileFetch(args: { path: string; slug: string }) {
+		return req<FetchFileResponsePayload>({
+			endpoint: `servers/${args.slug}/fetchFile`,
+			method: "POST",
+			token: this.parent.string_token,
+			body: {
+				filePath: args.path,
 			},
 			headers: ["x-callback-id"],
 		});
 	}
 
-	disableIpv6({
-		serverSlug,
-	}: {
-		serverSlug: string;
-	}) {
-		return req<AsyncActionResponseType>({
+	async fetchFile(args: {
+		path: string;
+		slug: string;
+	}): Promise<FetchFileResult> {
+		const init = await this.StartFileFetch({ path: args.path, slug: args.slug });
+
+		if (!init.success) {
+			return {
+				success: false,
+				message: `Failed to initiate file fetch for '${args.path}' on server '${args.slug}'`,
+			};
+		}
+
+		const callbackId = init.response.headers["x-callback-id"];
+
+		const event = await this.parent.operation.waitForEventToEnd(callbackId);
+
+		if (!event.success) {
+			return {
+				success: false,
+				message: `Failed to retrieve operation status (callback ID: ${callbackId})`,
+			};
+		}
+
+		return {
+			success: true,
+			base64: event.data,
+		};
+	}
+
+	getBySlug(args: { serverSlug: string }) {
+		return req<CreateServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/disable-ipv6`,
+			endpoint: `/servers/${args.serverSlug}`,
+			method: "GET",
+		});
+	}
+	list(args: { status?: "all" | "suspended" | "active" | "archived" } = {}) {
+		return req<ListServersResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers?status=${args.status ?? "all"}`,
+			method: "GET",
+		});
+	}
+	getServerMetrics(args: {
+		serverSlug: string;
+		resolutionSeconds?: number;
+		maxSamples?: number;
+		from?: string | number;
+		to?: string | number;
+	}) {
+		const params = new URLSearchParams();
+		if (args.resolutionSeconds !== undefined)
+			params.set("resolutionSeconds", String(args.resolutionSeconds));
+		if (args.maxSamples !== undefined) params.set("maxSamples", String(args.maxSamples));
+		if (args.from !== undefined) params.set("from", String(args.from));
+		if (args.to !== undefined) params.set("to", String(args.to));
+		const query = params.toString();
+		return req<ServerMetricsResponseType>({
+			endpoint: `/servers/${args.serverSlug}/metrics${query ? `?${query}` : ""}`,
+			method: "GET",
+			token: this.parent.string_token,
+		});
+	}
+	getInstantMetrics(args: { serverSlug: string }) {
+		return req<InstantServerMetricsResponseType>({
+			endpoint: `/servers/${args.serverSlug}/metrics/now`,
+			method: "GET",
+			token: this.parent.string_token,
+		});
+	}
+	getServerMetricsWarningsOverview(args: {
+		serverSlug?: string;
+		includeOk?: boolean;
+	} = {}) {
+		const params = new URLSearchParams();
+		if (args.serverSlug !== undefined) params.set("serverSlug", args.serverSlug);
+		if (args.includeOk !== undefined) params.set("includeOk", String(args.includeOk));
+		const query = params.toString();
+		return req<ServerMetricsWarningsOverviewResponseType>({
+			endpoint: `/servers/metrics/warnings${query ? `?${query}` : ""}`,
+			method: "GET",
+			token: this.parent.string_token,
+		});
+	}
+	reboot(args: { serverSlug: string }) {
+		return req<StartResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/actions/reboot`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	enableIpv6({
-		serverSlug,
-	}: {
-		serverSlug: string;
-	}) {
+	snapshot(args: { serverSlug: string; name: string }) {
+		return req<CreateServerSnapshotActionResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/actions/snapshot`,
+			method: "POST",
+			body: {
+				name: args.name,
+			},
+			headers: ["x-callback-id"],
+		});
+	}
+
+	disableIpv6(args: { serverSlug: string }) {
 		return req<AsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/enable-ipv6`,
+			endpoint: `/servers/${args.serverSlug}/actions/disable-ipv6`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	reinstall({ imageSlug, serverSlug, userScriptId, deleteSnapshots }: {
+	enableIpv6(args: { serverSlug: string }) {
+		return req<AsyncActionResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/actions/enable-ipv6`,
+			method: "POST",
+			headers: ["x-callback-id"],
+		});
+	}
+
+	toggleSSHSettings(args: SSHSettings) {
+		return req<SSHSettingsResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/sshSettings`,
+			method: "POST",
+			body: {
+				passwordSshAuthEnabled: args.passwordSshAuthEnabled,
+				passwordlessSudoEnabled: args.passwordlessSudoEnabled,
+				sshPort: args.sshPort,
+			},
+			headers: ["x-callback-id"],
+		});
+	}
+
+	reinstall(args: {
 		deleteSnapshots?: boolean;
 		serverSlug: string;
 		userScriptId?: ServerScriptReference;
 		imageSlug: string;
 	}) {
-		return req<ReinstallServerResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/actions/reinstall`,
-				method: "POST",
-				body: {
-					imageSlug, serverSlug, userScriptId, deleteSnapshots
-				},
-				headers: ["x-callback-id"],
+		return req<ReinstallServerResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/actions/reinstall`,
+			method: "POST",
+			body: {
+				imageSlug: args.imageSlug,
+				userScriptId: args.userScriptId,
+				deleteSnapshots: args.deleteSnapshots,
 			},
-		);
+			headers: ["x-callback-id"],
+		});
 	}
-	resize({ serverSlug, profileSlug }: {
+	resize(args: {
 		serverSlug: string;
 		profileSlug: string;
 	}) {
 		return req<ResizeResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/resize`,
+			endpoint: `/servers/${args.serverSlug}/actions/resize`,
 			method: "POST",
-			body: { profileSlug },
+			body: { profileSlug: args.profileSlug },
 			headers: ["x-callback-id"],
 		});
 	}
 
-	resizeDryRun({ serverSlug, profileSlug }: {
+	resizeDryRun(args: {
 		serverSlug: string;
 		profileSlug: string;
 	}) {
 		return req<ResizeDryRunResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/resize/dryrun`,
+			endpoint: `/servers/${args.serverSlug}/actions/resize/dryrun`,
 			method: "POST",
-			body: { profileSlug },
+			body: { profileSlug: args.profileSlug },
 		});
 	}
 
-	start({ serverSlug }: {
-		serverSlug: string;
-	}) {
+	start(args: { serverSlug: string }) {
 		return req<StartResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/start`,
+			endpoint: `/servers/${args.serverSlug}/actions/start`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	stop({ serverSlug, }: {
-		serverSlug: string;
-	}) {
+	stop(args: { serverSlug: string }) {
 		return req<StartResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/stop`,
+			endpoint: `/servers/${args.serverSlug}/actions/stop`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	archive({ serverSlug }: {
-		serverSlug: string;
-	}) {
+	archive(args: { serverSlug: string }) {
 		return req<ArchiveResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/suspend`,
+			endpoint: `/servers/${args.serverSlug}/actions/archive`,
 			method: "POST",
 			headers: ["x-callback-id"],
 		});
 	}
 
-	update({ serverSlug, nextActionDate, name, description, notes, }: {
+	UpdateServerMetadata(args: {
 		serverSlug: string;
 		nextActionDate?: string;
 		name?: string;
@@ -604,9 +772,14 @@ export class ServersClass {
 	}) {
 		return req<UpdateServerResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}`,
+			endpoint: `/servers/${args.serverSlug}`,
 			method: "PATCH",
-			body: { nextActionDate, name, description, notes },
+			body: {
+				nextActionDate: args.nextActionDate,
+				name: args.name,
+				description: args.description,
+				notes: args.notes,
+			},
 		});
 	}
 }
@@ -708,225 +881,197 @@ export class ServerScriptsClass {
 		this.parent = parent;
 	}
 
-
-	create({
-		scriptId,
-		path,
-		makeScriptExecutable,
-		executeImmediately,
-		serverSlug,
-	}: {
+	create(args: {
 		scriptId: ServerScriptReference;
 		path: string;
 		makeScriptExecutable: boolean;
 		executeImmediately: boolean;
 		serverSlug: string;
 	}) {
-		return req<CreateScriptOnServerResponse>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts`,
-				method: "POST",
-				body: {
-					scriptId,
-					path,
-					makeScriptExecutable,
-					executeImmediately,
-				},
-				headers: ["x-callback-id"],
+		return req<CreateScriptOnServerResponse>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/scripts`,
+			method: "POST",
+			body: {
+				scriptId: args.scriptId,
+				path: args.path,
+				makeScriptExecutable: args.makeScriptExecutable,
+				executeImmediately: args.executeImmediately,
 			},
-		);
+			headers: ["x-callback-id"],
+		});
 	}
 
-	delete(
-		{ serverSlug, scriptId }: {
-			serverSlug: string;
-			scriptId: string;
-		},
-	) {
-		return req<DeleteScriptServerReturnType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts/${scriptId}`,
-				method: "DELETE",
-				headers: ["x-callback-id"],
-			},
-		);
+	delete(args: { serverSlug: string; scriptId: string }) {
+		return req<DeleteScriptServerReturnType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptId}`,
+			method: "DELETE",
+			headers: ["x-callback-id"],
+		});
 	}
 
-	getById(
-		{ serverSlug, scriptId }: {
-			serverSlug: string;
-			scriptId: string | number;
-		},
-	) {
-		return req<GetScriptOnServerReturnType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts/${scriptId}`,
-				method: "GET",
-			},
-		);
-	}
-
-	execute(
-		{ serverSlug, scriptID }: {
-			serverSlug: string;
-			scriptID: string;
-		},
-	) {
-		return req<ExecuteScriptOnServerReturnType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts/${scriptID}/execute`,
-				method: "POST",
-				headers: ["x-callback-id"],
-			},
-		);
-	}
-
-	listOnServer({ serverSlug }: {
-		token?: string;
+	getById(args: {
 		serverSlug: string;
+		scriptId: string | number;
 	}) {
-		return req<ListScriptsOnServerResponseType>(
-			{
-				token: this.parent.string_token,
-				endpoint: `/servers/${serverSlug}/scripts`,
-				method: "GET",
-			},
-		);
+		return req<GetScriptOnServerReturnType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptId}`,
+			method: "GET",
+		});
 	}
 
+	execute(args: { serverSlug: string; scriptID: string }) {
+		return req<ExecuteScriptOnServerReturnType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptID}/execute`,
+			method: "POST",
+			headers: ["x-callback-id"],
+		});
+	}
 
-
+	listOnServer(args: {  serverSlug: string }) {
+		return req<ListScriptsOnServerResponseType>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/scripts`,
+			method: "GET",
+		});
+	}
 }
 
-// https://api.webdock.io/v1/servers/{serverSlug}/actions/changeIp
+export interface ServerIp {
+	/** IP row ID, as used by updateServerIps and inspectIpBlock. */
+	id: number;
+	/** ID of the IP block this address belongs to (see getServerIpBlocks). */
+	blockId: number;
+	/** IPv4 address, or null for IPv6-only assignments. */
+	ipv4: string | null;
+	/** IPv6 address, or null when the block has no IPv6. */
+	ipv6: string | null;
+	/** True for the server's primary IP (its outbound address). Exactly one IP per server is primary. */
+	primary: boolean;
+	/** True when this IP is billed in addition to the server price (every additional IP). */
+	billable: boolean;
+	/** Custom reverse DNS (PTR) hostname, or null for the default (the server's main domain for the primary IP, none otherwise). */
+	reverseDns: string | null;
+}
+
+type ChangeIPAddressResponseType = {
+	headers: ResponseHeaders;
+	body: ServerIp[];
+};
+
+type ServerIpToAdd =
+	| { ipId: number; blockId?: never; primary?: boolean; reverseDns?: string | null }
+	| { blockId: number; ipId?: never; primary?: boolean; reverseDns?: string | null };
+
+export type ChangeIPAddressArgs = {
+	serverSlug: string;
+	add?: ServerIpToAdd[];
+	remove?: number[];
+	banRemovedIpIds?: number[];
+	primaryIpId?: number | null;
+	reverseDns?: { ipId: number; hostname: string | null }[];
+};
 
 class ServerIpBlock {
-	private parent: Webdock
+	private parent: Webdock;
 	constructor(parent: Webdock) {
-		this.parent = parent
+		this.parent = parent;
 	}
 
-	ListIpBlocks({ serverSlug }: { serverSlug: string }) {
-		return req<IpBlockStatsv>({
+	ListIpBlocks(args: { serverSlug: string }) {
+		return req<ListIpBlocksResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/ipBlocks`,
+			endpoint: `/servers/${args.serverSlug}/ipBlocks`,
 			method: "GET",
-
-		})
+		});
 	}
 
-
-
-
-	ChangeIPAddress({ serverSlug, markReleasedIpBanned, overrideBlockId, sameBlock }: {
-		serverSlug: string
-		sameBlock: boolean,
-		overrideBlockId: number,
-		markReleasedIpBanned: boolean,
-	}) {
-		req({
+	ChangeIPAddress(args: ChangeIPAddressArgs) {
+		return req<ChangeIPAddressResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/changeIp`,
-			method: "post",
+			endpoint: `/servers/${args.serverSlug}/ips`,
+			method: "PATCH",
 			headers: ["x-callback-id"],
 			body: {
-				markReleasedIpBanned, overrideBlockId, sameBlock
-			}
-		})
+				add: args.add,
+				remove: args.remove,
+				banRemovedIpIds: args.banRemovedIpIds,
+				primaryIpId: args.primaryIpId,
+				reverseDns: args.reverseDns,
+			},
+		});
 	}
-
-
-
 }
-// https://api.webdock.io/v1/servers/{serverSlug}/actions/changeIp
 class ServerIdentityClass {
-	private parent: Webdock
+	private parent: Webdock;
 	constructor(parent: Webdock) {
-		this.parent = parent
+		this.parent = parent;
 	}
 
-	update({
-		serverSlug,
-		maindomain,
-		aliasdomains,
-		removeDefaultAlias
-	}: {
-		serverSlug: string,
-		maindomain: string,
-		aliasdomains?: string,
-		removeDefaultAlias?: boolean
+	update(args: {
+		serverSlug: string;
+		maindomain: string;
+		aliasdomains?: string;
+		removeDefaultAlias?: boolean;
 	}) {
 		return req<UpdateServerIdentityResponseType>({
 			token: this.parent.string_token,
 			method: "PATCH",
-			endpoint: `/servers/${serverSlug}/identity`,
+			endpoint: `/servers/${args.serverSlug}/identity`,
 			headers: ["x-callback-id"],
 			body: {
-				maindomain,
-				aliasdomains,
-				removeDefaultAlias
-			}
-		})
+				maindomain: args.maindomain,
+				aliasdomains: args.aliasdomains,
+				removeDefaultAlias: args.removeDefaultAlias,
+			},
+		});
 	}
 
-	renewCertificates({
-		serverSlug,
-		domains,
-		email,
-		forceSSL
-	}: {
+	renewCertificates(args: {
 		serverSlug: string;
 		domains?: string[];
 		email?: string;
-		forceSSL?: boolean
+		forceSSL?: boolean;
 	}) {
 		return req<RenewServerCertResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/run-certbot`,
+			endpoint: `/servers/${args.serverSlug}/actions/run-certbot`,
 			method: "POST",
 			headers: ["x-callback-id"],
 			body: {
-				domains,
-				email,
-				forceSSL
-			}
-		})
+				domains: args.domains,
+				email: args.email,
+				forceSSL: args.forceSSL,
+			},
+		});
 	}
-
 }
 
 class ServerSettingsClass {
-	private parent: Webdock
+	private parent: Webdock;
 	constructor(parent: Webdock) {
-		this.parent = parent
+		this.parent = parent;
 	}
 
-	update({
-		webroot,
-		updateWebserver,
-		updateLetsencrypt,
-		serverSlug
-	}: {
-		webroot: string,
-		updateWebserver: boolean,
-		updateLetsencrypt: boolean,
-		serverSlug: string
+	update(args: {
+		webroot?: string;
+		updateWebserver?: boolean;
+		updateLetsencrypt?: boolean;
+		serverSlug: string;
 	}) {
-
 		return req<AsyncActionResponseType>({
 			token: this.parent.string_token,
-			endpoint: `/servers/${serverSlug}/actions/settings`,
+			endpoint: `/servers/${args.serverSlug}/actions/settings`,
 			method: "POST",
 			headers: ["x-callback-id"],
 			body: {
-				webroot: webroot,
-				updateWebserver: updateWebserver,
-				updateLetsencrypt: updateLetsencrypt,
-			}
-		})
+				...(args.webroot !== undefined ? { webroot: args.webroot } : {}),
+				...(args.updateWebserver !== undefined ? { updateWebserver: args.updateWebserver } : {}),
+				...(args.updateLetsencrypt !== undefined ? { updateLetsencrypt: args.updateLetsencrypt } : {}) 
+			},
+		});
 	}
 }
