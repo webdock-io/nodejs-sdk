@@ -9,6 +9,16 @@ import { ProfilesClass } from "./profiles.js";
 
 import { ServersClass } from "./servers/index.js";
 export type {
+  WordpressAsyncActionResponseType,
+  SetupWordpressCliRequest,
+  RegisterWordpressInstallationRequest,
+  WordpressInstallation,
+  WordpressInstallationResponseType,
+  InstallWordpressRequest,
+  WordpressLockdownRequest,
+  WordpressUpdateType,
+} from "./servers/wordpress/types.js";
+export type {
   MonitoringCheck,
   MonitoringRuleType,
   UpdateMonitoringRuleRequest,

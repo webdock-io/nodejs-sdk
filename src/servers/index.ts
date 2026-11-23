@@ -6,6 +6,7 @@ import { ServerIpBlock } from "./ip-block/index.js";
 import { ServerIdentityClass } from "./identity/index.js";
 import { ServerSettingsClass } from "./settings/index.js";
 import { ServerMonitoringClass } from "./monitoring/index.js";
+import { ServerWordpressClass } from "./wordpress/index.js";
 import { req } from "../utils/req";
 
 export type ServerStatus =
@@ -500,6 +501,7 @@ export class ServersClass {
 	webserver: ServerWebserverClass;
 	mail: ServerMailClass;
 	monitoring: ServerMonitoringClass;
+	wordpress: ServerWordpressClass;
 
 	constructor(parent: Webdock) {
 		this.parent = parent;
@@ -510,6 +512,7 @@ export class ServersClass {
 		this.webserver = new ServerWebserverClass(parent);
 		this.mail = new ServerMailClass(parent);
 		this.monitoring = new ServerMonitoringClass(parent);
+		this.wordpress = new ServerWordpressClass(parent);
 	}
 
 	cancelDelete(args: { serverSlug: string }) {
