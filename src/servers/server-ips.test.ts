@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Webdock } from "./index.js";
+import { Webdock } from "../index.js";
 
 jest.mock("axios");
 

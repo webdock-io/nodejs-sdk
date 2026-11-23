@@ -1,4 +1,4 @@
-import { createTestClient, isE2EEnabled } from "./testUtils.js";
+import { createTestClient, isE2EEnabled } from "../testUtils.js";
 
 describe("Account API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";

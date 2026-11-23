@@ -1,4 +1,4 @@
-import { createTestClient, isE2EEnabled, waitForCallback } from "./testUtils.js";
+import { createTestClient, isE2EEnabled, waitForCallback } from "../testUtils.js";
 
 describe("Server API", () => {
 	const token = process.env.WEBDOCK_TOKEN ?? "";

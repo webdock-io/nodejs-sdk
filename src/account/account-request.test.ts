@@ -1,5 +1,5 @@
-import { Webdock } from "./index.js";
-import { expectRequest, mockNextResponse, resetAxiosMock } from "./requestTestUtils.js";
+import { Webdock } from "../index.js";
+import { expectRequest, mockNextResponse, resetAxiosMock } from "../requestTestUtils.js";
 
 jest.mock("axios");
 

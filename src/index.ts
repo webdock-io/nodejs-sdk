@@ -1,13 +1,13 @@
 
 
-import { AccountClass } from "./account.js";
+import { AccountClass } from "./account/account.js";
 import { EventsClass } from "./events.js";
 import { HooksClass } from "./hooks.js";
 import { ImagesClass } from "./images.js";
 import { LocationClass } from "./locations.js";
 import { ProfilesClass } from "./profiles.js";
 
-import { ServersClass } from "./servers.js";
+import { ServersClass } from "./servers/index.js";
 export type {
   MetricsSamplingDTO,
   MetricsPercentSamplingDTO,
@@ -42,7 +42,7 @@ export type {
   ServerMetricsResponseType,
   InstantServerMetricsResponseType,
   ServerMetricsWarningsOverviewResponseType,
-} from "./servers.js";
+} from "./servers/index.js";
 import { ShellUsersClass } from "./shellusers.js";
 import { SshKeysClass } from "./sshkeys.js";
 import { SnapshotsClass } from "./snapshots.js";

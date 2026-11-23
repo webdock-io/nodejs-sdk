@@ -1,4 +1,4 @@
-import { Webdock } from "./index.js";
+import { Webdock } from "../index.js";
 import {
 	CALLBACK_ID,
 	expectCallback,
@@ -8,7 +8,7 @@ import {
 	mockNextServerError,
 	mockedAxios,
 	resetAxiosMock,
-} from "./requestTestUtils.js";
+} from "../requestTestUtils.js";
 
 jest.mock("axios");
 

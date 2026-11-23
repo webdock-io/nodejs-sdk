@@ -1,6 +1,11 @@
-import { Webdock } from "./index";
-import { ServerWebserverClass } from "./server-webserver.js";
-import { req } from "./utils/req";
+import { Webdock } from "../index";
+import { ServerWebserverClass } from "./webserver/index.js";
+import { ServerMailClass } from "./mail/index.js";
+import { ServerScriptsClass } from "./scripts/index.js";
+import { ServerIpBlock } from "./ip-block/index.js";
+import { ServerIdentityClass } from "./identity/index.js";
+import { ServerSettingsClass } from "./settings/index.js";
+import { req } from "../utils/req";
 
 export type ServerStatus =
 	| "provisioning"
@@ -492,6 +497,7 @@ export class ServersClass {
 	settings: ServerSettingsClass;
 	IpBlock: ServerIpBlock;
 	webserver: ServerWebserverClass;
+	mail: ServerMailClass;
 
 	constructor(parent: Webdock) {
 		this.parent = parent;
@@ -500,6 +506,7 @@ export class ServersClass {
 		this.settings = new ServerSettingsClass(parent);
 		this.IpBlock = new ServerIpBlock(parent);
 		this.webserver = new ServerWebserverClass(parent);
+		this.mail = new ServerMailClass(parent);
 	}
 
 	cancelDelete(args: { serverSlug: string }) {
@@ -875,70 +882,6 @@ export type ListScriptsResponse = {
 	}[];
 };
 
-export class ServerScriptsClass {
-	private parent: Webdock;
-	constructor(parent: Webdock) {
-		this.parent = parent;
-	}
-
-	create(args: {
-		scriptId: ServerScriptReference;
-		path: string;
-		makeScriptExecutable: boolean;
-		executeImmediately: boolean;
-		serverSlug: string;
-	}) {
-		return req<CreateScriptOnServerResponse>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/scripts`,
-			method: "POST",
-			body: {
-				scriptId: args.scriptId,
-				path: args.path,
-				makeScriptExecutable: args.makeScriptExecutable,
-				executeImmediately: args.executeImmediately,
-			},
-			headers: ["x-callback-id"],
-		});
-	}
-
-	delete(args: { serverSlug: string; scriptId: string }) {
-		return req<DeleteScriptServerReturnType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptId}`,
-			method: "DELETE",
-			headers: ["x-callback-id"],
-		});
-	}
-
-	getById(args: {
-		serverSlug: string;
-		scriptId: string | number;
-	}) {
-		return req<GetScriptOnServerReturnType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptId}`,
-			method: "GET",
-		});
-	}
-
-	execute(args: { serverSlug: string; scriptID: string }) {
-		return req<ExecuteScriptOnServerReturnType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/scripts/${args.scriptID}/execute`,
-			method: "POST",
-			headers: ["x-callback-id"],
-		});
-	}
-
-	listOnServer(args: {  serverSlug: string }) {
-		return req<ListScriptsOnServerResponseType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/scripts`,
-			method: "GET",
-		});
-	}
-}
 
 export interface ServerIp {
 	/** IP row ID, as used by updateServerIps and inspectIpBlock. */
@@ -957,7 +900,7 @@ export interface ServerIp {
 	reverseDns: string | null;
 }
 
-type ChangeIPAddressResponseType = {
+export type ChangeIPAddressResponseType = {
 	headers: ResponseHeaders;
 	body: ServerIp[];
 };
@@ -975,103 +918,5 @@ export type ChangeIPAddressArgs = {
 	reverseDns?: { ipId: number; hostname: string | null }[];
 };
 
-class ServerIpBlock {
-	private parent: Webdock;
-	constructor(parent: Webdock) {
-		this.parent = parent;
-	}
 
-	ListIpBlocks(args: { serverSlug: string }) {
-		return req<ListIpBlocksResponseType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/ipBlocks`,
-			method: "GET",
-		});
-	}
 
-	ChangeIPAddress(args: ChangeIPAddressArgs) {
-		return req<ChangeIPAddressResponseType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/ips`,
-			method: "PATCH",
-			headers: ["x-callback-id"],
-			body: {
-				add: args.add,
-				remove: args.remove,
-				banRemovedIpIds: args.banRemovedIpIds,
-				primaryIpId: args.primaryIpId,
-				reverseDns: args.reverseDns,
-			},
-		});
-	}
-}
-class ServerIdentityClass {
-	private parent: Webdock;
-	constructor(parent: Webdock) {
-		this.parent = parent;
-	}
-
-	update(args: {
-		serverSlug: string;
-		maindomain: string;
-		aliasdomains?: string;
-		removeDefaultAlias?: boolean;
-	}) {
-		return req<UpdateServerIdentityResponseType>({
-			token: this.parent.string_token,
-			method: "PATCH",
-			endpoint: `/servers/${args.serverSlug}/identity`,
-			headers: ["x-callback-id"],
-			body: {
-				maindomain: args.maindomain,
-				aliasdomains: args.aliasdomains,
-				removeDefaultAlias: args.removeDefaultAlias,
-			},
-		});
-	}
-
-	renewCertificates(args: {
-		serverSlug: string;
-		domains?: string[];
-		email?: string;
-		forceSSL?: boolean;
-	}) {
-		return req<RenewServerCertResponseType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/actions/run-certbot`,
-			method: "POST",
-			headers: ["x-callback-id"],
-			body: {
-				domains: args.domains,
-				email: args.email,
-				forceSSL: args.forceSSL,
-			},
-		});
-	}
-}
-
-class ServerSettingsClass {
-	private parent: Webdock;
-	constructor(parent: Webdock) {
-		this.parent = parent;
-	}
-
-	update(args: {
-		webroot?: string;
-		updateWebserver?: boolean;
-		updateLetsencrypt?: boolean;
-		serverSlug: string;
-	}) {
-		return req<AsyncActionResponseType>({
-			token: this.parent.string_token,
-			endpoint: `/servers/${args.serverSlug}/actions/settings`,
-			method: "POST",
-			headers: ["x-callback-id"],
-			body: {
-				...(args.webroot !== undefined ? { webroot: args.webroot } : {}),
-				...(args.updateWebserver !== undefined ? { updateWebserver: args.updateWebserver } : {}),
-				...(args.updateLetsencrypt !== undefined ? { updateLetsencrypt: args.updateLetsencrypt } : {}) 
-			},
-		});
-	}
-}

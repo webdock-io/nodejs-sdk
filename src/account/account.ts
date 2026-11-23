@@ -1,7 +1,8 @@
-import type { Webdock, WebdockApiRequestReturn } from "./index";
-import { CreateScriptResponseType, GetScriptByIdTResponseType, ListScriptsResponse } from "./servers";
-import type { Snapshot } from "./snapshots";
-import { req } from "./utils/req";
+import type { Webdock, WebdockApiRequestReturn } from "../index";
+import { CreateScriptResponseType, GetScriptByIdTResponseType, ListScriptsResponse } from "../servers/index";
+import type { Snapshot } from "../snapshots";
+import { req } from "../utils/req";
+import { AccountCloudflare } from "./cloudflare";
 
 export type AccountInformation = {
 	userId: number;
@@ -60,9 +61,11 @@ export type ArchivedServer = {
 export class AccountClass {
 	private parent: Webdock;
 	scripts: AccountScripts;
+	cloudflare: AccountCloudflare;
 	constructor(parent: Webdock) {
 		this.parent = parent;
 		this.scripts = new AccountScripts(parent)
+		this.cloudflare = new AccountCloudflare(parent)
 	}
 
 
