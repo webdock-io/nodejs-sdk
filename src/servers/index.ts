@@ -5,6 +5,7 @@ import { ServerScriptsClass } from "./scripts/index.js";
 import { ServerIpBlock } from "./ip-block/index.js";
 import { ServerIdentityClass } from "./identity/index.js";
 import { ServerSettingsClass } from "./settings/index.js";
+import { ServerMonitoringClass } from "./monitoring/index.js";
 import { req } from "../utils/req";
 
 export type ServerStatus =
@@ -498,6 +499,7 @@ export class ServersClass {
 	IpBlock: ServerIpBlock;
 	webserver: ServerWebserverClass;
 	mail: ServerMailClass;
+	monitoring: ServerMonitoringClass;
 
 	constructor(parent: Webdock) {
 		this.parent = parent;
@@ -507,6 +509,7 @@ export class ServersClass {
 		this.IpBlock = new ServerIpBlock(parent);
 		this.webserver = new ServerWebserverClass(parent);
 		this.mail = new ServerMailClass(parent);
+		this.monitoring = new ServerMonitoringClass(parent);
 	}
 
 	cancelDelete(args: { serverSlug: string }) {

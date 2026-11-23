@@ -3,6 +3,7 @@ import { CreateScriptResponseType, GetScriptByIdTResponseType, ListScriptsRespon
 import type { Snapshot } from "../snapshots";
 import { req } from "../utils/req";
 import { AccountCloudflare } from "./cloudflare";
+import { AccountMonitoringClass } from "./monitoring/index.js";
 
 export type AccountInformation = {
 	userId: number;
@@ -62,10 +63,12 @@ export class AccountClass {
 	private parent: Webdock;
 	scripts: AccountScripts;
 	cloudflare: AccountCloudflare;
+	monitoring: AccountMonitoringClass;
 	constructor(parent: Webdock) {
 		this.parent = parent;
 		this.scripts = new AccountScripts(parent)
 		this.cloudflare = new AccountCloudflare(parent)
+		this.monitoring = new AccountMonitoringClass(parent)
 	}
 
 

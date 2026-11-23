@@ -9,6 +9,18 @@ import { ProfilesClass } from "./profiles.js";
 
 import { ServersClass } from "./servers/index.js";
 export type {
+  MonitoringCheck,
+  MonitoringRuleType,
+  UpdateMonitoringRuleRequest,
+  MonitoringRule,
+  MonitoringRuleResponseType,
+  MonitoringNoContentResponseType,
+  MonitoringOverviewRow,
+  MonitoringOverviewResponseType,
+  ServerMonitoringConfiguration,
+  ServerMonitoringResponseType,
+} from "./monitoring/types.js";
+export type {
   MailEnableRequest,
   MailManagement,
   MailManagementResponseType,
