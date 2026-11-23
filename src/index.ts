@@ -9,6 +9,14 @@ import { ProfilesClass } from "./profiles.js";
 
 import { ServersClass } from "./servers/index.js";
 export type {
+  MailEnableRequest,
+  MailManagement,
+  MailManagementResponseType,
+  MailSetupStatus,
+  ImprovmxAlias,
+  ImprovmxAliasesResponseType,
+} from "./servers/mail/types.js";
+export type {
   MetricsSamplingDTO,
   MetricsPercentSamplingDTO,
   MetricsValueSamplingDTO,
