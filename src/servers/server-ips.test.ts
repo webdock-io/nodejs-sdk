@@ -16,6 +16,16 @@ describe("Server IP API", () => {
 		});
 	});
 
+	it("lists a server's IPs", async () => {
+		const result = await client.servers.IpBlock.listIps({ serverSlug: "example-server" });
+
+		expect(mockedAxios).toHaveBeenCalledWith(expect.objectContaining({
+			url: "https://api.webdock.io/v1/servers/example-server/ips",
+			method: "GET",
+		}));
+		expect(result).toMatchObject({ success: true, response: { body: [{ id: 9001, primary: true }] } });
+	});
+
 	it("sends the updateServerIps request body and returns the IP list and callback", async () => {
 		const result = await client.servers.IpBlock.ChangeIPAddress({
 			serverSlug: "example-server",

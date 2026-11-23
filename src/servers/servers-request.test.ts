@@ -79,6 +79,13 @@ describe("Servers API requests", () => {
 		expectCallback(result);
 	});
 
+	it("sets bandwidth overage protection", async () => {
+		mockNextResponse({ auto_stop_on_bandwidth_cap: true });
+		const result = await client.servers.setBandwidthOverageProtection({ serverSlug, autoStopOnBandwidthCap: true });
+		expectRequest("POST", `/servers/${serverSlug}/actions/bandwidth-overage-protection`, { autoStopOnBandwidthCap: true });
+		expect(result).toMatchObject({ success: true, response: { body: { auto_stop_on_bandwidth_cap: true } } });
+	});
+
  
 	it("UpdateServerMetadata() patches the server", async () => {
 		await client.servers.UpdateServerMetadata({

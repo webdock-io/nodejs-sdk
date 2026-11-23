@@ -8,6 +8,16 @@ import { LocationClass } from "./locations.js";
 import { ProfilesClass } from "./profiles.js";
 
 import { ServersClass } from "./servers/index.js";
+import { LoadBalancersClass } from "./load-balancers/index.js";
+import { WafsClass } from "./wafs/index.js";
+export type { EdgeUpstreamInput, EdgeUpstream, EdgeSettings, EdgeOptions } from "./edge/types.js";
+export type { LoadBalancer, CreateLoadBalancerRequest, UpdateLoadBalancerRequest } from "./load-balancers/index.js";
+export type { Waf, WafProtectionLevel, CreateWafRequest, UpdateWafRequest } from "./wafs/index.js";
+export type { FtpUser, CreateFtpUserRequest, FtpDaemonStatus } from "./servers/ftp/types.js";
+export type { CronJob, CreateCronJobRequest, DeleteCronJobResponseType } from "./servers/cronjobs/index.js";
+export type { MysqlDatabase, CreateMysqlDatabaseRequest } from "./servers/mysql/databases/index.js";
+export type { ArchivedServer, HostAffinityMode } from "./account/account.js";
+export type { ServerIp } from "./servers/index.js";
 export type {
   WordpressAsyncActionResponseType,
   SetupWordpressCliRequest,
@@ -117,6 +127,8 @@ export class Webdock {
   hooks: HooksClass;
   location: LocationClass;
   servers: ServersClass;
+  loadBalancers: LoadBalancersClass;
+  wafs: WafsClass;
   shellUsers: ShellUsersClass;
   sshkeys: SshKeysClass;
   snapshots: SnapshotsClass;
@@ -138,6 +150,8 @@ export class Webdock {
     this.hooks = new HooksClass(this);
     this.location = new LocationClass(this);
     this.servers = new ServersClass(this);
+    this.loadBalancers = new LoadBalancersClass(this);
+    this.wafs = new WafsClass(this);
     this.shellUsers = new ShellUsersClass(this);
     this.sshkeys = new SshKeysClass(this);
     this.snapshots = new SnapshotsClass(this);

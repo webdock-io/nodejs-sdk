@@ -38,6 +38,13 @@ describe("Account API requests", () => {
 		expect(result).toMatchObject({ success: true, response: { body: accountInfo } });
 	});
 
+	it("updateInformation() patches host affinity mode", async () => {
+		mockNextResponse({ ...accountInfo, hostAffinityMode: "pack" });
+		const result = await client.account.updateInformation({ hostAffinityMode: "pack" });
+		expectRequest("PATCH", "/account/accountInformation", { hostAffinityMode: "pack" });
+		expect(result).toMatchObject({ success: true, response: { body: { hostAffinityMode: "pack" } } });
+	});
+
 	it("listArchivedServers() uses the archived servers endpoint", async () => {
 		await client.account.listArchivedServers();
 		expectRequest("GET", "/servers/archived");

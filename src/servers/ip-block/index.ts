@@ -1,5 +1,5 @@
 import type { Webdock } from "../../index.js";
-import type { ListIpBlocksResponseType, ChangeIPAddressArgs, ChangeIPAddressResponseType } from "../index.js";
+import type { ListIpBlocksResponseType, ChangeIPAddressArgs, ChangeIPAddressResponseType, ServerIp } from "../index.js";
 import { req } from "../../utils/req.js";
 
 export class ServerIpBlock {
@@ -12,6 +12,14 @@ export class ServerIpBlock {
 		return req<ListIpBlocksResponseType>({
 			token: this.parent.string_token,
 			endpoint: `/servers/${args.serverSlug}/ipBlocks`,
+			method: "GET",
+		});
+	}
+
+	listIps(args: { serverSlug: string }) {
+		return req<{ body: ServerIp[] }>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/ips`,
 			method: "GET",
 		});
 	}

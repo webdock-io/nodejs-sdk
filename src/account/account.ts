@@ -18,7 +18,11 @@ export type AccountInformation = {
 	accountBalanceCurrency: string;
 	referralURl: string;
 	referralCode: string;
+	isAllowedPostmark?: boolean;
+	hostAffinityMode?: HostAffinityMode;
 };
+
+export type HostAffinityMode = "capacity_first" | "spread_best_effort" | "strict_spread_if_possible" | "pack";
 
 export type AccountInformationReturnType = {
 	body: AccountInformation;
@@ -101,6 +105,15 @@ export class AccountClass {
 		}
 
 		return res as Awaited<WebdockApiRequestReturn<AccountInformationReturnType>>;
+	}
+
+	updateInformation(args: { hostAffinityMode: HostAffinityMode }) {
+		return req<AccountInformationReturnType>({
+			token: this.parent.string_token,
+			endpoint: "/account/accountInformation",
+			method: "PATCH",
+			body: { hostAffinityMode: args.hostAffinityMode },
+		});
 	}
 
 }

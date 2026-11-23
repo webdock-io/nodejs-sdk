@@ -7,6 +7,10 @@ import { ServerIdentityClass } from "./identity/index.js";
 import { ServerSettingsClass } from "./settings/index.js";
 import { ServerMonitoringClass } from "./monitoring/index.js";
 import { ServerWordpressClass } from "./wordpress/index.js";
+import { ServerFtpClass } from "./ftp/index.js";
+import { ServerCronJobsClass } from "./cronjobs/index.js";
+import { ServerMysqlClass } from "./mysql/index.js";
+import { ArchivedServersClass } from "./archived/index.js";
 import { req } from "../utils/req";
 
 export type ServerStatus =
@@ -502,6 +506,10 @@ export class ServersClass {
 	mail: ServerMailClass;
 	monitoring: ServerMonitoringClass;
 	wordpress: ServerWordpressClass;
+	ftp: ServerFtpClass;
+	cronjobs: ServerCronJobsClass;
+	mysql: ServerMysqlClass;
+	archived: ArchivedServersClass;
 
 	constructor(parent: Webdock) {
 		this.parent = parent;
@@ -513,6 +521,10 @@ export class ServersClass {
 		this.mail = new ServerMailClass(parent);
 		this.monitoring = new ServerMonitoringClass(parent);
 		this.wordpress = new ServerWordpressClass(parent);
+		this.ftp = new ServerFtpClass(parent);
+		this.cronjobs = new ServerCronJobsClass(parent);
+		this.mysql = new ServerMysqlClass(parent);
+		this.archived = new ArchivedServersClass(parent);
 	}
 
 	cancelDelete(args: { serverSlug: string }) {
@@ -520,6 +532,15 @@ export class ServersClass {
 			token: this.parent.string_token,
 			endpoint: `/servers/${args.serverSlug}/uncancel`,
 			method: "POST",
+		});
+	}
+
+	setBandwidthOverageProtection(args: { serverSlug: string; autoStopOnBandwidthCap: boolean }) {
+		return req<{ body: { auto_stop_on_bandwidth_cap: boolean } }>({
+			token: this.parent.string_token,
+			endpoint: `/servers/${args.serverSlug}/actions/bandwidth-overage-protection`,
+			method: "POST",
+			body: { autoStopOnBandwidthCap: args.autoStopOnBandwidthCap },
 		});
 	}
 
